@@ -4,9 +4,9 @@ function Post() {
   return (
     <div style={{height: '400px', border: '2px solid red', display: 'flex', flexDirection: 'column'}}>
         <img alt='post' height={'70%'}/>
-        <div style={{display: 'flex', justifyContent: 'space-between',}}>
+        <div style={{display: 'flex', justifyContent: 'space-between', border: '2px solid'}}>
           <div className='metadata'>
-              <div style={{display: 'flex'}}>
+              <div style={{display: 'flex', border: '2px solid'}}>
                   <img alt='' style={{border: '2px solid', borderRadius:'100%', height: '20px', width: '20px'}}/>
                   <p>Username</p>
               </div>

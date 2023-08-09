@@ -8,7 +8,6 @@ function Home() {
   return (
     <div>Home
         <div style={{height: '100vh', display: 'flex', justifyContent: 'center'}}>
-            <div style={{height: '100%', width: '250px', border: '2px solid'}}>Sidebar</div>
             <Sidebar />
             <div style={{border: '2px solid', height: '100%', width: '500px', overflowY: 'auto'}}>
                 <Post />
