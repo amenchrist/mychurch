@@ -8,6 +8,7 @@ import SignInSide from './pages/SignIn';
 import { useStateContext } from './contexts/ContextProvider';
 import Home from './pages/Home';
 import { auth } from './config/firebase';
+import WatchPage from './pages/@watchPage/WatchPage';
 
 export default function Router() {
 
@@ -16,6 +17,10 @@ export default function Router() {
     {
       path: '/',
       element: user.isSignedIn ? <Home/> : <SignInSide />
+    },
+    {
+      path: '/watch',
+      element: <WatchPage />
     },
     
     

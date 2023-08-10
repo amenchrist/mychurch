@@ -2,8 +2,6 @@ import React from 'react';
 import Post from '../components/timeline/Post';
 import Sidebar from '../components/timeline/Sidebar';
 
-
-
 function Home() {
   return (
     <div>Home

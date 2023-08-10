@@ -24,6 +24,11 @@
     "simplebar-react": "^2.4.1",
     "web-vitals": "^2.1.4"
   },
+  "devDependencies": {
+    "@faker-js/faker": "^7.5.0",
+    "@iconify/react": "^4.0.0",
+    "video.js": "^7.20.3"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

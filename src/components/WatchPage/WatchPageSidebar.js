@@ -1,95 +1,48 @@
 import { useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Divider, Drawer, Grid, Hidden, List, MenuItem, TextField, Typography } from '@mui/material';
 import {
-  // AlertCircle as AlertCircleIcon,
-  // UserPlus as UserPlusIcon,
-  Lock as LockIcon,
   BarChart as BarChartIcon,
-  Settings as SettingsIcon,
-  ShoppingBag as ShoppingBagIcon,
-  User as UserIcon,
-  Users as UsersIcon,
+  Briefcase,
   LogOut as Out,
-  Briefcase, RefreshCw
+  RefreshCw
 } from 'react-feather';
 import NavItem from '../NavItem';
-// import { useAdminStateContext } from '../../contexts/AdminContextProvider';
 import { useStateContext } from '../../contexts/ContextProvider';
-import { ArrowBack } from '@mui/icons-material';
 
-
-const items = [
-  {
-    href: '/admin-dashboard/summary',
-    icon: BarChartIcon,
-    title: 'Home'
-  },
-  {
-    href: '/admin-dashboard/attendees',
-    icon: UsersIcon,
-    title: 'Explore'
-  },
-  {
-    href: '/admin-dashboard/first-timers',
-    icon: UserIcon,
-    title: 'Notifications'
-  },
-  {
-    href: '/admin-dashboard/giving-records',
-    icon: LockIcon,
-    title: 'Messages'
-  },
+let items = [
   {
     href: '/member-dashboard',
     icon: Briefcase,
-    title: 'Pages'
+    title: 'To Member Dashboard'
   },
   {
     href: '/',
     icon: Out,
-    title: 'Transactions'
+    title: 'To Watch Page'
   },
   {
-    href: '/admin-dashboard/absentees',
-    icon: UserIcon,
-    title: 'Profile'
-  },
-  {
-    href: '/watch',
-    icon: UserIcon,
-    title: 'Watch Live'
-  },
-  // {
-  //   href: '/admin-dashboard/overview',
-  //   icon: LockIcon,
-  //   title: 'Yearly Overview'
-  // },
-  // {
-  //   href: '/register',
-  //   icon: UserPlusIcon,
-  //   title: 'Register'
-  // },
-  // {
-  //   href: '/404',
-  //   icon: AlertCircleIcon,
-  //   title: 'Error'
-  // }
+    href: '/admin-dashboard/summary',
+    icon: BarChartIcon,
+    title: 'To Admin Dashboard'
+  }
+
 ];
 
-const Sidebar = ({ onMobileClose, openMobile }) => {
+const WatchPageSidebar = ({ onMobileClose, openMobile }) => {
 
-  const { user, setUser, serviceDateObjects, blankUser } = useStateContext()
+  const { user, setUser, isAdmin, blankUser, orgDetails } = useStateContext();
 
   const { church, avatar, name } = user;
 
-  const location = useLocation();
-  // useEffect(() => {
-  //   if (openMobile && onMobileClose) {
-  //     onMobileClose();
-  //   }
-  // }, [openMobile, onMobileClose, location.pathname]);
+  useEffect(()=> {
+    if(!isAdmin){
+      items = items.filter(item => item.href !== '/admin-dashboard/summary')
+    }
+  }, [isAdmin])
+
+  
 
   const content = (
     <Box
@@ -127,6 +80,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
         <Typography
           color="textSecondary"
           variant="body2"
+          align='center'
         >
           {church}
         </Typography>
@@ -160,8 +114,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
 
   return (
     <>
-    {/* For Mobile Devices */}
-      <Hidden lgUp>
+      {/* <Hidden lgUp> */}
         <Drawer
           anchor="left"
           onClose={onMobileClose}
@@ -175,9 +128,8 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
         >
           {content}
         </Drawer>
-      </Hidden>
-      {/* For Large Devices */}
-      <Hidden lgDown>
+      {/* </Hidden> */}
+      {/* <Hidden lgDown>
         <Drawer
           anchor="left"
           open
@@ -185,27 +137,27 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
           PaperProps={{
             sx: {
               width: 256,
-              // top: 64,
-              // height: 'calc(100% - 64px)'
+              top: 64,
+              height: 'calc(100% - 64px)'
             }
           }}
         >
           {content}
         </Drawer>
-      </Hidden>
+      </Hidden> */}
     </>
   );
 };
 
-Sidebar.propTypes = {
+WatchPageSidebar.propTypes = {
   onMobileClose: PropTypes.func,
   openMobile: PropTypes.bool
 };
 
-Sidebar.defaultProps = {
+WatchPageSidebar.defaultProps = {
   onMobileClose: () => {
   },
   openMobile: false
 };
 
-export default Sidebar;
+export default WatchPageSidebar;
