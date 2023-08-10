@@ -12,6 +12,9 @@ import {
   User as UserIcon,
   Users as UsersIcon,
   LogOut as Out,
+  CreditCard, Monitor,
+  Clipboard, Bell,
+  Mail as MailIcon,
   Briefcase, RefreshCw
 } from 'react-feather';
 import NavItem from '../NavItem';
@@ -22,34 +25,34 @@ import { ArrowBack } from '@mui/icons-material';
 
 const items = [
   {
-    href: '/admin-dashboard/summary',
+    href: '/',
     icon: BarChartIcon,
     title: 'Home'
   },
   {
-    href: '/admin-dashboard/attendees',
-    icon: UsersIcon,
-    title: 'Explore'
+    href: '/transactions',
+    icon: CreditCard,
+    title: 'Transactions'
   },
   {
-    href: '/admin-dashboard/first-timers',
-    icon: UserIcon,
-    title: 'Notifications'
-  },
-  {
-    href: '/admin-dashboard/giving-records',
-    icon: LockIcon,
+    href: '/messages',
+    icon: MailIcon,
     title: 'Messages'
   },
   {
-    href: '/member-dashboard',
-    icon: Briefcase,
-    title: 'Pages'
+    href: '/admin-dashboard/first-timers',
+    icon: Bell,
+    title: 'Notifications'
   },
   {
-    href: '/',
-    icon: Out,
-    title: 'Transactions'
+    href: '/watch',
+    icon: Monitor,
+    title: 'Watch Live'
+  },
+  {
+    href: '/notes',
+    icon: Clipboard,
+    title: 'Notes'
   },
   {
     href: '/admin-dashboard/absentees',
@@ -57,10 +60,12 @@ const items = [
     title: 'Profile'
   },
   {
-    href: '/watch',
-    icon: UserIcon,
-    title: 'Watch Live'
+    href: '/church',
+    icon: Out,
+    title: 'Back to Church Site'
   },
+    
+ 
   // {
   //   href: '/admin-dashboard/overview',
   //   icon: LockIcon,
