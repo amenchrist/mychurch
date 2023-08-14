@@ -1,18 +1,14 @@
 import React from 'react';
 import Post from '../components/timeline/Post';
 import Sidebar from '../components/timeline/Sidebar';
+import { Outlet } from 'react-router-dom';
 
 function Home() {
   return (
-    <div>Home
+    <div>
         <div style={{height: '100vh', display: 'flex', justifyContent: 'center'}}>
             <Sidebar />
-            <div style={{border: '2px solid', height: '100%', width: '500px', overflowY: 'auto'}}>
-                <Post />
-                <Post />
-                <Post />
-                <Post />
-            </div>
+            <Outlet />
         </div>
     </div>
   )

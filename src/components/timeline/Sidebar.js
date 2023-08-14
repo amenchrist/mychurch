@@ -12,42 +12,43 @@ import {
   User as UserIcon,
   Users as UsersIcon,
   LogOut as Out,
-  CreditCard, Monitor,
+  CreditCard, Monitor, Calendar, Rss, Square,
   Clipboard, Bell,
   Mail as MailIcon,
-  Briefcase, RefreshCw
+  Briefcase, RefreshCw, Home
 } from 'react-feather';
 import NavItem from '../NavItem';
 // import { useAdminStateContext } from '../../contexts/AdminContextProvider';
 import { useStateContext } from '../../contexts/ContextProvider';
 import { ArrowBack } from '@mui/icons-material';
+import { useMyStore } from '../../store';
 
 
 const items = [
   {
     href: '/',
-    icon: BarChartIcon,
+    icon: Home,
     title: 'Home'
   },
   {
-    href: '/transactions',
+    href: 'giving-records',
     icon: CreditCard,
-    title: 'Transactions'
+    title: 'Giving Records'
   },
   {
-    href: '/messages',
+    href: '/conversations',
     icon: MailIcon,
-    title: 'Messages'
+    title: 'Conversations'
   },
   {
-    href: '/admin-dashboard/first-timers',
+    href: '/notifications',
     icon: Bell,
     title: 'Notifications'
   },
   {
-    href: '/watch',
-    icon: Monitor,
-    title: 'Watch Live'
+    href: '/testimonies',
+    icon: Bell,
+    title: 'Testimonies'
   },
   {
     href: '/notes',
@@ -55,14 +56,44 @@ const items = [
     title: 'Notes'
   },
   {
-    href: '/admin-dashboard/absentees',
+    href: '/events',
+    icon: Calendar,
+    title: 'Upcoming Events'
+  },
+  {
+    href: '/news-feed',
+    icon: Rss,
+    title: 'News Feed'
+  },
+  {
+    href: '/profile',
     icon: UserIcon,
     title: 'Profile'
+  },
+  {
+    href: '/watch',
+    icon: Monitor,
+    title: 'Watch Live'
   },
   {
     href: '/church',
     icon: Out,
     title: 'Back to Church Site'
+  },
+  {
+    href: '/admin',
+    icon: Square,
+    title: 'For Admins'
+  },
+  {
+    href: '/signup',
+    icon: Square,
+    title: 'Sign Up'
+  },
+  {
+    href: '/signin',
+    icon: Square,
+    title: 'Sign In'
   },
     
  
@@ -84,6 +115,8 @@ const items = [
 ];
 
 const Sidebar = ({ onMobileClose, openMobile }) => {
+
+  const loggedInUser = useMyStore(store => store.user)
 
   const { user, setUser, serviceDateObjects, blankUser } = useStateContext()
 
@@ -128,6 +161,13 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
           align='center'
         >
           {name}
+        </Typography> 
+        <Typography
+          color="textPrimary"
+          variant="h5"
+          align='center'
+        >
+          {loggedInUser?.email}
         </Typography>
         <Typography
           color="textSecondary"

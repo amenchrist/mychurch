@@ -1,33 +1,27 @@
 import { auth } from "../config/firebase";
-import {
-  createUserWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
+import { useMyStore } from "../store";
 
-export const Auth = () => {
+export const SignUpForm = () => {
+
+  const setUser = useMyStore((store) => store.setUser)
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const signIn = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      setUser(userCred.user)
     } catch (err) {
       console.error(err);
     }
   };
 
-  const logout = async () => {
-    try {
-      await signOut(auth);
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   return (
-    <div style={{width: '400px', display: 'flex', flexDirection: 'column'}}>
+    <div style={{width: '400px', display: 'flex', flexDirection: 'column', height: '400px'}}>
       <input
         placeholder="Email..."
         onChange={(e) => setEmail(e.target.value)}
@@ -37,10 +31,8 @@ export const Auth = () => {
         type="password"
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={signIn}> Sign In</button>
+      <button onClick={signIn}> Sign Up</button>
 
-
-      <button onClick={logout}> Logout </button>
     </div>
   );
 };
