@@ -1,124 +1,29 @@
-import { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Divider, Drawer, Grid, Hidden, List, MenuItem, TextField, Typography } from '@mui/material';
-import {
-  // AlertCircle as AlertCircleIcon,
-  // UserPlus as UserPlusIcon,
-  Lock as LockIcon,
-  BarChart as BarChartIcon,
-  Settings as SettingsIcon,
-  ShoppingBag as ShoppingBagIcon,
-  User as UserIcon,
-  Users as UsersIcon,
-  LogOut as Out,
-  CreditCard, Monitor, Calendar, Rss, Square,
-  Clipboard, Bell,
-  Mail as MailIcon,
-  Briefcase, RefreshCw, Home
-} from 'react-feather';
+import { LogOut, RefreshCw } from 'react-feather';
 import NavItem from '../NavItem';
-// import { useAdminStateContext } from '../../contexts/AdminContextProvider';
 import { useStateContext } from '../../contexts/ContextProvider';
-import { ArrowBack } from '@mui/icons-material';
 import { useMyStore } from '../../store';
-
-
-const items = [
-  {
-    href: '/',
-    icon: Home,
-    title: 'Home'
-  },
-  {
-    href: 'giving-records',
-    icon: CreditCard,
-    title: 'Giving Records'
-  },
-  {
-    href: '/conversations',
-    icon: MailIcon,
-    title: 'Conversations'
-  },
-  {
-    href: '/notifications',
-    icon: Bell,
-    title: 'Notifications'
-  },
-  {
-    href: '/testimonies',
-    icon: Bell,
-    title: 'Testimonies'
-  },
-  {
-    href: '/notes',
-    icon: Clipboard,
-    title: 'Notes'
-  },
-  {
-    href: '/events',
-    icon: Calendar,
-    title: 'Upcoming Events'
-  },
-  {
-    href: '/news-feed',
-    icon: Rss,
-    title: 'News Feed'
-  },
-  {
-    href: '/profile',
-    icon: UserIcon,
-    title: 'Profile'
-  },
-  {
-    href: '/watch',
-    icon: Monitor,
-    title: 'Watch Live'
-  },
-  {
-    href: '/church',
-    icon: Out,
-    title: 'Back to Church Site'
-  },
-  {
-    href: '/admin',
-    icon: Square,
-    title: 'For Admins'
-  },
-  {
-    href: '/signup',
-    icon: Square,
-    title: 'Sign Up'
-  },
-  {
-    href: '/signin',
-    icon: Square,
-    title: 'Sign In'
-  },
-    
- 
-  // {
-  //   href: '/admin-dashboard/overview',
-  //   icon: LockIcon,
-  //   title: 'Yearly Overview'
-  // },
-  // {
-  //   href: '/register',
-  //   icon: UserPlusIcon,
-  //   title: 'Register'
-  // },
-  // {
-  //   href: '/404',
-  //   icon: AlertCircleIcon,
-  //   title: 'Error'
-  // }
-];
+import { signOut } from "firebase/auth";
+import { auth } from "../../config/firebase";
+import { items } from '../sideBarItems';
 
 const Sidebar = ({ onMobileClose, openMobile }) => {
 
-  const loggedInUser = useMyStore(store => store.user)
+  const loggedInUser = useMyStore(store => store.user);
+  const { setUser } = useMyStore();
 
-  const { user, setUser, serviceDateObjects, blankUser } = useStateContext()
+  const logOut = async () => {
+    try {
+      await signOut(auth);
+      setUser({})
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const { user, serviceDateObjects, blankUser } = useStateContext()
 
   const { church, avatar, name } = user;
 
@@ -198,6 +103,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
             <></>
           }
         </List>
+        <NavItem onClick={logOut} key={'Sign Out'} title={'Sign Out'} icon={LogOut} />
       </Box>
       <Box sx={{ flexGrow: 1 }} />
     </Box>

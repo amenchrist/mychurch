@@ -23,6 +23,7 @@ import Conversations from './pages/Conversations';
 import { SignUpForm } from './components/SignUpForm';
 import { SignInForm } from './components/SignInForm';
 import { useMyStore } from './store';
+import AdminPage from './pages/AdminPage';
 
 export default function Router() {
 
@@ -44,14 +45,12 @@ export default function Router() {
         { path: 'testimonies', element: <Testimonies/> },
         { path: 'watch', element: <WatchLive /> },
         { path: 'conversations', element: <Conversations /> },
-        { path: 'signup', element: <SignUpForm /> },
         { path: 'signin', element: <SignInForm /> },
       ]
     },
-    {
-      path: '/watch',
-      element: <WatchPage />
-    },
+    { path: 'watch', element: <WatchPage /> },
+    { path: 'signup', element: <SignUpForm /> },
+    { path: 'admin', element: <AdminPage /> },
     
     
   ];

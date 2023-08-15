@@ -13,20 +13,14 @@ export const SignInForm = () => {
   const signIn = async () => {
     try {
       let userCred = await signInWithEmailAndPassword(auth, email, password);
+      console.log(userCred.user)
       setUser(userCred.user)
     } catch (err) {
       console.error(err);
     }
   };
 
-  const logout = async () => {
-    try {
-      await signOut(auth);
-      setUser({})
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  
 
   return (
     <div style={{width: '400px', display: 'flex', flexDirection: 'column'}}>
@@ -40,9 +34,8 @@ export const SignInForm = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={signIn}> Sign In</button>
-
-
-      <button onClick={logout}> Logout </button>
+      <br />
+      <a href='/signup'>I'm new here</a>
     </div>
   );
 };
