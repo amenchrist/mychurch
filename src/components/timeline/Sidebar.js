@@ -7,7 +7,8 @@ import { useStateContext } from '../../contexts/ContextProvider';
 import { useMyStore } from '../../store';
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase";
-import { items } from '../sideBarItems';
+import { memberSidebarItems, churchSidebarItems } from '../sideBarItems';
+import { useState } from 'react';
 
 const Sidebar = ({ onMobileClose, openMobile }) => {
 
@@ -22,6 +23,10 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
       console.error(err);
     }
   };
+
+  const [ items, setItems ] = useState([])
+
+
 
   const { user, serviceDateObjects, blankUser } = useStateContext()
 

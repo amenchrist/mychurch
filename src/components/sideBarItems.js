@@ -1,18 +1,9 @@
 import {
-    Lock as LockIcon,
-    BarChart as BarChartIcon,
-    Settings as SettingsIcon,
-    ShoppingBag as ShoppingBagIcon,
-    User as UserIcon,
-    Users as UsersIcon,
-    LogOut as Out,
-    CreditCard, Monitor, Calendar, Rss, Square,
-    Clipboard, Bell,
-    Mail as MailIcon,
-    Briefcase, RefreshCw, Home, LogOut
-  } from 'react-feather';
+    Lock, BarChart, Settings, ShoppingBag, User, Users, LogOut, CreditCard, Monitor, Calendar, Rss, Square,
+    Clipboard, Bell, Mail, Briefcase, RefreshCw, Home, Out 
+} from 'react-feather';
 
-export const items = [
+const items = [
     {
       href: '/',
       icon: Home,
@@ -25,7 +16,7 @@ export const items = [
     },
     {
       href: '/conversations',
-      icon: MailIcon,
+      icon: Mail,
       title: 'Conversations'
     },
     {
@@ -55,7 +46,7 @@ export const items = [
     },
     {
       href: '/profile',
-      icon: UserIcon,
+      icon: User,
       title: 'Profile'
     },
     {
@@ -65,13 +56,17 @@ export const items = [
     },
     {
       href: '/church',
-      icon: Out,
+      icon: LogOut,
       title: 'Back to Church Site'
     },
     {
       href: '/admin',
       icon: Square,
-      title: 'For Admins'
+      title: 'For Admins',
+      forAdmins : true
     }  
   ];
 
+  export const memberSidebarItems = []
+
+  export const churchSidebarItems = []
