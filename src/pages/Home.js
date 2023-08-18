@@ -6,10 +6,7 @@ import { Outlet } from 'react-router-dom';
 function Home() {
   return (
     <div>
-        <div style={{height: '100vh', display: 'flex', justifyContent: 'center'}}>
-            <Sidebar />
-            <Outlet />
-        </div>
+        Home
     </div>
   )
 }

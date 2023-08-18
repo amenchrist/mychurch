@@ -22,37 +22,27 @@ import Notifications from './pages/Notifications';
 import Conversations from './pages/Conversations';
 import { SignUpForm } from './components/SignUpForm';
 import { SignInForm } from './components/SignInForm';
-import { useMyStore } from './store';
 import AdminPage from './pages/AdminPage';
 
 export default function Router() {
 
-  // const { user, awaitingServerResponse } = useStateContext()
-
-  const user = useMyStore(store => store.user)
+  
   const routes = [
-    {
-      element: user.email ? <Home/> : <SignInForm />,
-      children: [
-        { path: '/', element: <Dashboard/> },
-        { path: 'news-feed', element: <NewsFeed/> },
-        { path: 'profile', element: <Profile/> },
-        { path: 'giving-records', element: <GivingRecords/> },
-        { path: 'church', element: <Church /> },
-        { path: 'events', element: <Events /> },
-        { path: 'notes', element: <Notes/> },
-        { path: 'notifications', element: <Notifications/> },
-        { path: 'testimonies', element: <Testimonies/> },
-        { path: 'watch', element: <WatchLive /> },
-        { path: 'conversations', element: <Conversations /> },
-        { path: 'signin', element: <SignInForm /> },
-      ]
-    },
+    { path: '/', element: <Dashboard/> },
+    { path: 'giving-records', element: <GivingRecords/> },
+    { path: 'conversations', element: <Conversations /> },
+    { path: 'notifications', element: <Notifications/> },
+    { path: 'testimonies', element: <Testimonies/> },
+    { path: 'notes', element: <Notes/> },
+    { path: 'events', element: <Events /> },
+    { path: '/news-feed', element: <NewsFeed/> },
+    { path: 'profile', element: <Profile/> },
+    { path: 'church', element: <Church /> },
+    { path: 'watch', element: <WatchLive /> },
+    { path: 'signin', element: <SignInForm /> },
     { path: 'watch', element: <WatchPage /> },
     { path: 'signup', element: <SignUpForm /> },
-    { path: 'admin', element: <AdminPage /> },
-    
-    
+    { path: 'admin', element: <AdminPage /> } 
   ];
 
 

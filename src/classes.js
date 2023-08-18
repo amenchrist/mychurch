@@ -19,7 +19,8 @@ export class User {
             savedPosts: [],
             events: [],
             notes: [],
-            reviews: []
+            reviews: [],
+            role: 'SUBSCRIBER'
         }
         constructorHelper.call(this, data, defaultUser) 
     }

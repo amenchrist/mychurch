@@ -1,18 +1,17 @@
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Divider, Drawer, Grid, Hidden, List, MenuItem, TextField, Typography } from '@mui/material';
-import { LogOut, RefreshCw } from 'react-feather';
+import { LogOut, RefreshCw, Square } from 'react-feather';
 import NavItem from '../NavItem';
-import { useStateContext } from '../../contexts/ContextProvider';
 import { useMyStore } from '../../store';
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase";
-import { memberSidebarItems, churchSidebarItems } from '../sideBarItems';
+import { items } from '../sideBarItems';
 import { useState } from 'react';
 
 const Sidebar = ({ onMobileClose, openMobile }) => {
 
-  const loggedInUser = useMyStore(store => store.user);
+  const user = useMyStore(store => store.user);
   const { setUser } = useMyStore();
 
   const logOut = async () => {
@@ -24,20 +23,13 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
     }
   };
 
-  const [ items, setItems ] = useState([])
+  const toggleAdminMode = () => {
+    setAdminMode(!adminMode);
+  }
 
-
-
-  const { user, serviceDateObjects, blankUser } = useStateContext()
+  const [ adminMode, setAdminMode ] = useState(false);
 
   const { church, avatar, name } = user;
-
-  const location = useLocation();
-  // useEffect(() => {
-  //   if (openMobile && onMobileClose) {
-  //     onMobileClose();
-  //   }
-  // }, [openMobile, onMobileClose, location.pathname]);
 
   const content = (
     <Box
@@ -77,7 +69,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
           variant="h5"
           align='center'
         >
-          {loggedInUser?.email}
+          {user?.email}
         </Typography>
         <Typography
           color="textSecondary"
@@ -103,11 +95,18 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
               key={'reset'}
               title={'Reset'}
               icon={RefreshCw}
-              onClick={() => setUser(blankUser)}
+              onClick={() => setUser({})}
             />  :
             <></>
           }
         </List>
+
+        {!(user?.role === 'ADMINISTRATOR')?
+        !adminMode ? <NavItem onClick={toggleAdminMode} key={'Open Admin Mode'} title={'Open Admin Mode'} icon={Square}/> 
+        : <NavItem onClick={toggleAdminMode} key={'Close Admin Mode'} title={'Close Admin Mode'} icon={Square}/>
+        : <></>
+        }
+
         <NavItem onClick={logOut} key={'Sign Out'} title={'Sign Out'} icon={LogOut} />
       </Box>
       <Box sx={{ flexGrow: 1 }} />

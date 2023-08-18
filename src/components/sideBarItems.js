@@ -3,9 +3,9 @@ import {
     Clipboard, Bell, Mail, Briefcase, RefreshCw, Home, Out 
 } from 'react-feather';
 
-const items = [
+export const items = [
     {
-      href: '/',
+      href: '',
       icon: Home,
       title: 'Home'
     },
@@ -58,15 +58,5 @@ const items = [
       href: '/church',
       icon: LogOut,
       title: 'Back to Church Site'
-    },
-    {
-      href: '/admin',
-      icon: Square,
-      title: 'For Admins',
-      forAdmins : true
-    }  
+    }
   ];
-
-  export const memberSidebarItems = []
-
-  export const churchSidebarItems = []
