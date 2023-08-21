@@ -23,7 +23,7 @@ export const SignInForm = () => {
   
 
   return (
-    <div style={{width: '400px', display: 'flex', flexDirection: 'column'}}>
+    <div style={{width: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
       <input
         placeholder="Email..."
         onChange={(e) => setEmail(e.target.value)}

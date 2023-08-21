@@ -12,13 +12,13 @@ function Dashboard() {
   }
 
   return (
-    <div >Dashboard of {user?.email}
+    <div >
       <div style={{display: 'flex'}}>
         <div style={style}><p>Tithes</p></div>
         <div style={style}><p>Offerings</p></div>
         <div style={style}><p>Partnership</p></div>
       </div>
-      <div style={{width: '600px', height: '300px', border: '2px solid'}}>
+      <div style={{ ...style, width: '600px' }}>
         <p>Giving Trend Graph</p>
       </div>
       <div style={style}><p>Recent Transactions</p></div>

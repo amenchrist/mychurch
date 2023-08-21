@@ -1,13 +1,13 @@
 import {
     Lock, BarChart, Settings, ShoppingBag, User, Users, LogOut, CreditCard, Monitor, Calendar, Rss, Square,
-    Clipboard, Bell, Mail, Briefcase, RefreshCw, Home, Out 
+    Clipboard, Bell, Mail, Briefcase, RefreshCw, Home, Out, Archive 
 } from 'react-feather';
 
 export const items = [
     {
       href: '',
       icon: Home,
-      title: 'Home'
+      title: 'Dashboard'
     },
     {
       href: 'giving-records',
@@ -52,11 +52,21 @@ export const items = [
     {
       href: '/watch',
       icon: Monitor,
-      title: 'Watch Live'
+      title: 'Watch'
     },
     {
       href: '/church',
       icon: LogOut,
       title: 'Back to Church Site'
+    },
+    {
+      href: '/reports',
+      icon: Archive,
+      title: 'Reports'
+    },
+    {
+      href: '/members',
+      icon: Users,
+      title: 'Member Database'
     }
   ];

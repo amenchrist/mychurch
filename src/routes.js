@@ -5,7 +5,6 @@ import {  useRoutes, Navigate } from 'react-router-dom';
 // import { ServiceSummary, Attendees, FirstTimers, Absentees, GivingRecord, Members, YearOverview } from './pages/@adminDashboard';
 // import WatchPage from './pages/@watchPage/WatchPage';
 import SignInSide from './pages/SignIn';
-// import { useStateContext } from './contexts/ContextProvider';
 import Home from './pages/Home';
 import { auth } from './config/firebase';
 import WatchPage from './pages/@watchPage/WatchPage';
@@ -21,28 +20,35 @@ import WatchLive from './pages/WatchLive';
 import Notifications from './pages/Notifications';
 import Conversations from './pages/Conversations';
 import { SignUpForm } from './components/SignUpForm';
-import { SignInForm } from './components/SignInForm';
 import AdminPage from './pages/AdminPage';
+import { useMyStore } from './store';
+import { SignInForm } from './components/SignInForm';
+import Reports from './pages/Reports';
+import MemberDatabase from './pages/MemberDatabase';
 
 export default function Router() {
 
+  const user = useMyStore(store => store.user)
+
   
   const routes = [
-    { path: '/', element: <Dashboard/> },
-    { path: 'giving-records', element: <GivingRecords/> },
-    { path: 'conversations', element: <Conversations /> },
-    { path: 'notifications', element: <Notifications/> },
-    { path: 'testimonies', element: <Testimonies/> },
-    { path: 'notes', element: <Notes/> },
-    { path: 'events', element: <Events /> },
-    { path: '/news-feed', element: <NewsFeed/> },
-    { path: 'profile', element: <Profile/> },
+    { path: '/', element: user.email? <Dashboard/> : <SignInForm /> },
+    { path: 'giving-records', element: user.email? <GivingRecords/>: <SignInForm /> },
+    { path: 'conversations', element: user.email?<Conversations />: <SignInForm /> },
+    { path: 'notifications', element: user.email?<Notifications/>: <SignInForm /> },
+    { path: 'testimonies', element: user.email?<Testimonies/>: <SignInForm /> },
+    { path: 'notes', element: user.email?<Notes/>: <SignInForm /> },
+    { path: 'events', element: user.email?<Events />: <SignInForm /> },
+    { path: '/news-feed', element: user.email?<NewsFeed/>: <SignInForm /> },
+    { path: 'profile', element: user.email?<Profile/>: <SignInForm /> },
     { path: 'church', element: <Church /> },
+    { path: 'watch', element: <WatchPage /> },
     { path: 'watch', element: <WatchLive /> },
     { path: 'signin', element: <SignInForm /> },
-    { path: 'watch', element: <WatchPage /> },
     { path: 'signup', element: <SignUpForm /> },
-    { path: 'admin', element: <AdminPage /> } 
+    { path: 'reports', element: <Reports /> },
+    { path: 'members', element: <MemberDatabase /> },
+    { path: 'admin', element: user.email?<AdminPage />: <SignInForm /> } 
   ];
 
 

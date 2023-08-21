@@ -22,7 +22,7 @@ function App() {
   return (
     <div style={{height: '100vh', overflowY: 'hidden' }}>
       <ThemeProvider>
-      { user.email? <Home /> : <SignInForm />}
+      <Home /> 
       </ThemeProvider>
     </div>
   );

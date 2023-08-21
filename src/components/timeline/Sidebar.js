@@ -62,7 +62,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
           variant="h5"
           align='center'
         >
-          {name}
+          {user? name :'Guest'}
         </Typography> 
         <Typography
           color="textPrimary"
@@ -75,7 +75,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
           color="textSecondary"
           variant="body2"
         >
-          {church}
+          {church || 'Christ Embassy'}
         </Typography>
       </Box>
       <Divider />
