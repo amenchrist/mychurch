@@ -3,70 +3,89 @@ import {
     Clipboard, Bell, Mail, Briefcase, RefreshCw, Home, Out, Archive 
 } from 'react-feather';
 
-export const items = [
+export const allItems = [
     {
       href: '',
       icon: Home,
-      title: 'Dashboard'
+      title: 'Dashboard',
+      mode: 'BOTH'
     },
     {
       href: 'giving-records',
       icon: CreditCard,
-      title: 'Giving Records'
+      title: 'Giving Records',
+      mode: 'BOTH'
     },
     {
       href: '/conversations',
       icon: Mail,
-      title: 'Conversations'
+      title: 'Conversations',
+      mode: 'BOTH'
     },
     {
       href: '/notifications',
       icon: Bell,
-      title: 'Notifications'
+      title: 'Notifications',
+      mode: 'BOTH'
     },
     {
       href: '/testimonies',
       icon: Bell,
-      title: 'Testimonies'
+      title: 'Testimonies',
+      mode: 'USER'
     },
     {
       href: '/notes',
       icon: Clipboard,
-      title: 'Notes'
+      title: 'Notes',
+      mode: 'USER'
     },
     {
       href: '/events',
       icon: Calendar,
-      title: 'Upcoming Events'
+      title: 'Upcoming Events',
+      mode: 'BOTH'
     },
     {
       href: '/news-feed',
       icon: Rss,
-      title: 'News Feed'
+      title: 'News Feed',
+      mode: 'USER'
     },
     {
       href: '/profile',
       icon: User,
-      title: 'Profile'
+      title: 'Profile',
+      mode: 'BOTH'
     },
     {
       href: '/watch',
       icon: Monitor,
-      title: 'Watch'
+      title: 'Watch',
+      mode: 'USER'
     },
     {
       href: '/church',
       icon: LogOut,
-      title: 'Back to Church Site'
+      title: 'Back to Church Site',
+      mode: 'USER'
     },
     {
       href: '/reports',
       icon: Archive,
-      title: 'Reports'
+      title: 'Reports',
+      mode: 'ADMIN'
     },
     {
       href: '/members',
       icon: Users,
-      title: 'Member Database'
+      title: 'Member Database',
+      mode: 'ADMIN'
+    },
+    {
+      href: '/admins',
+      icon: Users,
+      title: 'Manage Admins',
+      mode: 'ADMIN'
     }
   ];

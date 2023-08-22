@@ -6,30 +6,68 @@ import NavItem from '../NavItem';
 import { useMyStore } from '../../store';
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase";
-import { items } from '../sideBarItems';
-import { useState } from 'react';
+import { allItems } from '../sideBarItems';
+import { useEffect, useState } from 'react';
 
 const Sidebar = ({ onMobileClose, openMobile }) => {
 
   const user = useMyStore(store => store.user);
-  const { setUser } = useMyStore();
+  const { setUser, adminMode, toggleAdminMode } = useMyStore();
+  const [items, setItems] = useState(allItems.filter((item) => item.mode !== 'ADMIN'))
+
+  useEffect(() => {
+    if(adminMode) setItems(allItems.filter((item) => item.mode !== 'USER'))
+  }, [adminMode])
 
   const logOut = async () => {
     try {
       await signOut(auth);
+      toggleAdminMode(false)
       setUser({})
     } catch (err) {
       console.error(err);
     }
   };
 
-  const toggleAdminMode = () => {
-    setAdminMode(!adminMode);
+  function toggleMode(){
+    toggleAdminMode(!adminMode)
   }
 
-  const [ adminMode, setAdminMode ] = useState(false);
+  const { church, avatar, title, firstName, lastName } = user;
 
-  const { church, avatar, name } = user;
+  function Header() {
+    return (
+      <Box sx={{alignItems: 'center', display: 'flex', flexDirection: 'column', p: 2 }} >
+        <Avatar component={RouterLink} src={avatar} sx={{cursor: 'pointer', width: 64, height: 64 }} to="#" />
+        <Typography color="textPrimary" variant="h5" align='center' >
+          {user?.email? `${title} ${firstName} ${lastName}` :'Guest'}
+        </Typography> 
+        {/* <Typography color="textPrimary" variant="h5" align='center' >
+          {user?.email}
+        </Typography> */}
+        <Typography color="textSecondary" variant="body2" >
+          {church || 'Christ Embassy'}
+        </Typography>
+      </Box>
+    )
+  }
+
+  function AdminHeader() {
+    return (
+      <Box sx={{alignItems: 'center', display: 'flex', flexDirection: 'column', p: 2 }} >
+        <Avatar component={RouterLink} src={avatar} sx={{cursor: 'pointer', width: 64, height: 64 }} to="#" />
+        <Typography color="textPrimary" variant="h5" align='center' >
+          {'Christ Embassy Barking'}
+        </Typography> 
+        <Typography color="textSecondary" variant="body2" >
+          {'Change Page'}
+        </Typography>
+      </Box>
+    )
+  }
+  
+
+  
 
   const content = (
     <Box
@@ -39,45 +77,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
         height: '100%'
       }}
     >
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'column',
-          p: 2
-        }}
-      >
-        <Avatar
-          component={RouterLink}
-          src={avatar}
-          sx={{
-            cursor: 'pointer',
-            width: 64,
-            height: 64
-          }}
-          to="#"
-        />
-        <Typography
-          color="textPrimary"
-          variant="h5"
-          align='center'
-        >
-          {user? name :'Guest'}
-        </Typography> 
-        <Typography
-          color="textPrimary"
-          variant="h5"
-          align='center'
-        >
-          {user?.email}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
-          {church || 'Christ Embassy'}
-        </Typography>
-      </Box>
+      {adminMode? <AdminHeader /> : <Header /> }
       <Divider />
       <Box sx={{ p: 2 }}>
         <List>
@@ -89,21 +89,12 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
               icon={item.icon}
             />
           ))}
-          {user.emailChecked? 
-            <NavItem
-              href={'#'}
-              key={'reset'}
-              title={'Reset'}
-              icon={RefreshCw}
-              onClick={() => setUser({})}
-            />  :
-            <></>
-          }
+          {user.emailChecked? <NavItem href={'#'} key={'reset'} title={'Reset'} icon={RefreshCw} onClick={() => setUser({})}/>  : <></>}
         </List>
 
-        {!(user?.role === 'ADMINISTRATOR')?
-        !adminMode ? <NavItem onClick={toggleAdminMode} key={'Open Admin Mode'} title={'Open Admin Mode'} icon={Square}/> 
-        : <NavItem onClick={toggleAdminMode} key={'Close Admin Mode'} title={'Close Admin Mode'} icon={Square}/>
+        {user?.role === 'ADMINISTRATOR'?
+        !adminMode ? <NavItem onClick={toggleMode} key={'Open Admin Mode'} title={'Open Admin Mode'} icon={Square}/> 
+        : <NavItem onClick={toggleMode} key={'Close Admin Mode'} title={'Close Admin Mode'} icon={Square}/>
         : <></>
         }
 

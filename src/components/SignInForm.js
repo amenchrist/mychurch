@@ -1,7 +1,8 @@
-import { auth } from "../config/firebase";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { auth, db } from "../config/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { useMyStore } from "../store";
+import { doc, getDoc } from "firebase/firestore";
 
 export const SignInForm = () => {
 
@@ -12,13 +13,30 @@ export const SignInForm = () => {
 
   const signIn = async () => {
     try {
-      let userCred = await signInWithEmailAndPassword(auth, email, password);
-      console.log(userCred.user)
-      setUser(userCred.user)
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      getUser(userCred.user)
+      
     } catch (err) {
       console.error(err);
     }
   };
+
+  // const userProfilesRef = collection(db, 'userProfiles');
+
+  const getUser = async (userCred) => {
+
+    try {
+      const docRef = doc(db, 'userProfiles', userCred.email)
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()){
+        setUser({...userCred, ...docSnap.data()});
+      } else {
+        console.log('User Profile not found');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   
 
