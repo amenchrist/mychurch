@@ -13,14 +13,14 @@ function constructorHelper(dataObj, defObj){
 export class User {
     constructor(data){
         const defaultUser = {
-            bioData: null,
+            bioData: new BioData(),
+            contactInfo: new ContactInfo(),
             pages: [],
             likedPosts: [],
             savedPosts: [],
             events: [],
             notes: [],
             reviews: [],
-            role: 'SUBSCRIBER'
         }
         constructorHelper.call(this, data, defaultUser) 
     }
@@ -34,7 +34,7 @@ export class User {
 
 export class BioData {
     constructor(data){
-        const fields = [ "firstName", "middleName", "lastName", "gender", "dateOfBirth", "maritalStatus", "title", "nationality", "contactInfo"]
+        const fields = [ "firstName", "middleName", "lastName", "gender", "dateOfBirth", "maritalStatus", "title", "nationality" ]
         for (const value of fields){
             this[value] = null
         }
@@ -68,7 +68,7 @@ export class ContactInfo {
         const defaultObj = {
             email: null,
             phoneNumber: null,
-            address: null
+            address: new Address()
         };
         constructorHelper.call(this, data, defaultObj)       
     }

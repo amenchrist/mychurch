@@ -4,11 +4,15 @@ import { useState } from "react";
 import { useMyStore } from "../store";
 import { collection, setDoc, doc } from "firebase/firestore";
 import {  useNavigate } from "react-router-dom";
+import { User } from "../classes";
 
 export const SignUpForm = () => {
 
   const { setUser } = useMyStore();
   const userProfilesRef = collection(db, 'userProfiles');
+
+  const nUser = new User();
+  console.log(nUser);
 
   //New User Authentication states
   const [email, setEmail] = useState("");
