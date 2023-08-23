@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import './App.css';
-import { SignInForm } from './components/SignInForm';
 import Sidebar from './components/timeline/Sidebar';
 import Router from './routes';
 import { useMyStore } from './store';
