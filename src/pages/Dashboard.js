@@ -11,6 +11,17 @@ function Dashboard() {
     border: '2px solid'
   }
 
+  function AdminDashboard() {
+    return(
+      <div>
+        Attendance, FirstTimers, Giving and Testimonies
+        Average 
+        Giving Trend Graph For the current time period (By Category)
+        Weekly Attendance Trend Graph For the current time period (Sunday and Wednesday)
+      </div>
+    )
+  }
+
   return (
     <div >
       <div style={{display: 'flex'}}>
