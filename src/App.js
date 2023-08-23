@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import './App.css';
 import { SignInForm } from './components/SignInForm';
 import Sidebar from './components/timeline/Sidebar';
@@ -9,6 +10,21 @@ import ThemeProvider from './theme';
 function App() {
 
   const user = useMyStore(store => store.user)
+
+  const { setUser } = useMyStore()
+  
+  useEffect(() => {
+    const mockUser = {
+      email: 'amen@amen.com',
+      title: 'Bro',
+      firstName: 'Amen',
+      lastName: 'Christ',
+      role: 'ADMINISTRATOR'
+    }
+    setUser(mockUser)
+  }, [setUser])
+
+  console.log(user)
 
   const Home = () => {
     return (

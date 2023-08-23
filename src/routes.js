@@ -29,8 +29,7 @@ import Admins from './pages/Admins';
 
 export default function Router() {
 
-  const user = useMyStore(store => store.user)
-
+  const { user } = useMyStore()
   
   const routes = [
     { path: '/', element: user.email? <Dashboard/> : <SignInForm /> },
