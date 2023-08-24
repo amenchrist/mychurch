@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import './App.css';
-import Sidebar from './components/timeline/Sidebar';
+import Sidebar from './components/Sidebar';
 import Router from './routes';
 import { useMyStore } from './store';
 import ThemeProvider from './theme';
@@ -10,18 +10,18 @@ function App() {
 
   const user = useMyStore(store => store.user)
 
-  const { setUser } = useMyStore()
+  // const { setUser } = useMyStore()
   
-  useEffect(() => {
-    const mockUser = {
-      email: 'amen@amen.com',
-      title: 'Bro',
-      firstName: 'Amen',
-      lastName: 'Christ',
-      role: 'ADMINISTRATOR'
-    }
-    setUser(mockUser)
-  }, [setUser])
+  // useEffect(() => {
+  //   const mockUser = {
+  //     email: 'amen@amen.com',
+  //     title: 'Bro',
+  //     firstName: 'Amen',
+  //     lastName: 'Christ',
+  //     role: 'ADMINISTRATOR'
+  //   }
+  //   setUser(mockUser)
+  // }, [setUser])
 
   console.log(user)
 

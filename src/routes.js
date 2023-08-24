@@ -5,7 +5,7 @@ import {  useRoutes, Navigate } from 'react-router-dom';
 // import { ServiceSummary, Attendees, FirstTimers, Absentees, GivingRecord, Members, YearOverview } from './pages/@adminDashboard';
 // import WatchPage from './pages/@watchPage/WatchPage';
 import SignInSide from './pages/SignIn';
-import Home from './pages/Home';
+// import Home from './pages/Home';
 import { auth } from './config/firebase';
 import WatchPage from './pages/@watchPage/WatchPage';
 import Dashboard from './pages/Dashboard';

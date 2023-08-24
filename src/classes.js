@@ -21,6 +21,7 @@ export class User {
             events: [],
             notes: [],
             reviews: [],
+            type: 'USER'
         }
         constructorHelper.call(this, data, defaultUser) 
     }
@@ -49,7 +50,7 @@ export class BioData {
 //ADDRESS
 export class Address {
     constructor(data){
-        const fields = [ "houseNameOrNumber", "street", "cityOrTown", "state", "county", "country", "postCodeOrZipCode" ]
+        const fields = [ "houseNameOrNumber", "street", "cityOrTown", "state", "county", "country", "postOrZipCode" ]
         for (const value of fields){
             this[value] = null
         }

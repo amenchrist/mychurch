@@ -67,7 +67,7 @@ export const allItems = [
     {
       href: '/church',
       icon: LogOut,
-      title: 'Back to Church Site',
+      title: 'Home',
       mode: 'USER'
     },
     {

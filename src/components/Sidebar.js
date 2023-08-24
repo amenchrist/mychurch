@@ -2,17 +2,17 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Divider, Drawer, Grid, Hidden, List, MenuItem, TextField, Typography } from '@mui/material';
 import { LogOut, RefreshCw, Square } from 'react-feather';
-import NavItem from '../NavItem';
-import { useMyStore } from '../../store';
+import NavItem from './NavItem';
+import { useMyStore } from '../store';
 import { signOut } from "firebase/auth";
-import { auth } from "../../config/firebase";
-import { allItems } from '../sideBarItems';
+import { auth } from "../config/firebase";
+import { allItems } from './sideBarItems';
 import { useEffect, useState } from 'react';
 
 const Sidebar = ({ onMobileClose, openMobile }) => {
 
-  const user = useMyStore(store => store.user);
-  const { setUser, adminMode, toggleAdminMode } = useMyStore();
+  // const user = useMyStore(store => store.user);
+  const { setUser, adminMode, toggleAdminMode, user } = useMyStore();
   const [items, setItems] = useState(allItems.filter((item) => item.mode !== 'ADMIN'))
 
   useEffect(() => {
@@ -33,20 +33,20 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
     toggleAdminMode(!adminMode)
   }
 
-  const { church, avatar, title, firstName, lastName } = user;
+  // const { title, firstName, lastName } = user?.bioData;
 
   function Header() {
     return (
       <Box sx={{alignItems: 'center', display: 'flex', flexDirection: 'column', p: 2 }} >
-        <Avatar component={RouterLink} src={avatar} sx={{cursor: 'pointer', width: 64, height: 64 }} to="#" />
+        <Avatar component={RouterLink} src={''} sx={{cursor: 'pointer', width: 64, height: 64 }} to="#" />
         <Typography color="textPrimary" variant="h5" align='center' >
-          {user?.email? `${title} ${firstName} ${lastName}` :'Guest'}
+          {user?.email? `${user.bioData.title} ${user.bioData.firstName} ${user.bioData.lastName}` :'Guest'}
         </Typography> 
         {/* <Typography color="textPrimary" variant="h5" align='center' >
           {user?.email}
         </Typography> */}
         <Typography color="textSecondary" variant="body2" >
-          {church || 'Christ Embassy'}
+          {'Christ Embassy'}
         </Typography>
       </Box>
     )
@@ -55,7 +55,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
   function AdminHeader() {
     return (
       <Box sx={{alignItems: 'center', display: 'flex', flexDirection: 'column', p: 2 }} >
-        <Avatar component={RouterLink} src={avatar} sx={{cursor: 'pointer', width: 64, height: 64 }} to="#" />
+        <Avatar component={RouterLink} src={''} sx={{cursor: 'pointer', width: 64, height: 64 }} to="#" />
         <Typography color="textPrimary" variant="h5" align='center' >
           {'Christ Embassy Barking'}
         </Typography> 
@@ -98,7 +98,11 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
         : <></>
         }
 
+        {user?.email?
         <NavItem onClick={logOut} key={'Sign Out'} title={'Sign Out'} icon={LogOut} />
+        : <></>
+        }
+
       </Box>
       <Box sx={{ flexGrow: 1 }} />
     </Box>
