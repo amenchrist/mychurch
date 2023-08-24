@@ -7,7 +7,9 @@ function store(set) {
         user: {},
         setUser: (newUser) => set(() => ({user: newUser})),
         adminMode: false,
-        toggleAdminMode: (value) => set(() => ({adminMode: value}))
+        toggleAdminMode: (value) => set(() => ({adminMode: value})),
+        currentPage: {},
+        setPages: (newPage) => set(() => ({currentPage: newPage})),
     }
 }
 

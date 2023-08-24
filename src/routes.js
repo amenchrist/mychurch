@@ -26,6 +26,7 @@ import { SignInForm } from './components/SignInForm';
 import Reports from './pages/Reports';
 import MemberDatabase from './pages/MemberDatabase';
 import Admins from './pages/Admins';
+import NewPage from './components/NewPage';
 
 export default function Router() {
 
@@ -49,6 +50,7 @@ export default function Router() {
     { path: 'reports', element: <Reports /> },
     { path: 'members', element: <MemberDatabase /> },
     { path: 'admins', element: <Admins /> },
+    { path: 'admins', element: user.type === 'SUPERUSER'? <NewPage/>: <SignInForm /> },
     { path: 'admin', element: user.email?<AdminPage />: <SignInForm /> } 
   ];
 

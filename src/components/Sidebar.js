@@ -1,7 +1,7 @@
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Divider, Drawer, Grid, Hidden, List, MenuItem, TextField, Typography } from '@mui/material';
-import { LogOut, RefreshCw, Square } from 'react-feather';
+import { LogOut, Plus, PlusCircle, RefreshCw, Square } from 'react-feather';
 import NavItem from './NavItem';
 import { useMyStore } from '../store';
 import { signOut } from "firebase/auth";
@@ -100,6 +100,11 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
 
         {user?.email?
         <NavItem onClick={logOut} key={'Sign Out'} title={'Sign Out'} icon={LogOut} />
+        : <></>
+        }
+
+        {user?.type === 'SUPERUSER'?
+        <NavItem href={'create-page'} key={'createPage'} title={'Create a Page'} icon={PlusCircle} />
         : <></>
         }
 
