@@ -1,7 +1,7 @@
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Divider, Drawer, Grid, Hidden, List, MenuItem, TextField, Typography } from '@mui/material';
-import { LogOut, Plus, PlusCircle, RefreshCw, Square } from 'react-feather';
+import { LogOut, MinusSquare, Plus, PlusCircle, RefreshCw, Square } from 'react-feather';
 import NavItem from './NavItem';
 import { useMyStore } from '../store';
 import { signOut } from "firebase/auth";
@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 const Sidebar = ({ onMobileClose, openMobile }) => {
 
   // const user = useMyStore(store => store.user);
-  const { setUser, adminMode, toggleAdminMode, user } = useMyStore();
+  const { setUser, adminMode, toggleAdminMode, user, currentPage } = useMyStore();
   const [items, setItems] = useState(allItems.filter((item) => item.mode !== 'ADMIN'))
 
   useEffect(() => {
@@ -92,19 +92,19 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
           {user.emailChecked? <NavItem href={'#'} key={'reset'} title={'Reset'} icon={RefreshCw} onClick={() => setUser({})}/>  : <></>}
         </List>
 
-        {user?.role === 'ADMINISTRATOR'?
+        {currentPage.followers?.filter(f => f.id === user.id)[0]?.role === 'ADMINISTRATOR'?
         !adminMode ? <NavItem onClick={toggleMode} key={'Open Admin Mode'} title={'Open Admin Mode'} icon={Square}/> 
         : <NavItem onClick={toggleMode} key={'Close Admin Mode'} title={'Close Admin Mode'} icon={Square}/>
         : <></>
         }
 
-        {user?.email?
-        <NavItem onClick={logOut} key={'Sign Out'} title={'Sign Out'} icon={LogOut} />
+        {user.type === 'SUPERUSER'?
+        <NavItem href={'pages'} title={'Pages'} icon={MinusSquare} />
         : <></>
         }
 
-        {user?.type === 'SUPERUSER'?
-        <NavItem href={'create-page'} key={'createPage'} title={'Create a Page'} icon={PlusCircle} />
+        {user?.email?
+        <NavItem onClick={logOut} key={'Sign Out'} title={'Sign Out'} icon={LogOut} />
         : <></>
         }
 

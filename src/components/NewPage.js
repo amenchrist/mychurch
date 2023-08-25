@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { Page } from '../classes';
 import { db } from '../config/firebase';
 import { useMyStore } from '../store';
+import { v4 as uuidv4 } from 'uuid';
+
 
 function NewPage() {
 
@@ -25,31 +27,32 @@ function NewPage() {
     const [ country, setCountry ] = useState('');  
     const [ postOrZipCode, setPostOrZipCode ] = useState('');  
 
+    const userProfilesRef = collection(db, 'pages');
+    const { setCurrentPage, toggleAdminMode, user } = useMyStore();
+    const navigate = useNavigate();
+
     const address = { houseNameOrNumber, street, cityOrTown, state, county, country, postOrZipCode }
 
     const contactInfo = { email, phoneNumber, address };
 
+    const firstFollower = {
+        userID: user.id,
+        isMember: false,
+        role: 'ADMINISTRATOR',
+        pagePosts: []
+    }
+
     const newPage = {
+        id: uuidv4(),
         type: 'CHURCH',
         avatarURL, bannerURL, name, handle, bio, contactInfo, websiteURL,
-        followers: [],
+        followers: [firstFollower],
         events: [],
         posts: [],
         bankDetails: [],
         transactions: [],
         chats: []
     }
-
-    const newFollower= {
-      pageID: handle,
-      isMember: false,
-      role: 'SUBSCRIBER',
-      pagePosts: []
-  }
-
-    const userProfilesRef = collection(db, 'pages');
-    const { setCurrentPage, toggleAdminMode } = useMyStore();
-    const navigate = useNavigate()
 
     const createPage = async () => {
 

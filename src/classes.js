@@ -166,7 +166,7 @@ export const SUBSCRIBER = "SUBSCRIBER", CONTRIBUTOR = "CONTRIBUTOR", AUTHOR = "A
 export class Follower {
     constructor(data){
         const defaultObj= {
-            pageID: null,
+            userID: null,
             isMember: false,
             role: SUBSCRIBER,
             pagePosts: []

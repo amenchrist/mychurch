@@ -5,6 +5,8 @@ import { useMyStore } from "../store";
 import { collection, setDoc, doc } from "firebase/firestore";
 import {  useNavigate } from "react-router-dom";
 import { Address, BioData, ContactInfo, User } from "../classes";
+import { v4 as uuidv4 } from 'uuid';
+
 
 export const SignUpForm = () => {
 
@@ -49,6 +51,7 @@ export const SignUpForm = () => {
   // const newUser = { title, firstName, lastName, role }
 
   const newUser = {
+    id: uuidv4(),
     bioData,
     contactInfo,
     pages: [],
@@ -60,7 +63,7 @@ export const SignUpForm = () => {
     type: 'USER'
 }
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const signUp = async () => {
     try {

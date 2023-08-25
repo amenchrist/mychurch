@@ -87,5 +87,11 @@ export const allItems = [
       icon: Users,
       title: 'Manage Admins',
       mode: 'ADMIN'
+    },
+    {
+      href: '/pages',
+      icon: Users,
+      title: 'Pages',
+      mode: 'ADMIN'
     }
   ];

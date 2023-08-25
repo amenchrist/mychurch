@@ -27,6 +27,8 @@ import Reports from './pages/Reports';
 import MemberDatabase from './pages/MemberDatabase';
 import Admins from './pages/Admins';
 import NewPage from './components/NewPage';
+import ErrorPage from './pages/ErrorPage';
+import Pages from './pages/Pages';
 
 export default function Router() {
 
@@ -50,10 +52,13 @@ export default function Router() {
     { path: 'reports', element: <Reports /> },
     { path: 'members', element: <MemberDatabase /> },
     { path: 'admins', element: <Admins /> },
-    { path: 'create-page', element: user.type === 'SUPERUSER'? <NewPage/>: <SignInForm /> },
+    { path: 'create-page', element: user.type === 'SUPERUSER'? <NewPage/>: <ErrorPage /> },
+    { path: 'pages', element: user.type === 'SUPERUSER'? <Pages />: <ErrorPage /> },
     { path: 'admin', element: user.email?<AdminPage />: <SignInForm /> } 
   ];
 
+  // console.log(user)
+  // console.log(currentPage)
 
   return useRoutes(routes);
 
