@@ -40,6 +40,13 @@ function NewPage() {
         chats: []
     }
 
+    const newFollower= {
+      pageID: handle,
+      isMember: false,
+      role: 'SUBSCRIBER',
+      pagePosts: []
+  }
+
     const userProfilesRef = collection(db, 'pages');
     const { setCurrentPage, toggleAdminMode } = useMyStore();
     const navigate = useNavigate()

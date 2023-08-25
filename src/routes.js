@@ -50,7 +50,7 @@ export default function Router() {
     { path: 'reports', element: <Reports /> },
     { path: 'members', element: <MemberDatabase /> },
     { path: 'admins', element: <Admins /> },
-    { path: 'admins', element: user.type === 'SUPERUSER'? <NewPage/>: <SignInForm /> },
+    { path: 'create-page', element: user.type === 'SUPERUSER'? <NewPage/>: <SignInForm /> },
     { path: 'admin', element: user.email?<AdminPage />: <SignInForm /> } 
   ];
 

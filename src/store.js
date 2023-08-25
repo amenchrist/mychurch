@@ -9,7 +9,7 @@ function store(set) {
         adminMode: false,
         toggleAdminMode: (value) => set(() => ({adminMode: value})),
         currentPage: {},
-        setPages: (newPage) => set(() => ({currentPage: newPage})),
+        setCurrentPage: (newPage) => set(() => ({currentPage: newPage})),
     }
 }
 
