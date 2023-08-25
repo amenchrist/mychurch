@@ -5,10 +5,12 @@ function Pages() {
 
     const { user } = useMyStore();
 
+
+
     const style = {
-        height: '450px',
+        height: '100px',
         border: '2px solid',
-        width: '470px'
+        width: 300
       }
     
       const arr = new Array(11).fill(1);
@@ -24,7 +26,7 @@ function Pages() {
                 </div>
             </a>
             : <></>
-            }     
+            }
             {arr.map((e,i) => {
               return (
                 <div style={style} key={i}>

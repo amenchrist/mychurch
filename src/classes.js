@@ -13,6 +13,7 @@ function constructorHelper(dataObj, defObj){
 export class User {
     constructor(data){
         const defaultUser = {
+            id: null,
             bioData: new BioData(),
             contactInfo: new ContactInfo(),
             pages: [],
@@ -102,7 +103,10 @@ export class Page {
             posts: [],
             bankDetails: [],
             transactions: [],
-            chats: []
+            chats: [],
+            creatorID: null,
+            id: null,
+            creationTimestamp: new Date().getTime()
         }
         for (const value of fields){
             this[value] = null

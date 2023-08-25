@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const SignUpForm = () => {
 
-  const { setUser } = useMyStore();
+  const { setUser, currentPage } = useMyStore();
   const userProfilesRef = collection(db, 'userProfiles');
 
   //New User Authentication states
@@ -69,7 +69,7 @@ export const SignUpForm = () => {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password);
       await addUser(newUser);
-      const nUser = new User({bioData, contactInfo})
+      const nUser = new User({id: newUser?.id, bioData, contactInfo, pages: [currentPage?.id]})
       setUser({...userCred.user, ...nUser});
       console.log('New User Added')
       navigate('/');

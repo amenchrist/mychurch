@@ -29,10 +29,22 @@ import Admins from './pages/Admins';
 import NewPage from './components/NewPage';
 import ErrorPage from './pages/ErrorPage';
 import Pages from './pages/Pages';
+import { useEffect, useState } from 'react';
 
 export default function Router() {
 
-  const { user } = useMyStore()
+  const { user, currentPage } = useMyStore();
+  const [ isAdmin, setIsAdmin ] = useState(false)
+
+  useEffect(() => {
+    if (!isAdmin){
+      const admins = currentPage?.followers?.filter(f => f.role === 'ADMINISTRATOR');
+      const adminIDs = admins?.map(a => a.id);
+      if (adminIDs?.includes(user.id)){
+        setIsAdmin(true)
+      }
+    }
+  }, [isAdmin, currentPage, user])
   
   const routes = [
     { path: '/', element: user.email? <Dashboard/> : <SignInForm /> },
@@ -54,6 +66,7 @@ export default function Router() {
     { path: 'admins', element: <Admins /> },
     { path: 'create-page', element: user.type === 'SUPERUSER'? <NewPage/>: <ErrorPage /> },
     { path: 'pages', element: user.type === 'SUPERUSER'? <Pages />: <ErrorPage /> },
+    { path: 'page-profile', element:  isAdmin ? <Pages />: <ErrorPage /> },
     { path: 'admin', element: user.email?<AdminPage />: <SignInForm /> } 
   ];
 

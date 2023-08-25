@@ -15,7 +15,7 @@ function NewPage() {
     const [ handle, setHandle ] = useState('');
     const [ bio, setBio ] = useState('');
     const [ websiteURL, setWebsiteURL ] = useState('');
-    const [email, setEmail] = useState("");
+    const [ email, setEmail ] = useState("");
     const [ phoneNumber, setPhoneNumber ] = useState('');
 
     
@@ -27,7 +27,7 @@ function NewPage() {
     const [ country, setCountry ] = useState('');  
     const [ postOrZipCode, setPostOrZipCode ] = useState('');  
 
-    const userProfilesRef = collection(db, 'pages');
+    const pagesRef = collection(db, 'pages');
     const { setCurrentPage, toggleAdminMode, user } = useMyStore();
     const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ function NewPage() {
     const contactInfo = { email, phoneNumber, address };
 
     const firstFollower = {
-        userID: user.id,
+        id: user.id,
         isMember: false,
         role: 'ADMINISTRATOR',
         pagePosts: []
@@ -51,16 +51,20 @@ function NewPage() {
         posts: [],
         bankDetails: [],
         transactions: [],
-        chats: []
+        chats: [],
+        creatorID: user.id,
+        creationTimestamp: new Date().getTime()
     }
 
     const createPage = async () => {
 
         try {
-          await setDoc(doc(userProfilesRef, handle), newPage);
+            console.log(newPage)
+          await setDoc(doc(pagesRef, handle), newPage);
           setCurrentPage(new Page((newPage)));
-          console.log('New User Added')
-          toggleAdminMode(true)
+          console.log('New User Added');
+          console.log(uuidv4())
+          toggleAdminMode(true);
           navigate('/');
         } catch (err) {
           console.log(err);
@@ -70,7 +74,7 @@ function NewPage() {
   return (
     
     <div style={{width: '400px', display: 'flex', flexDirection: 'column', height: '400px'}}>
-
+        <br/>
       <div style={{width: '400px', display: 'flex', flexDirection: 'column'}}>
         <input required placeholder="Name" onChange={(e) => setName(e.target.value)} />
         <input required placeholder="@Handle" onChange={(e) => setHandle(e.target.value)} />      
