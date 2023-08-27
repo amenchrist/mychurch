@@ -7,10 +7,13 @@ import AttendancePage from './AttendancePage';
 import { useStateContext } from '../../contexts/ContextProvider';
 import WatchPageSidebar from '../../components/WatchPage/WatchPageSidebar';
 import { Hidden } from '@mui/material';
+import { useMyStore } from '../../store';
 
 function WatchPage() {
 
   const { user, isMobileNavOpen, setMobileNavOpen } = useStateContext();
+  const { currentPage } = useMyStore();
+
 
   const ServiceMessage = () => {
     return (

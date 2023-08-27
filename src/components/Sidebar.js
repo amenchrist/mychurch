@@ -14,6 +14,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
   // const user = useMyStore(store => store.user);
   const { setUser, adminMode, toggleAdminMode, user, currentPage } = useMyStore();
   const [items, setItems] = useState(allItems.filter((item) => item.mode !== 'ADMIN'))
+  const location = useLocation();
 
   useEffect(() => {
     if(adminMode) setItems(allItems.filter((item) => item.mode !== 'USER'))
@@ -46,7 +47,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
           {user?.email}
         </Typography> */}
         <Typography color="textSecondary" variant="body2" >
-          {'Christ Embassy'}
+          {currentPage? currentPage.name : 'Christ Embassy'}
         </Typography>
       </Box>
     )
@@ -81,14 +82,20 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
       <Divider />
       <Box sx={{ p: 2 }}>
         <List>
-          {items.map((item) => (
-            <NavItem
-              href={item.href}
-              key={item.title}
-              title={item.title}
-              icon={item.icon}
-            />
-          ))}
+          {items.map((item) => {
+            if (item.title === 'Home' && currentPage?.websiteURL ){
+              item.href = currentPage.websiteURL;
+            }
+
+            return (
+              <NavItem
+                href={`${currentPage.handle}/${item.href}`}
+                key={item.title}
+                title={item.title}
+                icon={item.icon}
+              />
+            )
+          })}
           {user.emailChecked? <NavItem href={'#'} key={'reset'} title={'Reset'} icon={RefreshCw} onClick={() => setUser({})}/>  : <></>}
         </List>
 

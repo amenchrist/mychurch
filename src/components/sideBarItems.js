@@ -1,12 +1,13 @@
 import {
-    Lock, BarChart, Settings, ShoppingBag, User, Users, LogOut, CreditCard, Monitor, Calendar, Rss, Square,
-    Clipboard, Bell, Mail, Briefcase, RefreshCw, Home, Out, Archive 
+    BarChart, User, Users, CreditCard, Monitor, Calendar, Rss,
+    Clipboard, Bell, Mail, Home, Archive 
 } from 'react-feather';
+
 
 export const allItems = [
     {
       href: '',
-      icon: Home,
+      icon: BarChart,
       title: 'Dashboard',
       mode: 'BOTH'
     },
@@ -66,7 +67,7 @@ export const allItems = [
     },
     {
       href: '/church',
-      icon: LogOut,
+      icon: Home,
       title: 'Home',
       mode: 'USER'
     },

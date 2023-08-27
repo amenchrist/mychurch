@@ -4,11 +4,24 @@ import Sidebar from './components/Sidebar';
 import Router from './routes';
 import { useMyStore } from './store';
 import ThemeProvider from './theme';
+import { useLocation } from 'react-router-dom';
+import { doc, getDoc } from "firebase/firestore";
+import { db } from './config/firebase';
+import { Page } from './classes';
+
 
 
 function App() {
 
-  const user = useMyStore(store => store.user)
+  const {user, setCurrentPage, currentPage } = useMyStore()
+  const location = useLocation();
+  // const parent = window.parent.location.hostname
+
+  
+
+
+  // console.log(currentPage)
+  // console.log(typeof console.log)
 
   // const { setUser } = useMyStore()
   

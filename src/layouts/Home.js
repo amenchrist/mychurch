@@ -5,10 +5,10 @@ import { Outlet } from 'react-router-dom';
 
 function Home() {
   return (
-    <>
-      <Sidebar />
-      <Outlet />
-    </>
+    <div style={{height: '100vh', display: 'flex', justifyContent: 'center'}}>
+            <Sidebar />
+            <Outlet />
+        </div>
   )
 }
 

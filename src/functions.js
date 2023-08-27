@@ -1,5 +1,6 @@
 //Functions
 
+
 export function getAttendees(membersArray, date){
     const relevantMembers = membersArray.filter(member => member.attendanceRecords.filter(record => record.date === date ).length > 0 )
     const attRecords = relevantMembers.map(m => {

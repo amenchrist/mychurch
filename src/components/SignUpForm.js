@@ -6,12 +6,13 @@ import { collection, setDoc, doc } from "firebase/firestore";
 import {  useNavigate } from "react-router-dom";
 import { Address, BioData, ContactInfo, User } from "../classes";
 import { v4 as uuidv4 } from 'uuid';
+import { userConverter } from "../firebaseConverters";
 
 
 export const SignUpForm = () => {
 
   const { setUser, currentPage } = useMyStore();
-  const userProfilesRef = collection(db, 'userProfiles');
+  // const userProfilesRef = collection(db, 'userProfiles');
 
   //New User Authentication states
   const [email, setEmail] = useState("");
@@ -54,7 +55,7 @@ export const SignUpForm = () => {
     id: uuidv4(),
     bioData,
     contactInfo,
-    pages: [],
+    pages: [currentPage?.id],
     likedPosts: [],
     savedPosts: [],
     events: [],
@@ -69,7 +70,7 @@ export const SignUpForm = () => {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password);
       await addUser(newUser);
-      const nUser = new User({id: newUser?.id, bioData, contactInfo, pages: [currentPage?.id]})
+      const nUser = new User(newUser)
       setUser({...userCred.user, ...nUser});
       console.log('New User Added')
       navigate('/');
@@ -82,7 +83,7 @@ export const SignUpForm = () => {
   const addUser = async () => {
 
     try {
-      await setDoc(doc(userProfilesRef, email), newUser);
+      await setDoc(doc(db, 'userProfiles', email), newUser);
     } catch (err) {
       console.log(err);
     }

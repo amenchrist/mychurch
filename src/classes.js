@@ -106,14 +106,21 @@ export class Page {
             chats: [],
             creatorID: null,
             id: null,
-            creationTimestamp: new Date().getTime()
+            creationTimestamp: new Date().getTime(),
+            websiteURL: null
         }
+
+        //create all object properties
         for (const value of fields){
             this[value] = null
         }
+
+        //Assign object properties to default values
         for (const property in defaultPage) {
             this[property] = defaultPage[property];
         }
+
+        //Assign property values passed through parameters
         for (const property in data) {
             if (fields.includes(property)){
                 this[property] = data[property];

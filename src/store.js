@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 
 function store(set) {
 
+
     return {
         user: {},
         setUser: (newUser) => set(() => ({user: newUser})),
