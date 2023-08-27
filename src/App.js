@@ -14,7 +14,7 @@ import { Page } from './classes';
 function App() {
 
   const {user, setCurrentPage, currentPage } = useMyStore()
-  const location = useLocation();
+  // const location = useLocation();
   // const parent = window.parent.location.hostname
 
   

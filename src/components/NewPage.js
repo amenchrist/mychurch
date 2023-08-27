@@ -1,4 +1,4 @@
-import { collection, setDoc, doc } from 'firebase/firestore';
+import { collection, setDoc, doc, updateDoc } from 'firebase/firestore';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Page } from '../classes';
@@ -7,7 +7,7 @@ import { useMyStore } from '../store';
 import { v4 as uuidv4 } from 'uuid';
 
 
-function NewPage() {
+function NewPage({setCreatePageMode}) {
 
     const [ avatarURL, setAvatarURL ] = useState('');
     const [ bannerURL, setBannerURL ] = useState('');
@@ -17,7 +17,6 @@ function NewPage() {
     const [ websiteURL, setWebsiteURL ] = useState('');
     const [ email, setEmail ] = useState("");
     const [ phoneNumber, setPhoneNumber ] = useState('');
-
     
     const [ houseNameOrNumber, setHouseNameOrNumber ] = useState('');  
     const [ street, setStreet ] = useState('');  
@@ -60,20 +59,21 @@ function NewPage() {
 
         try {
             console.log(newPage)
-          await setDoc(doc(pagesRef, handle), newPage);
-          setCurrentPage(new Page((newPage)));
-          console.log('New User Added');
-          console.log(uuidv4())
-          toggleAdminMode(true);
-          navigate('/');
+            await setDoc(doc(pagesRef, handle), newPage);
+            await updateDoc(doc(db,'userProfiles', user.email), {pages: user.pages.push(newPage.handle)});
+            setCurrentPage(new Page((newPage)));
+            console.log('New User Added');
+            toggleAdminMode(true);
+            navigate('/');
         } catch (err) {
-          console.log(err);
+            console.log(err);
         }
       }
 
   return (
     
     <div style={{width: '400px', display: 'flex', flexDirection: 'column', height: '400px'}}>
+        <div onClick={() => setCreatePageMode(false)}>{'Back to Pages List'}</div>
         <br/>
       <div style={{width: '400px', display: 'flex', flexDirection: 'column'}}>
         <input required placeholder="Name" onChange={(e) => setName(e.target.value)} />

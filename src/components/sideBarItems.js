@@ -18,79 +18,79 @@ export const allItems = [
       mode: 'BOTH'
     },
     {
-      href: '/conversations',
+      href: 'conversations',
       icon: Mail,
       title: 'Conversations',
       mode: 'BOTH'
     },
     {
-      href: '/notifications',
+      href: 'notifications',
       icon: Bell,
       title: 'Notifications',
       mode: 'BOTH'
     },
     {
-      href: '/testimonies',
+      href: 'testimonies',
       icon: Bell,
       title: 'Testimonies',
       mode: 'USER'
     },
     {
-      href: '/notes',
+      href: 'notes',
       icon: Clipboard,
       title: 'Notes',
       mode: 'USER'
     },
     {
-      href: '/events',
+      href: 'events',
       icon: Calendar,
       title: 'Upcoming Events',
       mode: 'BOTH'
     },
     {
-      href: '/news-feed',
+      href: 'news-feed',
       icon: Rss,
       title: 'News Feed',
       mode: 'USER'
     },
     {
-      href: '/profile',
+      href: 'profile',
       icon: User,
       title: 'Profile',
       mode: 'BOTH'
     },
     {
-      href: '/watch',
+      href: 'watch',
       icon: Monitor,
       title: 'Watch',
       mode: 'USER'
     },
     {
-      href: '/church',
+      href: 'church',
       icon: Home,
       title: 'Home',
       mode: 'USER'
     },
     {
-      href: '/reports',
+      href: 'reports',
       icon: Archive,
       title: 'Reports',
       mode: 'ADMIN'
     },
     {
-      href: '/members',
+      href: 'members',
       icon: Users,
       title: 'Member Database',
       mode: 'ADMIN'
     },
     {
-      href: '/admins',
+      href: 'admins',
       icon: Users,
       title: 'Manage Admins',
       mode: 'ADMIN'
     },
     {
-      href: '/pages',
+      href: 'pages',
       icon: Users,
       title: 'Pages',
       mode: 'ADMIN'

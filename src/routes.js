@@ -41,6 +41,7 @@ export default function Router() {
   const [ isAdmin, setIsAdmin ] = useState(false)
 
   useEffect(() => {
+    console.log('running useEffect 1 about admin')
     if (!isAdmin){
       const admins = currentPage?.followers?.filter(f => f.role === 'ADMINISTRATOR');
       const adminIDs = admins?.map(a => a.id);
@@ -52,16 +53,24 @@ export default function Router() {
 
   const location = useLocation();
   const [ pageRef, setPageRef ] = useState(location.pathname.substring(1)) 
-  if (pageRef.includes('/')){
-    setPageRef(pageRef.replace(/\/.+/gm, ''))
-  }
-
-  console.log(pageRef)
-  console.log(pageRef.indexOf('/'))
 
   useEffect(() => {
+    console.log('running useEffect 2 page refs ')
+    console.log(pageRef)
+
+    if (pageRef.includes('/')){
+      setPageRef(pageRef.replace(/\/.*/gm, ''))
+    }
+  }, [pageRef]);
+
+  console.log(pageRef)
+
+  useEffect(() => {
+    console.log('running useEffect 3 getting the page')
 
     const getPage = async () => {
+
+      console.log('running get page')
 
       try {
         const docRef = doc(db, 'pages', pageRef)
@@ -75,26 +84,22 @@ export default function Router() {
         console.log(err);
       }
     }
-    getPage();
-    console.log(window.parent.location)
-    console.log(document.referrer);
-    console.log(document);
-    console.log(document.location.origin);
 
-    // console.log(location.pathname.substring(1))
+    if(pageRef !== currentPage?.handle){
+      getPage();
+    }
     
-    
-  }, [pageRef, setCurrentPage])
+  }, [pageRef, setCurrentPage, currentPage])
 
   const routes = [
-    { path: '*', element: <ErrorPage /> },
     { 
       path: '/', 
       element: user.email? <Home /> : <SignInForm />,
       children: [
         {
-          path: pageRef,
+          path: pageRef? pageRef : '',
           children: [
+            { path: '', element: user.email? <Dashboard />: <SignInForm /> },
             { path: 'giving-records', element: user.email? <GivingRecords/>: <SignInForm /> },
             { path: 'conversations', element: user.email?<Conversations />: <SignInForm /> },
             { path: 'notifications', element: user.email?<Notifications/>: <SignInForm /> },
@@ -104,25 +109,22 @@ export default function Router() {
             { path: 'news-feed', element: user.email?<NewsFeed/>: <SignInForm /> },
             { path: 'profile', element: user.email?<Profile/>: <SignInForm /> },
             { path: 'church', element: <Church /> },
-            { path: 'watch', element: <WatchPage /> },
-            { path: 'watch', element: <WatchLive /> },
             { path: 'signin', element: <SignInForm /> },
             { path: 'signup', element: <SignUpForm /> },
             { path: 'reports', element: <Reports /> },
             { path: 'members', element: <MemberDatabase /> },
             { path: 'admins', element: <Admins /> },
+            { path: 'pages', element: user.type === 'SUPERUSER'? <Pages />: 'hello amen' },
             { path: 'create-page', element: user.type === 'SUPERUSER'? <NewPage/>: <ErrorPage /> },
-            { path: 'pages', element: user.type === 'SUPERUSER'? <Pages />: <ErrorPage /> },
             { path: 'page-profile', element:  isAdmin ? <Pages />: <ErrorPage /> },
             { path: 'admin', element: user.email?<AdminPage />: <SignInForm /> } 
           ]
         }
-
-      ]
+      ],
     },
-  ]
-  
-  const oldroutes = [
+    { path: pageRef+'/watch', element: <WatchPage /> },
+    // { path: pageRef+'/watch', element: <WatchLive /> },
+    { path: '*', element: <ErrorPage /> },
     { path: '/', element: user.email? <Dashboard/> : <SignInForm /> },
     { path: 'giving-records', element: user.email? <GivingRecords/>: <SignInForm /> },
     { path: 'conversations', element: user.email?<Conversations />: <SignInForm /> },
@@ -144,7 +146,7 @@ export default function Router() {
     { path: 'pages', element: user.type === 'SUPERUSER'? <Pages />: <ErrorPage /> },
     { path: 'page-profile', element:  isAdmin ? <Pages />: <ErrorPage /> },
     { path: 'admin', element: user.email?<AdminPage />: <SignInForm /> } 
-  ];
+  ]
 
   // console.log(user)
   // console.log(currentPage)

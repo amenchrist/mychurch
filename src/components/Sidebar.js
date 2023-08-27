@@ -58,7 +58,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
       <Box sx={{alignItems: 'center', display: 'flex', flexDirection: 'column', p: 2 }} >
         <Avatar component={RouterLink} src={''} sx={{cursor: 'pointer', width: 64, height: 64 }} to="#" />
         <Typography color="textPrimary" variant="h5" align='center' >
-          {'Christ Embassy Barking'}
+          {currentPage? currentPage.name : 'Christ Embassy'}
         </Typography> 
         <Typography color="textSecondary" variant="body2" >
           {'Change Page'}
@@ -66,10 +66,9 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
       </Box>
     )
   }
-  
 
+  console.log(currentPage.handle);
   
-
   const content = (
     <Box
       sx={{
@@ -89,7 +88,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
 
             return (
               <NavItem
-                href={`${currentPage.handle}/${item.href}`}
+                href={`${currentPage?.handle || ''}/${item.href}`}
                 key={item.title}
                 title={item.title}
                 icon={item.icon}
@@ -106,7 +105,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
         }
 
         {user.type === 'SUPERUSER'?
-        <NavItem href={'pages'} title={'Pages'} icon={MinusSquare} />
+        <NavItem href={`${currentPage?.handle || ''}/pages`} title={'Pages'} icon={MinusSquare} />
         : <></>
         }
 
