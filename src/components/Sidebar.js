@@ -1,7 +1,7 @@
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Divider, Drawer, Grid, Hidden, List, MenuItem, TextField, Typography } from '@mui/material';
-import { LogOut, MinusSquare, Plus, PlusCircle, RefreshCw, Square } from 'react-feather';
+import { LogOut, Menu, MinusSquare, Plus, PlusCircle, RefreshCw, Square, X } from 'react-feather';
 import NavItem from './NavItem';
 import { useMyStore } from '../store';
 import { signOut } from "firebase/auth";
@@ -16,10 +16,14 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
   const [items, setItems] = useState(allItems.filter((item) => item.mode !== 'ADMIN'))
   const location = useLocation();
 
+  const [ openMenu, setOpenMenu ] = useState(false)
+
   useEffect(() => {
     if(adminMode) setItems(allItems.filter((item) => item.mode !== 'USER'))
   }, [adminMode])
 
+
+  //LOG USER OUT
   const logOut = async () => {
     try {
       await signOut(auth);
@@ -30,7 +34,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
     }
   };
 
-  function toggleMode(){
+  const toggleMode = () => {
     toggleAdminMode(!adminMode)
   }
 
@@ -41,10 +45,10 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
       <Box sx={{alignItems: 'center', display: 'flex', flexDirection: 'column', p: 2 }} >
         <Avatar component={RouterLink} src={''} sx={{cursor: 'pointer', width: 64, height: 64 }} to="#" />
         <Typography color="textPrimary" variant="h5" align='center' >
-          {user?.email? `${user.bioData.title} ${user.bioData.firstName} ${user.bioData.lastName}` :'Guest'}
+          {user?.email? `${user.biodata?.title} ${user.biodata?.firstName} ${user.biodata?.lastName}` :'Guest'}
         </Typography> 
         {/* <Typography color="textPrimary" variant="h5" align='center' >
-          {user?.email}
+          {user?.email? 'Sign Amen Out' : 'Sign Amen In'}
         </Typography> */}
         <Typography color="textSecondary" variant="body2" >
           {currentPage? currentPage.name : 'Christ Embassy'}
@@ -67,7 +71,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
     )
   }
 
-  console.log(currentPage.handle);
+  // console.log(currentPage.handle);
   
   const content = (
     <Box
@@ -121,12 +125,15 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
 
   return (
     <>
+        <div style={{ borderRadius: '100%', backgroundColor: 'white', padding: 15, position: 'absolute', right: 0}} onClick={() => setOpenMenu(!openMenu)}>
+            {openMenu? <></>: <Menu /> }
+        </div>
     {/* For Mobile Devices */}
       <Hidden lgUp>
         <Drawer
           anchor="left"
           onClose={onMobileClose}
-          open={openMobile}
+          open={!openMenu}
           variant="temporary"
           PaperProps={{
             sx: {
@@ -134,6 +141,9 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
             }
           }}
         >
+          <div style={{padding: 15, display: 'flex', flexDirection: 'column', alignItems: 'flex-end'}} onClick={() => setOpenMenu(!openMenu)}>
+             <X />
+          </div>
           {content}
         </Drawer>
       </Hidden>
@@ -151,6 +161,9 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
             }
           }}
         >
+          <div style={{padding: 15, display: 'flex', flexDirection: 'column', alignItems: 'flex-end'}} onClick={() => setOpenMenu(!openMenu)}>
+              <X />
+          </div>
           {content}
         </Drawer>
       </Hidden>

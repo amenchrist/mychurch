@@ -1,6 +1,6 @@
 import {
     BarChart, User, Users, CreditCard, Monitor, Calendar, Rss,
-    Clipboard, Bell, Mail, Home, Archive 
+    Clipboard, Bell, Mail, Home, Archive, Menu 
 } from 'react-feather';
 
 
@@ -16,6 +16,24 @@ export const allItems = [
       icon: CreditCard,
       title: 'Giving Records',
       mode: 'BOTH'
+    },
+    {
+      href: 'events',
+      icon: Calendar,
+      title: 'Upcoming Events',
+      mode: 'BOTH'
+    },
+    {
+      href: 'watch',
+      icon: Monitor,
+      title: 'Watch',
+      mode: 'USER'
+    },
+    {
+      href: 'church',
+      icon: Home,
+      title: 'Home',
+      mode: 'USER'
     },
     {
       href: 'conversations',
@@ -41,12 +59,7 @@ export const allItems = [
       title: 'Notes',
       mode: 'USER'
     },
-    {
-      href: 'events',
-      icon: Calendar,
-      title: 'Upcoming Events',
-      mode: 'BOTH'
-    },
+    
     {
       href: 'news-feed',
       icon: Rss,
@@ -58,18 +71,6 @@ export const allItems = [
       icon: User,
       title: 'Profile',
       mode: 'BOTH'
-    },
-    {
-      href: 'watch',
-      icon: Monitor,
-      title: 'Watch',
-      mode: 'USER'
-    },
-    {
-      href: 'church',
-      icon: Home,
-      title: 'Home',
-      mode: 'USER'
     },
     {
       href: 'reports',

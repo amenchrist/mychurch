@@ -33,38 +33,35 @@ import { useEffect, useState } from 'react';
 import Home from './layouts/Home';
 import { doc, getDoc } from "firebase/firestore";
 import { Page } from './classes';
+import ComingSoon from './pages/ComingSoon';
 
 
 export default function Router() {
 
+  //IMPORTING RELEVANT VARIABLES
   const { user, currentPage, setCurrentPage } = useMyStore();
-  const [ isAdmin, setIsAdmin ] = useState(false)
-
-  useEffect(() => {
-    console.log('running useEffect 1 about admin')
-    if (!isAdmin){
-      const admins = currentPage?.followers?.filter(f => f.role === 'ADMINISTRATOR');
-      const adminIDs = admins?.map(a => a.id);
-      if (adminIDs?.includes(user.id)){
-        setIsAdmin(true)
-      }
-    }
-  }, [isAdmin, currentPage, user])
-
+  
+  /**
+   * GET THE HANDLE FROM THE URL
+   * RETRIEVE THE CURRENT PAGE DETAILS FROM HANDLE
+   * SET USER
+   */
+  
+  //GETTING THE RELEVANT PAGE FROM THE URL
   const location = useLocation();
   const [ pageRef, setPageRef ] = useState(location.pathname.substring(1)) 
-
+  
   useEffect(() => {
     console.log('running useEffect 2 page refs ')
     console.log(pageRef)
-
+    
     if (pageRef.includes('/')){
       setPageRef(pageRef.replace(/\/.*/gm, ''))
     }
   }, [pageRef]);
-
+  
   console.log(pageRef)
-
+  
   useEffect(() => {
     console.log('running useEffect 3 getting the page')
 
@@ -84,13 +81,29 @@ export default function Router() {
         console.log(err);
       }
     }
-
+    
     if(pageRef !== currentPage?.handle){
+      console.log(pageRef);
+      console.log(currentPage);
       getPage();
     }
     
   }, [pageRef, setCurrentPage, currentPage])
-
+  
+  
+  //ENABLING ADMIN PRIVILEGES
+  const [ isAdmin, setIsAdmin ] = useState(false);
+  useEffect(() => {
+    console.log('running useEffect 1 about admin')
+    if (!isAdmin){
+      const admins = currentPage?.followers?.filter(f => f.role === 'ADMINISTRATOR');
+      const adminIDs = admins?.map(a => a.id);
+      if (adminIDs?.includes(user.id)){
+        setIsAdmin(true)
+      }
+    }
+  }, [isAdmin, currentPage, user])
+  
   const routes = [
     { 
       path: '/', 
@@ -101,12 +114,12 @@ export default function Router() {
           children: [
             { path: '', element: user.email? <Dashboard />: <SignInForm /> },
             { path: 'giving-records', element: user.email? <GivingRecords/>: <SignInForm /> },
-            { path: 'conversations', element: user.email?<Conversations />: <SignInForm /> },
-            { path: 'notifications', element: user.email?<Notifications/>: <SignInForm /> },
-            { path: 'testimonies', element: user.email?<Testimonies/>: <SignInForm /> },
-            { path: 'notes', element: user.email?<Notes/>: <SignInForm /> },
+            { path: 'conversations', element: <ComingSoon /> }, //user.email?<Conversations />: <SignInForm /> },
+            { path: 'notifications', element: <ComingSoon /> }, //user.email?<Notifications/>: <SignInForm /> },
+            { path: 'testimonies', element: <ComingSoon /> }, //user.email?<Testimonies/>: <SignInForm /> },
+            { path: 'notes', element: <ComingSoon /> }, //user.email?<Notes/>: <SignInForm /> },
             { path: 'events', element: user.email?<Events />: <SignInForm /> },
-            { path: 'news-feed', element: user.email?<NewsFeed/>: <SignInForm /> },
+            { path: 'news-feed', element: <ComingSoon /> }, //user.email?<NewsFeed/>: <SignInForm /> },
             { path: 'profile', element: user.email?<Profile/>: <SignInForm /> },
             { path: 'church', element: <Church /> },
             { path: 'signin', element: <SignInForm /> },

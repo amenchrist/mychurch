@@ -14,7 +14,7 @@ export class User {
     constructor(data){
         const defaultUser = {
             id: null,
-            bioData: new BioData(),
+            biodata: new Biodata(),
             contactInfo: new ContactInfo(),
             pages: [],
             likedPosts: [],
@@ -34,7 +34,7 @@ export class User {
 
 //BIODATA
 
-export class BioData {
+export class Biodata {
     constructor(data){
         const fields = [ "firstName", "middleName", "lastName", "gender", "dateOfBirth", "maritalStatus", "title", "nationality" ]
         for (const value of fields){
