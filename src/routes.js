@@ -34,6 +34,7 @@ import Home from './layouts/Home';
 import { doc, getDoc } from "firebase/firestore";
 import { Page } from './classes';
 import ComingSoon from './pages/ComingSoon';
+import GivingForm from './components/WatchPage/GivingForm';
 
 
 export default function Router() {
@@ -105,8 +106,9 @@ export default function Router() {
   }, [isAdmin, currentPage, user])
   
   const routes = [
+    { path: '/', element: <GivingForm /> } ,
     { 
-      path: '/', 
+      path: '/give', 
       element: user.email? <Home /> : <SignInForm />,
       children: [
         {
@@ -130,7 +132,8 @@ export default function Router() {
             { path: 'pages', element: user.type === 'SUPERUSER'? <Pages />: 'hello amen' },
             { path: 'create-page', element: user.type === 'SUPERUSER'? <NewPage/>: <ErrorPage /> },
             { path: 'page-profile', element:  isAdmin ? <Pages />: <ErrorPage /> },
-            { path: 'admin', element: user.email?<AdminPage />: <SignInForm /> } 
+            { path: 'admin', element: user.email?<AdminPage />: <SignInForm /> },
+
           ]
         }
       ],
