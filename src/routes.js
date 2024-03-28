@@ -40,7 +40,7 @@ import GivingForm from './components/WatchPage/GivingForm';
 export default function Router() {
 
   //IMPORTING RELEVANT VARIABLES
-  const { user, currentPage, setCurrentPage } = useMyStore();
+  const { user, setUser, currentPage, setCurrentPage } = useMyStore();
   
   /**
    * GET THE HANDLE FROM THE URL
@@ -104,9 +104,21 @@ export default function Router() {
       }
     }
   }, [isAdmin, currentPage, user])
+
+  const TempPage = () => {
+    return (
+      <>
+      <div>
+        <h3>Hello {user.biodata.firstName}</h3>
+        <GivingForm />
+        <button onClick={() => setUser({})}>SIGN OUT</button>
+      </div>
+      </>
+    )
+  }
   
   const routes = [
-    { path: '/', element: <GivingForm /> } ,
+    { path: '/', element: user.email? <TempPage /> : <SignInForm /> },
     { 
       path: '/give', 
       element: user.email? <Home /> : <SignInForm />,
