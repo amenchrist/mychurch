@@ -9,8 +9,11 @@ function store(set) {
         setUser: (newUser) => set(() => ({user: newUser})),
         adminMode: false,
         toggleAdminMode: (value) => set(() => ({adminMode: value})),
-        currentPage: {},
+        currentPage: null,
         setCurrentPage: (newPage) => set(() => ({currentPage: newPage})),
+        urlHandle: '',
+        setUrlHandle: (handle) => set(() => ({urlHandle: handle})),
+
     }
 }
 

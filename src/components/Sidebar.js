@@ -102,7 +102,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
           {user.emailChecked? <NavItem href={'#'} key={'reset'} title={'Reset'} icon={RefreshCw} onClick={() => setUser({})}/>  : <></>}
         </List>
 
-        {currentPage.followers?.filter(f => f.id === user.id)[0]?.role === 'ADMINISTRATOR'?
+        {currentPage?.followers?.filter(f => f.id === user.id)[0]?.role === 'ADMINISTRATOR'?
         !adminMode ? <NavItem onClick={toggleMode} key={'Open Admin Mode'} title={'Open Admin Mode'} icon={Square}/> 
         : <NavItem onClick={toggleMode} key={'Close Admin Mode'} title={'Close Admin Mode'} icon={Square}/>
         : <></>

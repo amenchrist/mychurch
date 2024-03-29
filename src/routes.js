@@ -16,7 +16,6 @@ import Church from './pages/Church';
 import Events from './pages/Events';
 import Notes from './pages/Notes';
 import Testimonies from './pages/Testimonies';
-import WatchLive from './pages/WatchLive';
 import Notifications from './pages/Notifications';
 import Conversations from './pages/Conversations';
 import { SignUpForm } from './components/SignUpForm';
@@ -41,7 +40,7 @@ import { getPage } from './dbQueryFunctions';
 export default function Router() {
 
   //IMPORTING RELEVANT VARIABLES
-  const { user, setUser, currentPage, setCurrentPage } = useMyStore();
+  const { user, setUser, currentPage, setCurrentPage, urlHandle, setUrlHandle } = useMyStore();
   
   /**
    * GET THE HANDLE FROM THE URL
@@ -52,26 +51,16 @@ export default function Router() {
   //GETTING THE RELEVANT PAGE FROM THE URL
   const location = useLocation();
   const pageRef = location.pathname.substring(1).replace(/\/.*/gm, '');
-  const handle = useMemo(() => {
-    return pageRef
-  }, [pageRef])
 
-  //check if handle exists // Should be a function
-  const handleExists = useMemo(() => {
-    const handlesList = ['cebarking',];
-    return handlesList.includes(handle)
-  }, [handle])
-
-  // const handle = handleExists(pageRef); //useParams().handle didn't work for some reason
-  
-
+  //Validating the handle and getting the relevant page
   useEffect(() => {
-    if(handleExists && handle !== currentPage.handle){
+    if(pageRef !== urlHandle){
       (async () => {
-        setCurrentPage(await getPage(handle))
+          setCurrentPage(await getPage(pageRef))
+          setUrlHandle(pageRef)
       })()
     }
-  },[handleExists, setCurrentPage, handle, currentPage])
+  },[setCurrentPage, pageRef, currentPage, urlHandle, setUrlHandle])
   
   //ENABLING ADMIN PRIVILEGES
   const [ isAdmin, setIsAdmin ] = useState(false);
@@ -96,10 +85,12 @@ export default function Router() {
   }
   
   const routes = [
-    { path: '/', element: <GivingForm /> } ,
+    // { path: '/', element: <GivingForm /> } ,
+    { path: '/', element: <SignInForm /> } ,
+    { path: ':handle/watch', element: currentPage ? <WatchPage /> : <ErrorPage /> } ,    
     { 
       path: ':handle', 
-      element: handleExists ? user.email? <Dashboard />: <WelcomePage /> : <ErrorPage /> , //if handle doesn't exist, return error page, otherwise check if logged in
+      element: currentPage ? user.email? <Dashboard />: <WelcomePage /> : <ErrorPage /> , //if handle doesn't exist, return error page, otherwise check if logged in
       children: [
             // { path: '', element: user.email? <Dashboard />: <WelcomePage /> },
             { path: 'giving-records', element: user.email? <GivingRecords/>: <SignInForm /> },
@@ -123,33 +114,8 @@ export default function Router() {
       ],
     },
     { path: '*', element: <ErrorPage /> },
- 
-    // { path: pageRef+'/watch', element: <WatchLive /> },
-    // { path: '/', element: user.email? <Dashboard/> : <SignInForm /> },
-    // { path: 'giving-records', element: user.email? <GivingRecords/>: <SignInForm /> },
-    // { path: 'conversations', element: user.email?<Conversations />: <SignInForm /> },
-    // { path: 'notifications', element: user.email?<Notifications/>: <SignInForm /> },
-    // { path: 'testimonies', element: user.email?<Testimonies/>: <SignInForm /> },
-    // { path: 'notes', element: user.email?<Notes/>: <SignInForm /> },
-    // { path: 'events', element: user.email?<Events />: <SignInForm /> },
-    // { path: '/news-feed', element: user.email?<NewsFeed/>: <SignInForm /> },
-    // { path: 'profile', element: user.email?<Profile/>: <SignInForm /> },
-    // { path: 'church', element: <Church /> },
-    // { path: 'watch', element: <WatchPage /> },
-    // { path: 'watch2', element: <WatchLive /> },
-    // { path: 'signin', element: <SignInForm /> },
-    // { path: 'signup', element: <SignUpForm /> },
-    // { path: 'reports', element: <Reports /> },
-    // { path: 'members', element: <MemberDatabase /> },
-    // { path: 'admins', element: <Admins /> },
-    // { path: 'create-page', element: user.type === 'SUPERUSER'? <NewPage/>: <ErrorPage /> },
-    // { path: 'pages', element: user.type === 'SUPERUSER'? <Pages />: <ErrorPage /> },
-    // { path: 'page-profile', element:  isAdmin ? <Pages />: <ErrorPage /> },
-    // { path: 'admin', element: user.email?<AdminPage />: <SignInForm /> },
   ]
 
-  // console.log(user)
-  // console.log(currentPage)
 
   return useRoutes(routes);
 
