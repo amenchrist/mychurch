@@ -11,7 +11,7 @@ function GivingForm() {
   };
 
   function LoveworldPay(){
-    const { currentMember,  } = useStateContext();
+    const { currentMember, } = useStateContext();
 
     return (
       <div style={{padding: '20px'}}>

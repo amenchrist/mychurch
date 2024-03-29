@@ -41,7 +41,7 @@ import { getPage } from './dbQueryFunctions';
 export default function Router() {
 
   //IMPORTING RELEVANT VARIABLES
-  const { user, currentPage, setCurrentPage } = useMyStore();
+  const { user, setUser, currentPage, setCurrentPage } = useMyStore();
   
   /**
    * GET THE HANDLE FROM THE URL
@@ -96,9 +96,7 @@ export default function Router() {
   }
   
   const routes = [
-    // { path: '/', element: <GivingForm /> } ,
-    { path: '/', element: user.email? <Home /> : <SignInForm /> },
-    { path: ':handle/watch', element: handleExists? <WatchPage /> : <ErrorPage /> }, 
+    { path: '/', element: <GivingForm /> } ,
     { 
       path: ':handle', 
       element: handleExists ? user.email? <Dashboard />: <WelcomePage /> : <ErrorPage /> , //if handle doesn't exist, return error page, otherwise check if logged in
