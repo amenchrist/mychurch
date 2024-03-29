@@ -4,11 +4,14 @@ import { useStateContext } from '../../contexts/ContextProvider';
 import { getDateValues } from '../../functions';
 import { attendanceRegex, nameRegex, phoneRegex } from '../../regex';
 import { v4 as uuidv4 } from 'uuid';
+import { useMyStore } from '../../store';
 // import useAttendanceLogger from '../../hooks/useAttendanceLogger';
 
 export default function FirstTimersForm() {
 
-  const { user, setUser, orgDetails, geolocation } = useStateContext();
+  const { orgDetails, geolocation } = useStateContext();
+  const { user, setUser,} = useMyStore();
+
 
   const [ attendanceRecord, setAttendanceRecord ] = useState({});
   const [ processingRequested, setProcessingRequested ] = useState(false);

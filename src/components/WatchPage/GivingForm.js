@@ -33,9 +33,6 @@ function GivingForm() {
               <MenuItem value={"Healing School"}>Partnership(Healing School)</MenuItem>
               <MenuItem value={"Loveworld UK"}>Partnership(Loveworld UK)</MenuItem>
               <MenuItem value={"Inner City Mission"}>Partnership(Inner City Mission)</MenuItem>
-
-             
-
             </Select>
 
             <TextField id="outlined-basic" label="Amount" variant="outlined" sx={{marginTop: '15px'}} />

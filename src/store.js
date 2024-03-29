@@ -5,7 +5,7 @@ function store(set) {
 
 
     return {
-        user: {},
+        user: null,
         setUser: (newUser) => set(() => ({user: newUser})),
         adminMode: false,
         toggleAdminMode: (value) => set(() => ({adminMode: value})),

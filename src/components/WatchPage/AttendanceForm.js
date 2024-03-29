@@ -5,11 +5,13 @@ import { getDateValues } from '../../functions';
 import { attendanceRegex, phoneRegex } from '../../regex';
 import { Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import { useMyStore } from '../../store';
 // import useAttendanceLogger from '../../hooks/useAttendanceLogger';
 
 export default function AttendanceForm({isAnAdmin}) {
 
-    const { user, setUser, orgDetails, geolocation } = useStateContext();    
+    const { orgDetails, geolocation } = useStateContext();    
+    const { user, setUser,} = useMyStore();
 
     const [ attendance, setAttendance ] = useState(1)
     // const [ valid, setValid ] = useState(true);
