@@ -35,6 +35,7 @@ import { Page } from './classes';
 import ComingSoon from './pages/ComingSoon';
 import GivingForm from './components/WatchPage/GivingForm';
 import { getPage } from './dbQueryFunctions';
+import SignInPage from './pages/SignInPage';
 
 
 export default function Router() {
@@ -95,8 +96,9 @@ export default function Router() {
   
   const routes = [
     // { path: '/', element: <GivingForm /> } ,
-    { path: '/', element: isSignedIn? <SignedInScreen />: <SignInForm /> } ,
-    { path: ':handle/watch', element: currentPage ? <WatchPage /> : <ErrorPage /> } ,    
+    { path: '/', element: isSignedIn? <SignedInScreen /> : <SignInPage /> } ,
+    { path: 'register', element: <SignUpForm /> } ,
+    { path: ':handle/watch', element: currentPage ? <WatchPage /> : <ErrorPage /> } ,   
     { 
       path: ':handle', 
       element: currentPage ? isSignedIn? <Dashboard />: <WelcomePage /> : <ErrorPage /> , //if handle doesn't exist, return error page, otherwise check if logged in

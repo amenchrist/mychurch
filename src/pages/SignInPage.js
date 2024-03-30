@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
 import { SignInForm } from '../components/SignInForm';
 import { SignUpForm } from '../components/SignUpForm';
-import { Box, Container, CssBaseline, Link, Typography } from '@mui/material';
+import { Avatar, Box, Container, CssBaseline, Link, Typography } from '@mui/material';
 import { EmailSignInForm } from '../components/EmailSignInForm';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+
 
 export default function SignInPage() {
 
     const [ isRegistered, setIsRegistered ] = useState(true);
     const [ usePassword, setUsePassword ] = useState(false);
+    
 
     function Copyright(props) {
       return (
@@ -34,7 +37,13 @@ export default function SignInPage() {
             alignItems: 'center',
           }}
         >
-          {usePassword? <SignInForm /> : <EmailSignInForm />}
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          {usePassword? <SignInForm setUsePassword={setUsePassword} /> : <EmailSignInForm setUsePassword={setUsePassword}/>}
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
