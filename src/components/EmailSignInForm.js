@@ -8,13 +8,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { emailRegex } from "../regex";
 
 
-export const SignInForm = () => {
+export const EmailSignInForm = () => {
 
-  const setUser = useMyStore((store) => store.setUser)
-  const { setIsSignedIn } = useMyStore();
+  const { setIsSignedIn, setUser } = useMyStore();
 
-  const [email, setEmail] = useState(window.localStorage.getItem("emailForSignIn") || "");
-  const [password, setPassword] = useState("");
+  const [ email, setEmail ] = useState(window.localStorage.getItem("emailForSignIn") || "");
   const [ isRegistered, setIsRegistered ] = useState(false);
   const [ valid, setValid ] = useState(true);
 
@@ -30,52 +28,6 @@ export const SignInForm = () => {
     //test whether input is valid
     setValid(reg.test(value));
 
-  };
-
-
-
-  const signIn = async (e) => {
-    e.preventDefault();
-
-    const getUser = async (userCred) => {
-
-      try {
-        const docRef = doc(db, 'userProfiles', userCred.email);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()){
-          setUser({...userCred, ...docSnap.data()});
-        } else {
-          console.log('User Profile not found');
-          setIsRegistered(false)
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    if(!isRegistered){
-      try {
-        const docRef = doc(db, 'userProfiles', email)
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()){
-          setIsRegistered(true)
-          return
-        } 
-      } catch (err) {
-        console.log("Error fetching doc");
-        console.log(err)
-        setIsRegistered(false);
-        return
-      }
-    } else {
-      try {
-        const userCred = await signInWithEmailAndPassword(auth, email, password);
-        getUser(userCred.user)
-        
-      } catch (err) {
-        console.error(err);
-      }
-    }
   };
 
   

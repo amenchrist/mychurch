@@ -40,7 +40,7 @@ import { getPage } from './dbQueryFunctions';
 export default function Router() {
 
   //IMPORTING RELEVANT VARIABLES
-  const { user, setUser, currentPage, setCurrentPage, urlHandle, setUrlHandle } = useMyStore();
+  const { isSignedIn, setIsSignedIn, user, setUser, currentPage, setCurrentPage, urlHandle, setUrlHandle } = useMyStore();
   
   /**
    * GET THE HANDLE FROM THE URL
@@ -83,17 +83,26 @@ export default function Router() {
       </div>
     )
   }
+
+  const SignedInScreen = () => {
+    return (
+      <div>
+      <h1> You are signed in with {user.email}</h1>
+      <button onClick={() => {setIsSignedIn(false); setUser(null)}}>Sign Out</button>
+      </div>
+    )
+  }
   
   const routes = [
     // { path: '/', element: <GivingForm /> } ,
-    { path: '/', element: <SignInForm /> } ,
+    { path: '/', element: isSignedIn? <SignedInScreen />: <SignInForm /> } ,
     { path: ':handle/watch', element: currentPage ? <WatchPage /> : <ErrorPage /> } ,    
     { 
       path: ':handle', 
-      element: currentPage ? user?.email? <Dashboard />: <WelcomePage /> : <ErrorPage /> , //if handle doesn't exist, return error page, otherwise check if logged in
+      element: currentPage ? isSignedIn? <Dashboard />: <WelcomePage /> : <ErrorPage /> , //if handle doesn't exist, return error page, otherwise check if logged in
       children: [
             // { path: '', element: user.email? <Dashboard />: <WelcomePage /> },
-            { path: 'giving-records', element: user?.email? <GivingRecords/>: <SignInForm /> },
+            { path: 'giving-records', element: isSignedIn? <GivingRecords/>: <SignInForm /> },
             { path: 'conversations', element: <ComingSoon /> }, //user.email?<Conversations />: <SignInForm /> },
             { path: 'notifications', element: <ComingSoon /> }, //user.email?<Notifications/>: <SignInForm /> },
             { path: 'testimonies', element: <ComingSoon /> }, //user.email?<Testimonies/>: <SignInForm /> },

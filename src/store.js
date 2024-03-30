@@ -13,6 +13,8 @@ function store(set) {
         setCurrentPage: (newPage) => set(() => ({currentPage: newPage})),
         urlHandle: '',
         setUrlHandle: (handle) => set(() => ({urlHandle: handle})),
+        isSignedIn: false,
+        setIsSignedIn: (value) => set(() => ({isSignedIn: value})),
 
     }
 }
