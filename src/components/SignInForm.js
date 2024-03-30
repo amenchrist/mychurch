@@ -1,47 +1,322 @@
 import { auth, db } from "../config/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { signInWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
+import { useEffect, useState } from "react";
 import { useMyStore } from "../store";
 import { doc, getDoc } from "firebase/firestore";
+import { Avatar, Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, Link, TextField, Typography } from "@mui/material";
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { emailRegex } from "../regex";
+
 
 export const SignInForm = () => {
 
   const setUser = useMyStore((store) => store.setUser)
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(window.localStorage.getItem("emailForSignIn") || "");
   const [password, setPassword] = useState("");
+  const [ isRegistered, setIsRegistered ] = useState(true);
+  const [ valid, setValid ] = useState(true);
 
-  const signIn = async () => {
-    try {
-      const userCred = await signInWithEmailAndPassword(auth, email, password);
-      getUser(userCred.user)
+  const handleValidation = (value) => {
+
+    setIsRegistered(true)
+    //set email to user input
+    setEmail(value.toLowerCase());
+
+    //define regex     
+    const reg = new RegExp(emailRegex); 
       
-    } catch (err) {
-      console.error(err);
+    //test whether input is valid
+    setValid(reg.test(value));
+
+  };
+
+
+
+  const signIn = async (e) => {
+    e.preventDefault();
+
+    const getUser = async (userCred) => {
+
+      try {
+        const docRef = doc(db, 'userProfiles', userCred.email);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()){
+          setUser({...userCred, ...docSnap.data()});
+        } else {
+          console.log('User Profile not found');
+          setIsRegistered(false)
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    if(!isRegistered){
+      try {
+        const docRef = doc(db, 'userProfiles', email)
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()){
+          setIsRegistered(true)
+          return
+        } 
+      } catch (err) {
+        console.log("Error fetching doc");
+        console.log(err)
+        setIsRegistered(false);
+        return
+      }
+    } else {
+      try {
+        const userCred = await signInWithEmailAndPassword(auth, email, password);
+        getUser(userCred.user)
+        
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
-  // const userProfilesRef = collection(db, 'userProfiles');
+  
 
-  const getUser = async (userCred) => {
-
-    try {
-      const docRef = doc(db, 'userProfiles', userCred.email)
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()){
-        setUser({...userCred, ...docSnap.data()});
-      } else {
-        console.log('User Profile not found');
+  const checkEmail = () => {
+    (async () => {
+      try {
+        const docRef = doc(db, 'userProfiles', email)
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()){
+          console.log("Email exists");
+          setIsRegistered(true)
+        } else {
+          setIsRegistered(false)
+        }
+      } catch (err) {
+        console.log("Error validating email");
+        console.log(err)
       }
-    } catch (err) {
-      console.log(err);
-    }
+    })()
   }
+
+  function Copyright(props) {
+    return (
+      <Typography variant="body2" color="text.secondary" align="center" {...props}>
+        {'Copyright © '}
+        <Link color="inherit" href="#">
+          Evangel
+        </Link>{' '}
+        {new Date().getFullYear()}
+        {'.'}
+      </Typography>
+    );
+  }
+
+
+  //PASSWORDLESS SIGN IN
+
+    // Will try to use previously entered email, defaults to an empty string
+    // const [email, setEmail] = React.useState(
+    //   window.localStorage.getItem("emailForSignIn") || ""
+    // );
+    const [errorResponse, setErrorResponse] = useState("");
+  
+    // When this component renders
+    useEffect(() => {
+      // Get the saved email
+      const saved_email = window.localStorage.getItem("emailForSignIn");
+  
+      // Verify the user went through an email link and the saved email is not null
+      if (isSignInWithEmailLink(auth, window.location.href) && !!saved_email) {
+        // Sign the user in
+        signInWithEmailLink(auth, saved_email, window.location.href);
+      } 
+    }, []);
+  
+    // const clearError = () => {
+    //   if (errorResponse !== "") {
+    //     setErrorResponse("");
+    //   }
+    // };
+  
+    // const updateEmail = (e) => {
+    //   clearError();
+    //   setEmail(e.target.value);
+    // };
+  
+    const trySignIn = async (e) => {
+      e.preventDefault();
+      const actionCodeSettings = {
+        // URL you want to redirect back to. The domain (www.example.com) for this
+        // URL must be in the authorized domains list in the Firebase Console.
+        url: 'http://localhost:3000/',
+        // This must be true.
+        handleCodeInApp: true,
+        // iOS: {
+        //   bundleId: 'com.example.ios'
+        // },
+        // android: {
+        //   packageName: 'com.example.android',
+        //   installApp: true,
+        //   minimumVersion: '12'
+        // },
+        // dynamicLinkDomain: "example.page.link"
+      };
+
+      // If the user is re-entering their email address but already has a code
+      if (isSignInWithEmailLink(auth, window.location.href) && !!email) {
+        // Sign the user in
+        signInWithEmailLink(auth, email, window.location.href)
+        .then(result => {
+          window.localStorage.removeItem('emailForSignIn');
+          console.log(result)
+        })
+        .catch((err) => {
+          console.log(err)
+        });
+      } else {
+        sendSignInLinkToEmail( auth, email, actionCodeSettings)
+        .then((res) => {
+          console.log(res)
+          // Save the users email to verify it after they access their email
+          window.localStorage.setItem("emailForSignIn", email);
+        })
+        .catch((err) => {
+          console.log(err)
+        });
+      }
+    };
+  
 
   
 
   return (
-    <div style={{width: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+    <>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          
+          <Box component="form" onSubmit={trySignIn} sx={{ mt: 1, width: '100%' }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              onChange={(e) => handleValidation(e.target.value)}
+              onBlur={checkEmail}
+              error={!valid}
+            />
+            
+            { !isRegistered? 
+            <Typography component="h5" variant="p" sx={{ textAlign: 'center',  color: 'red' }}>
+            Email not found
+            </Typography> : <></>}
+            {/* <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+            /> */}
+            
+            {/* <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            /> */}
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In with Email
+            </Button>
+            <Grid container>
+              <Grid item xs>
+              <Link href="#" variant="body2">
+                  Forgot password?
+              </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {"Create account"}
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+        <Copyright sx={{ mt: 8, mb: 4 }} />
+      </Container>
+      {/* <Box component="form" noValidate onSubmit={signIn} sx={{ mt: 3, width: '100%' }}  >
+        <Grid container spacing={2} >
+          <Grid item xs={12} >
+            <TextField
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              value={email}
+              error={false}
+              autoFocus
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Grid>
+        </Grid>
+        {!isRegistered? <Typography component="h5" variant="p" sx={{ mt: 2,  textAlign: 'center', color: 'red' }}>
+            Email not found
+        </Typography> : <></> }
+        
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 2, mb: 2 }}
+          disabled={false}
+        >
+          Log in
+        </Button>
+      </Box>
+      <Button
+        type="submit"
+        fullWidth
+        variant="outlined"
+        sx={{ mt:1, mb: 2 }}
+      >
+        I'm New Here
+      </Button> */}
+    {/* <div style={{width: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
       <input
         placeholder="Email..."
         onChange={(e) => setEmail(e.target.value)}
@@ -54,6 +329,7 @@ export const SignInForm = () => {
       <button onClick={signIn}> Sign In</button>
       <br />
       <a href='/signup'>I'm new here</a>
-    </div>
+    </div> */}
+    </>
   );
 };
