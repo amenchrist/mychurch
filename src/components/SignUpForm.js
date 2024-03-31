@@ -69,13 +69,14 @@ export const SignUpForm = () => {
 
   const navigate = useNavigate();
 
-  const signUp = async () => {
+  const signUp = async (e) => {
+    e.preventDefault()
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password);
       await addUser(newUser);
       const nUser = new User(newUser)
       setUser({...userCred.user, ...nUser});
-      console.log('New User Added')
+      
       navigate('/');
     } catch (err) {
       console.error(err);
@@ -87,7 +88,9 @@ export const SignUpForm = () => {
 
     try {
       await setDoc(doc(db, 'userProfiles', email), newUser);
+      console.log('New User Added')
     } catch (err) {
+      console.log('Error adding user')
       console.log(err);
     }
   }
@@ -106,12 +109,12 @@ export const SignUpForm = () => {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{}}>
       <CssBaseline />
-      <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center',  }} >
+      <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center',height:'80%' }} >
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}><LockOutlinedIcon /></Avatar>
         <Typography component="h1" variant="h5">Sign up</Typography>
-        <Box component="form" noValidate onSubmit={signUp} sx={{ mt: 3, overflowY: 'auto' }}>
+        <Box component="form" onSubmit={signUp} sx={{ mt: 3,  height:'100%', overflowY: 'auto'}}>
           <Grid container spacing={2}>
           <Grid item xs={12}>
               <TextField required fullWidth id="email" label="Email Address" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -120,10 +123,10 @@ export const SignUpForm = () => {
               <TextField required fullWidth  label="Password" type="password" id="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField autoFocus required fullWidth autoComplete="given-name" label="First Name" id="firstName" value={firstName}/>
+              <TextField autoFocus required fullWidth autoComplete="given-name" label="First Name" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField required fullWidth autoComplete="family-name" label="Last Name" id="lastName" value={lastName}/>
+              <TextField required fullWidth autoComplete="family-name" label="Last Name" id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)}/>
             </Grid>
             <Grid item xs={12}>
               <TextField required fullWidth disabled name="Role" label="Role" type="text" id="Role" value={role} onChange={(e) => setRole(e.target.value)} />
@@ -145,7 +148,7 @@ export const SignUpForm = () => {
               <Typography>Contact Info</Typography>
             </Grid>
             <Grid item xs={12}>
-              <TextField fullWidth label="Phone Number" type="text" id="phoneNumber" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+              <TextField required fullWidth label="Phone Number" type="text" id="phoneNumber" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
             </Grid>
             <Grid item xs={12}>
               <TextField fullWidth label="House Name of Number" type="text" id="houseNameOrNumber" value={houseNameOrNumber} onChange={(e) => setHouseNameOrNumber(e.target.value)} />
