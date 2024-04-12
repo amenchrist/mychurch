@@ -12,8 +12,8 @@ export const SignInForm = ({setUsePassword}) => {
   const setUser = useMyStore((store) => store.setUser)
   const { setIsSignedIn } = useMyStore();
 
-  const [email, setEmail] = useState(window.localStorage.getItem("emailForSignIn") || "");
-  const [password, setPassword] = useState("");
+  const [ email, setEmail ] = useState(window.localStorage.getItem("emailForSignIn") || "");
+  const [ password, setPassword ] = useState("");
   const [ isRegistered, setIsRegistered ] = useState(false);
   const [ valid, setValid ] = useState(true);
 
@@ -32,15 +32,17 @@ export const SignInForm = ({setUsePassword}) => {
   };
 
   const signIn = async (e) => {
+    //Submit will only be enabled if email is registered
     e.preventDefault();
 
     const getUser = async (userCred) => {
-
+      //Used to load profile after successful auth
       try {
         const docRef = doc(db, 'userProfiles', userCred.email);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()){
           setUser({...userCred, ...docSnap.data()});
+          setIsSignedIn(true);
         } else {
           console.log('User Profile not found');
           setIsRegistered(false)
@@ -50,34 +52,53 @@ export const SignInForm = ({setUsePassword}) => {
       }
     }
 
-    if(!isRegistered){
-      try {
-        const docRef = doc(db, 'userProfiles', email)
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()){
-          setIsRegistered(true)
-          return
-        } 
-      } catch (err) {
-        console.log("Error fetching doc");
-        console.log(err)
-        setIsRegistered(false);
-        return
-      }
-    } else {
-      try {
-        const userCred = await signInWithEmailAndPassword(auth, email, password);
-        getUser(userCred.user)
-        
-      } catch (err) {
-        console.error(err);
-      }
+    //Sign in flow
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      getUser(userCred.user)
+      // setIsSignedIn(true)
+      
+    } catch (err) {
+      console.error(err);
     }
+    // if(!isRegistered){
+    //   try {
+    //     const docRef = doc(db, 'userProfiles', email)
+    //     const docSnap = await getDoc(docRef);
+    //     if (docSnap.exists()){
+    //       setIsRegistered(true)
+    //       try {
+    //         const userCred = await signInWithEmailAndPassword(auth, email, password);
+    //         getUser(userCred.user)
+    //         setIsSignedIn(true)
+            
+    //       } catch (err) {
+    //         console.error(err);
+    //       }
+    //       return
+    //     } 
+    //   } catch (err) {
+    //     console.log("Error fetching doc");
+    //     console.log(err)
+    //     setIsRegistered(false);
+    //     return
+    //   }
+    // } else {
+    //   try {
+    //     const userCred = await signInWithEmailAndPassword(auth, email, password);
+    //     getUser(userCred.user)
+    //     setIsSignedIn(true)
+        
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+    // }
   };
 
   
 
   const checkEmail = () => {
+    console.log('checking if email is registered')
     if(!valid && email !=='' ) return
     (async () => {
       try {
@@ -95,6 +116,10 @@ export const SignInForm = ({setUsePassword}) => {
       }
     })()
   }
+
+  checkEmail() 
+
+
   return (
     <>
       <Box component="form" onSubmit={signIn} sx={{ mt: 1, width: '100%' }}>

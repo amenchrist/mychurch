@@ -1,4 +1,4 @@
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Divider, Drawer, Grid, Hidden, List, MenuItem, TextField, Typography } from '@mui/material';
 import { LogOut, Menu, MinusSquare, Plus, PlusCircle, RefreshCw, Square, X } from 'react-feather';
@@ -12,9 +12,10 @@ import { useEffect, useState } from 'react';
 const Sidebar = ({ onMobileClose, openMobile }) => {
 
   // const user = useMyStore(store => store.user);
-  const { setUser, adminMode, toggleAdminMode, user, currentPage } = useMyStore();
+  const { setUser, adminMode, toggleAdminMode, user, currentPage, setIsSignedIn } = useMyStore();
   const [items, setItems] = useState(allItems.filter((item) => item.mode !== 'ADMIN'))
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [ openMenu, setOpenMenu ] = useState(false)
 
@@ -28,7 +29,9 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
     try {
       await signOut(auth);
       toggleAdminMode(false)
-      setUser({})
+      setIsSignedIn(false)
+      setUser(null)
+      navigate('/')
     } catch (err) {
       console.error(err);
     }
@@ -39,13 +42,15 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
   }
 
   // const { title, firstName, lastName } = user?.bioData;
+  // console.log(user)
+
 
   function Header() {
     return (
       <Box sx={{alignItems: 'center', display: 'flex', flexDirection: 'column', p: 2 }} >
         <Avatar component={RouterLink} src={''} sx={{cursor: 'pointer', width: 64, height: 64 }} to="#" />
         <Typography color="textPrimary" variant="h5" align='center' >
-          {user?.email? `${user.biodata?.title} ${user.biodata?.firstName} ${user.biodata?.lastName}` :'Guest'}
+          {user?.email? `${user.bioData?.title} ${user.bioData?.firstName} ${user.bioData?.lastName}` :'Guest'}
         </Typography> 
         {/* <Typography color="textPrimary" variant="h5" align='center' >
           {user?.email? 'Sign Amen Out' : 'Sign Amen In'}
@@ -92,7 +97,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
 
             return (
               <NavItem
-                href={`${currentPage?.handle || ''}/${item.href}`}
+                href={`${item.href}`}
                 key={item.title}
                 title={item.title}
                 icon={item.icon}

@@ -9,7 +9,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 export default function SignInPage() {
 
     const [ isRegistered, setIsRegistered ] = useState(true);
-    const [ usePassword, setUsePassword ] = useState(false);
+    const [ usePassword, setUsePassword ] = useState(true);
     
 
     function Copyright(props) {

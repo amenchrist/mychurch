@@ -25,8 +25,10 @@ export const EmailSignInForm = ({setUsePassword}) => {
       
     //test whether input is valid
     setValid(reg.test(value));
+    
 
-  };  
+  }; 
+  
 
   const checkEmail = () => {
     if( !valid && email =='' ) return
@@ -47,6 +49,8 @@ export const EmailSignInForm = ({setUsePassword}) => {
     })()
   }
 
+  checkEmail() 
+
   //PASSWORDLESS SIGN IN
   const [errorResponse, setErrorResponse] = useState("");
 
@@ -66,8 +70,8 @@ export const EmailSignInForm = ({setUsePassword}) => {
       signInWithEmailLink(auth, email, window.location.href)
       .then(res => {
         window.localStorage.removeItem('emailForSignIn');
-        setIsSignedIn(true);
         setUser({...{}, email: res.user.email});
+        setIsSignedIn(true);
       })
       .catch((err) => {
         console.log(err)

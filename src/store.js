@@ -15,6 +15,8 @@ function store(set) {
         setUrlHandle: (handle) => set(() => ({urlHandle: handle})),
         isSignedIn: false,
         setIsSignedIn: (value) => set(() => ({isSignedIn: value})),
+        event: null,
+        setEvent: (newEvent) => set(() => ({event: newEvent})),
 
     }
 }

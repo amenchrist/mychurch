@@ -1,4 +1,4 @@
-import {  useRoutes, Navigate, useLocation, useParams } from 'react-router-dom';
+import {  useRoutes, Navigate, useLocation, useParams, useNavigate, Outlet } from 'react-router-dom';
 // import DashboardLayout from './components/adminDashboard/DashboardLayout';
 // import MemberDashboardLayout from './components/memberDashboard/MemberDashboardLayout';
 // import { Offerings, Tithes, Partnerships, SpecialSeeds, OtherGiving, GivingSummary } from './pages/@memberDashboard';
@@ -36,12 +36,15 @@ import ComingSoon from './pages/ComingSoon';
 import GivingForm from './components/WatchPage/GivingForm';
 import { getPage } from './dbQueryFunctions';
 import SignInPage from './pages/SignInPage';
+import Sidebar from './components/Sidebar';
 
 
 export default function Router() {
 
   //IMPORTING RELEVANT VARIABLES
   const { isSignedIn, setIsSignedIn, user, setUser, currentPage, setCurrentPage, urlHandle, setUrlHandle } = useMyStore();
+
+  const navigate = useNavigate()
   
   /**
    * GET THE HANDLE FROM THE URL
@@ -85,25 +88,41 @@ export default function Router() {
     )
   }
 
+  
   const SignedInScreen = () => {
+    const listStyle = {width: '100%', height: '50px', border:'1px solid', padding: '5px'}
+    const pagesManaged = ['My Dashboard','cebarking', 'ceilford', 'celovechurchbkg', ]
     return (
       <div>
       <h1> You are signed in with {user.email}</h1>
       <button onClick={() => {setIsSignedIn(false); setUser(null)}}>Sign Out</button>
+      <div style={{width: '300px', height: '500px', border:'2px solid', }}>
+        {pagesManaged.map((p,i) => 
+         <div onClick={() => navigate(p)} style={listStyle} key={i}><h4>{p}</h4></div>
+        )}
+      </div>
       </div>
     )
   }
-  
+
+  const PageContainer = () => {
+    return(
+      <>
+      <Sidebar />
+      <Outlet />
+      </>
+    )
+  }  
   const routes = [
     // { path: '/', element: <GivingForm /> } ,
     { path: '/', element: isSignedIn? <SignedInScreen /> : <SignInPage /> } ,
-    { path: 'register', element: <SignUpForm /> } ,
+    { path: 'register', element: isSignedIn?<SignUpForm />:<><h1>You are already registered</h1></> } ,
     { path: ':handle/watch', element: currentPage ? <WatchPage /> : <ErrorPage /> } ,   
     { 
       path: ':handle', 
-      element: currentPage ? isSignedIn? <Dashboard />: <WelcomePage /> : <ErrorPage /> , //if handle doesn't exist, return error page, otherwise check if logged in
+      element: currentPage ? isSignedIn? <PageContainer /> : <WelcomePage /> : <ErrorPage /> , //if handle doesn't exist, return error page, otherwise check if logged in
       children: [
-            // { path: '', element: user.email? <Dashboard />: <WelcomePage /> },
+            { path: '', element: user?.email? <Dashboard />: <WelcomePage /> },
             { path: 'giving-records', element: isSignedIn? <GivingRecords/>: <SignInForm /> },
             { path: 'conversations', element: <ComingSoon /> }, //user.email?<Conversations />: <SignInForm /> },
             { path: 'notifications', element: <ComingSoon /> }, //user.email?<Notifications/>: <SignInForm /> },
