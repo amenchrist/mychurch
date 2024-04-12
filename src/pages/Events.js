@@ -9,6 +9,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
 
 export default function Events() {
 
@@ -50,17 +51,15 @@ export default function Events() {
 
         <Grid container spacing={2}>
           <Grid item xs={12} md={12}>
-            <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
-              Events
-            </Typography>
+              <Grid item xs={6} >
+                <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">Events</Typography>
+              </Grid>
+              <Grid item xs={6} >
+                <Button onClick={() => setNewEvent(true)} variant="contained">New Event</Button>
+              </Grid>
+              
             <Demo>
               <List sx={{ height:'80vh', overflowY:'auto'}}>
-                <ListItem onClick={() => setNewEvent(true)}>
-                    <ListItemText
-                      primary={`+ New Event`}
-                    />
-                </ListItem>
-                <Divider  component="li" />
                 {arr.map((e,i) => (
                   <>
                   <ListItem key={i}>
