@@ -107,10 +107,10 @@ export default function Router() {
 
   const PageContainer = () => {
     return(
-      <>
+      <div>
       <Sidebar />
       <Outlet />
-      </>
+      </div>
     )
   }  
   const routes = [
