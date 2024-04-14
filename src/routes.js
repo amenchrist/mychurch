@@ -37,12 +37,14 @@ import GivingForm from './components/WatchPage/GivingForm';
 import { getPage } from './dbQueryFunctions';
 import SignInPage from './pages/SignInPage';
 import Sidebar from './components/Sidebar';
+import EventPage from './pages/EventPage';
 
 
 export default function Router() {
 
   //IMPORTING RELEVANT VARIABLES
-  const { isSignedIn, setIsSignedIn, user, setUser, currentPage, setCurrentPage, urlHandle, setUrlHandle } = useMyStore();
+  const { isSignedIn, setIsSignedIn, user, setUser, currentPage, setCurrentPage } = useMyStore();
+  const { urlHandle, setUrlHandle, event } = useMyStore();
 
   const navigate = useNavigate()
   
@@ -80,6 +82,7 @@ export default function Router() {
   // }, [isAdmin, currentPage, user])
 
   const WelcomePage = () => {
+    
     return(
       <div>
         <h2>Welcome to {currentPage?.name}</h2>
@@ -106,6 +109,8 @@ export default function Router() {
   }
 
   const PageContainer = () => {
+
+
     return(
       <div>
       <Sidebar />
@@ -128,7 +133,6 @@ export default function Router() {
             { path: 'notifications', element: <ComingSoon /> }, //user.email?<Notifications/>: <SignInForm /> },
             { path: 'testimonies', element: <ComingSoon /> }, //user.email?<Testimonies/>: <SignInForm /> },
             { path: 'notes', element: <ComingSoon /> }, //user.email?<Notes/>: <SignInForm /> },
-            { path: 'events', element: <Events /> },
             { path: 'news-feed', element: <ComingSoon /> }, //user.email?<NewsFeed/>: <SignInForm /> },
             { path: 'profile', element: <Profile/> },
             { path: 'church', element: <Church /> },
@@ -141,6 +145,13 @@ export default function Router() {
             { path: 'create-page', element: user?.type === 'SUPERUSER'? <NewPage/>: <ErrorPage /> },
             { path: 'page-profile', element:  isAdmin ? <Pages />: <ErrorPage /> },
             { path: 'admin', element: <AdminPage /> },
+            { 
+              path: 'events', 
+              children: [
+                { path: '', element: <Events />,},
+                { path: ':id', element: <EventPage /> }
+              ]
+            },
       ],
     },
     { path: '*', element: <ErrorPage /> },

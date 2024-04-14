@@ -55,7 +55,7 @@ export const SignUpForm = () => {
   // const newUser = { title, firstName, lastName, role }
 
   const newUser = {
-    id: uuidv4(),
+    id: `user_${uuidv4()}`,
     bioData,
     contactInfo,
     pages: [currentPage?.id],
@@ -76,7 +76,6 @@ export const SignUpForm = () => {
       await addUser(newUser);
       const nUser = new User(newUser)
       setUser({...userCred.user, ...nUser});
-      
       navigate('/');
     } catch (err) {
       console.error(err);
@@ -85,7 +84,6 @@ export const SignUpForm = () => {
   };
 
   const addUser = async () => {
-
     try {
       await setDoc(doc(db, 'userProfiles', email), newUser);
       console.log('New User Added')
@@ -209,10 +207,7 @@ export const SignUpForm = () => {
     //     <input required placeholder="Postcode / Zip code" onChange={(e) => setPostOrZipCode(e.target.value)} />
     //   </div>
     //   <button onClick={signUp}> Sign Up</button>
-
     //   <a href='/'>I'm Registered</a>
-
-
     // </div>
   );
 }

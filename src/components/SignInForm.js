@@ -44,7 +44,7 @@ export const SignInForm = ({setUsePassword}) => {
           setUser({...userCred, ...docSnap.data()});
           setIsSignedIn(true);
         } else {
-          console.log('User Profile not found');
+          // console.log('User Profile not found');
           setIsRegistered(false)
         }
       } catch (err) {
@@ -98,14 +98,14 @@ export const SignInForm = ({setUsePassword}) => {
   
 
   const checkEmail = () => {
-    console.log('checking if email is registered')
+    // console.log('checking if email is registered')
     if(!valid && email !=='' ) return
     (async () => {
       try {
         const docRef = doc(db, 'userProfiles', email)
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()){
-          console.log("Email exists");
+          // console.log("Email exists");
           setIsRegistered(true)
         } else {
           setIsRegistered(false)

@@ -79,7 +79,7 @@ export class ContactInfo {
 //USER NOTES
 export class Note {
     constructor(data){
-        const fields = [ "eventID", "authorID", "title", "content", "timestamp" ]
+        const fields = [ "id", "eventID", "authorID", "title", "content", "timestamp" ]
         for (const value of fields){
             this[value] = null
         }
@@ -302,7 +302,8 @@ export class Event extends Page{
         const defaultObj = {
             parentPageID: null,
             creatorID: null,
-            startDateTime: null,
+            date: null,
+            time: null,
             endDateTime: null,
             eventType: LIVESTREAM,
             content: null,
@@ -310,8 +311,10 @@ export class Event extends Page{
             participants: [],
             chats: [],
             recordedLiveURL: null,
+            liveStreamURL: null,
             report: null,
-            reviews: []
+            reviews: [],
+            recurring: false
         };
         constructorHelper.call(this, data, defaultObj)
     } 

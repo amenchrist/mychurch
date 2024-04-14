@@ -3,7 +3,6 @@ import { persist } from 'zustand/middleware';
 
 function store(set) {
 
-
     return {
         user: null,
         setUser: (newUser) => set(() => ({user: newUser})),
@@ -17,8 +16,8 @@ function store(set) {
         setIsSignedIn: (value) => set(() => ({isSignedIn: value})),
         event: null,
         setEvent: (newEvent) => set(() => ({event: newEvent})),
-
     }
+
 }
 
 export const useMyStore = create(persist(store, {name: 'store'}));

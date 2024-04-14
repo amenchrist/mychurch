@@ -1,21 +1,54 @@
-import { Box, Button, Container, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import { Box, Button, Checkbox, Container, FormControlLabel, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../config/firebase';
+import { Event } from '../classes';
+import { v4 as uuidv4 } from 'uuid';
+import { useMyStore } from '../store';
+import { useNavigate,} from 'react-router-dom';
 
 
-export default function Event({setNewEvent}) {  
+export default function EventForm({setNewEvent}) {  
 
-  const [ date, setDate ] = useState(null);
-  const [ time, setTime ] = useState(null);
-  const [ title, setTitle ] = useState('');
+  const { user, setEvent, currentPage } = useMyStore();
+  const navigate = useNavigate();
+
+  const [ date, setDate ] = useState('');
+  const [ time, setTime ] = useState('');
+  const [ name, setName ] = useState('');
   const [ description, setDescription ] = useState('');
   const [ watchLink, setWatchLink ] = useState('');
   const [ frequency, setFrequency ] = useState('');
+  const [ recurring, setRecurring ] = useState(false);
 
 
-  const createEvent = () => {
+  const createEvent = async (e) => {
+    // e.preventDefault()
 
+    const newEvent = {
+      id: `ev_${uuidv4()}`,
+      parentPageID: currentPage.id,
+      creatorID: user.id,
+      recurring,
+      bio: description,
+      liveStreamURL: watchLink,
+      name,
+      date,
+      time,
+    }
+
+    try {
+      await setDoc(doc(db, 'events', newEvent.id), newEvent);
+      console.log('New Event Created');
+      const event = new Event({...newEvent, id:newEvent.id })
+      setEvent(event);
+      navigate(`/${currentPage.handle}/events`);
+    } catch (err) {
+      console.log('Error creating event')
+      console.log(err);
+    }
   }
 
   const frequencyOptions = [ {value: 'DAILY', label: 'Daily'}, {value: 'WEEKLY', label: 'Weekly'}, {value: 'MONTHLY', label: 'Monthly'} ];
@@ -28,7 +61,7 @@ export default function Event({setNewEvent}) {
           <Box component="form" onSubmit={createEvent} sx={{ mt: 3,  height:'100%', overflowY: 'auto'}}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-            <TextField autoFocus required fullWidth label="Title" id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <TextField autoFocus required fullWidth label="Event Title" id="name" value={name} onChange={(e) => setName(e.target.value)} />
             </Grid>
             <Grid item xs={12}>
             <TextField required fullWidth multiline label="Description" id="description" value={description} onChange={(e) => setDescription(e.target.value)}/>
@@ -40,11 +73,14 @@ export default function Event({setNewEvent}) {
             <TextField required fullWidth type="time" id="time" value={time} onChange={(e) => setTime(e.target.value)} />
             </Grid>
             <Grid item xs={12} sm={6} >
-              <TextField required fullWidth select id="frequency" value={frequency} onChange={(e) => setFrequency(e.target.value)}>
+              <FormControlLabel control={<Checkbox onChange={() => setRecurring(!recurring)} />} label="Recurring" />
+              { !recurring? <></> :
+              <TextField required={recurring} fullWidth select id="frequency" value={frequency} onChange={(e) => setFrequency(e.target.value)}>
                 {frequencyOptions.map((e,i) => (
                   <MenuItem key={i} value={e.value}>{e.value}</MenuItem>
                 ))}
               </TextField>
+              }
             </Grid>
             <Grid item xs={12} >
             <TextField required fullWidth label="Watch Link" id="watch-link" value={watchLink} onChange={(e) => setWatchLink(e.target.value)}/>

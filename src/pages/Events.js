@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useMyStore } from '../store';
-import Event from '../components/Event';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -10,66 +9,79 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
+import EventForm from '../components/EventForm';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../config/firebase';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Events() {
 
-  const { event, setEvent } = useMyStore();
+  const { currentPage, setEvent } = useMyStore();
   const [ newEvent, setNewEvent ] = useState(false);
-
-  const style = {
-    height: '100px',
-    border: '2px solid',
-    maxWidth: '470px',
-    width: '90vw',
-    marginBottom: '5px'
-  }
+  const [ events, setEvents ] = useState([])
 
   const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
   }));
 
-  const arr = new Array(15).fill(1);
+  
+  useEffect(() => {
+
+    const getEvents = async () => {
+      const q = query(collection(db, "events"), where("parentPageID", "==", currentPage.id));      
+
+
+      const querySnapshot = await getDocs(q); 
+      const newEvents = []
+
+      querySnapshot.forEach((doc) => {
+        newEvents.push(doc.data())
+      });
+
+      setEvents([...newEvents])
+ 
+    }
+
+    getEvents();
+
+  }, [])
+
+  const navigate = useNavigate()
+  const location = useLocation();
+
+  const getEvent = (id) => {
+    const event = events.find(e => e.id === id)
+    if(event){
+      setEvent(event);
+      navigate(`${id}`)
+    }  
+  }
 
   const EventsList = () => {
     return(
-      // <>
-      // <div style={{padding: '15px 0'}}><h2>Events</h2></div>
-      // <div style={{height: '95vh', overflowY:'auto'}}>
-      //   <div style={{...style, padding: '5px'}} onClick={() => setNewEvent(true)} >
-      //     <h3> + New </h3>
-      //   </div>
-      //   {arr.map((e,i) => {
-      //     return (
-      //       <div style={style} key={i}>
-      //         <p>Event {e+i}</p>
-      //       </div>
-      //     )})
-      //   }        
-      // </div>
-      // </>
-      <Box sx={{ flexGrow: 1, maxWidth: 752, width: '800px', }}>
-
+      <Box sx={{ flexGrow: 1, maxWidth: '800px', width: '80vw', }}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={12}>
-              <Grid item xs={6} >
-                <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">Events</Typography>
+            <Grid container justifyContent="space-between" sx={{ mt: 4, mb: 2 }}>
+              <Grid item>
+                <Typography variant="h6" component="div">Events</Typography>
               </Grid>
-              <Grid item xs={6} >
+              <Grid item>
                 <Button onClick={() => setNewEvent(true)} variant="contained">New Event</Button>
               </Grid>
-              
+            </Grid>              
             <Demo>
               <List sx={{ height:'80vh', overflowY:'auto'}}>
-                {arr.map((e,i) => (
-                  <>
-                  <ListItem key={i}>
+                {events.map((e,i) => (
+                  <div key={`Event ${i}`}>
+                  <ListItem onClick={() => getEvent(e.id)}>
                     <ListItemText
-                      primary={`Event ${e+i}`}
-                      secondary={'Secondary text'}
+                      primary={`${e.date}`}
+                      secondary={`${e.name}`}
                     />
                   </ListItem>
                   <Divider  component="li" />
-                  </>
+                  </div>
                 ))}
               </List>
             </Demo>
@@ -81,7 +93,7 @@ export default function Events() {
 
   return (
     <div>
-      { newEvent? <Event setNewEvent={setNewEvent} /> : <EventsList />}
+      { newEvent? <EventForm setNewEvent={setNewEvent} /> : <EventsList />}
     </div>
   )
 }
