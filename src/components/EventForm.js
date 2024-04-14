@@ -8,6 +8,7 @@ import { Event } from '../classes';
 import { v4 as uuidv4 } from 'uuid';
 import { useMyStore } from '../store';
 import { useNavigate,} from 'react-router-dom';
+import dayjs from 'dayjs';
 
 
 export default function EventForm({setNewEvent}) {  
@@ -15,17 +16,21 @@ export default function EventForm({setNewEvent}) {
   const { user, setEvent, currentPage } = useMyStore();
   const navigate = useNavigate();
 
-  const [ date, setDate ] = useState('');
-  const [ time, setTime ] = useState('');
+  const minute = String(dayjs().$m).padStart(2,'0');
+  const month = String(dayjs().$M+1).padStart(2,'0');
+
+  const [ date, setDate ] = useState(`${dayjs().$y}-${month}-${dayjs().$D}`);
+  const [ time, setTime ] = useState(`${dayjs().$H}:${minute}`);
   const [ name, setName ] = useState('');
   const [ description, setDescription ] = useState('');
   const [ watchLink, setWatchLink ] = useState('');
   const [ frequency, setFrequency ] = useState('');
   const [ recurring, setRecurring ] = useState(false);
 
+  // console.log(`${dayjs().$H}:${dayjs().$m}`)
 
   const createEvent = async (e) => {
-    // e.preventDefault()
+    e.preventDefault()
 
     const newEvent = {
       id: `ev_${uuidv4()}`,
@@ -38,11 +43,10 @@ export default function EventForm({setNewEvent}) {
       date,
       time,
     }
+    const event = new Event(newEvent)
 
     try {
-      await setDoc(doc(db, 'events', newEvent.id), newEvent);
-      console.log('New Event Created');
-      const event = new Event({...newEvent, id:newEvent.id })
+      await setDoc(doc(db, 'events', newEvent.id), {...event});
       setEvent(event);
       navigate(`/${currentPage.handle}/events`);
     } catch (err) {
@@ -58,19 +62,19 @@ export default function EventForm({setNewEvent}) {
       <Container component="main" maxWidth="xs" sx={{}}>
         <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center',height:'80%', }} >
           <Typography component="h1" variant="h5">New Event</Typography>
-          <Box component="form" onSubmit={createEvent} sx={{ mt: 3,  height:'100%', overflowY: 'auto'}}>
+          <Box component="form" onSubmit={createEvent} sx={{ mt: 3,  height:'100%', overflowY: 'auto', paddingTop:1}}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-            <TextField autoFocus required fullWidth label="Event Title" id="name" value={name} onChange={(e) => setName(e.target.value)} />
-            </Grid>
-            <Grid item xs={12}>
-            <TextField required fullWidth multiline label="Description" id="description" value={description} onChange={(e) => setDescription(e.target.value)}/>
+              <TextField autoFocus required fullWidth label="Event Title" id="name" value={name} onChange={(e) => setName(e.target.value)} />
             </Grid>
             <Grid item xs={12} sm={6}>
-            <TextField required fullWidth type="date" id="date" value={date} onChange={(e) => setDate(e.target.value)} />
+              <TextField required fullWidth type="date" label="Date" id="date" value={date} onChange={(e) => setDate(e.target.value)} />
             </Grid>
             <Grid item xs={12} sm={6} >
-            <TextField required fullWidth type="time" id="time" value={time} onChange={(e) => setTime(e.target.value)} />
+              <TextField required fullWidth type="time" label="Time" id="time" value={time} onChange={(e) => setTime(e.target.value)} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField required fullWidth multiline label="Description" id="description" value={description} onChange={(e) => setDescription(e.target.value)}/>
             </Grid>
             <Grid item xs={12} sm={6} >
               <FormControlLabel control={<Checkbox onChange={() => setRecurring(!recurring)} />} label="Recurring" />

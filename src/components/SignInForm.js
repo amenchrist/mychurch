@@ -112,7 +112,7 @@ export const SignInForm = ({setUsePassword}) => {
         }
       } catch (err) {
         console.log("Error validating email");
-        console.log(err)
+        // console.log(err)
       }
     })()
   }

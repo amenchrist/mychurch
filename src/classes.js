@@ -300,6 +300,8 @@ export class Event extends Page{
     constructor(data){
         super(data)
         const defaultObj = {
+            id: null,
+            type: EVENT,
             parentPageID: null,
             creatorID: null,
             date: null,

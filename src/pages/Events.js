@@ -10,9 +10,11 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import EventForm from '../components/EventForm';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function Events() {
 
@@ -30,7 +32,6 @@ export default function Events() {
     const getEvents = async () => {
       const q = query(collection(db, "events"), where("parentPageID", "==", currentPage.id));      
 
-
       const querySnapshot = await getDocs(q); 
       const newEvents = []
 
@@ -47,7 +48,6 @@ export default function Events() {
   }, [])
 
   const navigate = useNavigate()
-  const location = useLocation();
 
   const getEvent = (id) => {
     const event = events.find(e => e.id === id)
@@ -55,6 +55,17 @@ export default function Events() {
       setEvent(event);
       navigate(`${id}`)
     }  
+  }
+
+  const deleteEvent = async (e) => {
+    try {
+        await deleteDoc(doc(db, 'events', e.id));
+        navigate(`/${currentPage.handle}/events`);
+        // setEvent(null);
+      } catch (err) {
+        console.log('Error deleting event')
+        console.log(err);
+      }    
   }
 
   const EventsList = () => {
@@ -74,11 +85,13 @@ export default function Events() {
               <List sx={{ height:'80vh', overflowY:'auto'}}>
                 {events.map((e,i) => (
                   <div key={`Event ${i}`}>
-                  <ListItem onClick={() => getEvent(e.id)}>
+                  <ListItem >
                     <ListItemText
+                      onClick={() => getEvent(e.id)}
                       primary={`${e.date}`}
                       secondary={`${e.name}`}
                     />
+                      <IconButton edge="end" aria-label="delete" onClick={() => deleteEvent(e)} ><DeleteIcon /></IconButton>
                   </ListItem>
                   <Divider  component="li" />
                   </div>
