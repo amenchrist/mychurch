@@ -8,19 +8,24 @@ import { useStateContext } from '../../contexts/ContextProvider';
 import WatchPageSidebar from '../../components/WatchPage/WatchPageSidebar';
 import { Hidden } from '@mui/material';
 import { useMyStore } from '../../store';
+import Schedule from '../../components/Schedule';
+import date from 'date-and-time';
+
 
 function WatchPage() {
 
   const { user, isMobileNavOpen, setMobileNavOpen } = useStateContext();
-  const { currentPage } = useMyStore();
+  const { event, nextEvent } = useMyStore();
+
+  console.log(nextEvent)
 
 
   const ServiceMessage = () => {
     return (
       <div style={{color: 'white', width: "100%", textAlign: 'center', padding: '20px'}}>
-      <h3>PLEASE NOTE</h3>
-      <p>TODAY'S SERVICE (15/01/2022) WILL NOT BE STREAMED</p>
-      <p>PLEASE BE ONSITE TO PARTICIPATE</p>
+      <p>NEXT EVENT</p>
+      <h3>{nextEvent.name}.toUpperCase()</h3>
+      <p>{`${date.format(new Date(nextEvent.date), 'dddd, MMMM DD')} @ ${nextEvent.time}`}</p>
       </div>
     )
   }
@@ -37,13 +42,14 @@ function WatchPage() {
           <Grid item xs={12} md={8}  >  
             <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center'}}>
               <div style={{ width: '100%'}}>
-                <VideoPlayer />
+                {event === null ? <ServiceMessage /> : <VideoPlayer event={event} />}
                 {/* <ServiceMessage /> */}
               </div>
             </div>     
           </Grid>
           <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  alignItems: 'center'}} >
-            {user.attendanceSubmitted? <FullWidthTabs /> : <AttendancePage /> }
+            {/* {user.attendanceSubmitted? <FullWidthTabs /> : <AttendancePage /> } */}
+            {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }
           </Grid>
         </Grid>
         </Hidden>

@@ -12,6 +12,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "change-case": "^4.1.2",
+    "date-and-time": "^3.1.1",
     "dayjs": "^1.11.10",
     "firebase": "^10.1.0",
     "iconify": "^1.4.0",

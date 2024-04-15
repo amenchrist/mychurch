@@ -23,7 +23,10 @@ export default function EventPage({setNewEvent}) {
     if(id !== event?.id){
         setError(true)
     }
-  }, [id, event])
+    return () => {
+      setEvent(null)
+    }
+  }, [id, event, setEvent])
 
   const [ date, setDate ] = useState(event?.date);
   const [ time, setTime ] = useState(event?.time || '');

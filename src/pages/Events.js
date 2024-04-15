@@ -60,8 +60,8 @@ export default function Events() {
   const deleteEvent = async (e) => {
     try {
         await deleteDoc(doc(db, 'events', e.id));
-        navigate(`/${currentPage.handle}/events`);
         // setEvent(null);
+        navigate(`/${currentPage.handle}/events`);
       } catch (err) {
         console.log('Error deleting event')
         console.log(err);
@@ -88,8 +88,8 @@ export default function Events() {
                   <ListItem >
                     <ListItemText
                       onClick={() => getEvent(e.id)}
-                      primary={`${e.date}`}
-                      secondary={`${e.name}`}
+                      primary={`${e.name}`}
+                      secondary={`${e.date}`}
                     />
                       <IconButton edge="end" aria-label="delete" onClick={() => deleteEvent(e)} ><DeleteIcon /></IconButton>
                   </ListItem>

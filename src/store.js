@@ -16,6 +16,8 @@ function store(set) {
         setIsSignedIn: (value) => set(() => ({isSignedIn: value})),
         event: null,
         setEvent: (newEvent) => set(() => ({event: newEvent})),
+        nextEvent: null,
+        setNextEvent: (newEvent) => set(() => ({nextEvent: newEvent})),
     }
 
 }

@@ -17,10 +17,12 @@ export default function EventForm({setNewEvent}) {
   const navigate = useNavigate();
 
   const minute = String(dayjs().$m).padStart(2,'0');
+  const hour = String(dayjs().$H).padStart(2,'0');
   const month = String(dayjs().$M+1).padStart(2,'0');
+  const dayNumber = String(dayjs().$D).padStart(2,'0');
 
-  const [ date, setDate ] = useState(`${dayjs().$y}-${month}-${dayjs().$D}`);
-  const [ time, setTime ] = useState(`${dayjs().$H}:${minute}`);
+  const [ date, setDate ] = useState(`${dayjs().$y}-${month}-${dayNumber}`);
+  const [ time, setTime ] = useState(`${hour}:${minute}`);
   const [ name, setName ] = useState('');
   const [ description, setDescription ] = useState('');
   const [ watchLink, setWatchLink ] = useState('');
