@@ -8,7 +8,7 @@ import { Event } from '../classes';
 import { useMyStore } from '../store';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import ErrorPage from './ErrorPage';
-
+import dayjs from 'dayjs';
 
 export default function EventPage({setNewEvent}) {  
 
@@ -18,37 +18,37 @@ export default function EventPage({setNewEvent}) {
   const { id } = useParams();
   const [ error, setError ] = useState(false);
   const [ updated, setUpdated ] = useState(false);  
+  const [ isToday, setIsToday ] = useState(false);  
 
   useEffect(() => {
     if(id !== event?.id){
         setError(true)
     }
-    return () => {
-      setEvent(null)
-    }
   }, [id, event, setEvent])
 
-  const [ date, setDate ] = useState(event?.date);
-  const [ time, setTime ] = useState(event?.time || '');
+  useEffect(() => {
+    if(dayjs(event?.date).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD') && !isToday){
+      setIsToday(true)
+    }
+  }, [event, setEvent, isToday])
+  
+  const [ date, setDate ] = useState(dayjs(event?.date).format('YYYY-MM-DD'));
+  const [ time, setTime ] = useState(dayjs(event?.date).format('HH:mm') || '');
   const [ name, setName ] = useState(event?.name);
   const [ description, setDescription ] = useState(event?.bio || '');
   const [ watchLink, setWatchLink ] = useState(event?.liveStreamURL || '');
   const [ frequency, setFrequency ] = useState(event?.frequency || '');
   const [ recurring, setRecurring ] = useState(event?.recurring);
-
-  if(event === null ) {
-      return (<ErrorPage />)
-  }
+  const [ isOnNow, setIsOnNow ] = useState(event?.isOnNow)
 
   const updateEvent = async (e) => {
-    e.preventDefault()
-
+    e?.preventDefault();
     const eventUpdate = {
-      date, time, recurring, name,
+      date: dayjs(`${date} ${time}`).toDate().toString(),
+      recurring, name, isOnNow,
       bio: description,
-      liveStreamURL: watchLink,
+      liveStreamURL: watchLink.trim(),
     }
-
     try {
       await setDoc(doc(db, 'events', event.id), eventUpdate, { merge: true });
       const updatedEvent = new Event({...eventUpdate, id: event.id })
@@ -61,14 +61,33 @@ export default function EventPage({setNewEvent}) {
 
   const deleteEvent = async (e) => {
     try {
-        await deleteDoc(doc(db, 'events', event.id));
-        navigate(`/${currentPage.handle}/events`);
-        setEvent(null);
-      } catch (err) {
-        console.log('Error deleting event')
-        console.log(err);
-      }    
+      await deleteDoc(doc(db, 'events', event.id));
+      navigate(`/${currentPage.handle}/events`);
+      setEvent(null);
+    } catch (err) {
+      console.log('Error deleting event')
+      console.log(err);
+    }    
   }
+
+  const toEventsPage = () => {
+    setEvent(null);
+    navigate(`/${currentPage.handle}/events`);
+  }
+
+  const toggleEvent = async (value) => {
+    try {
+      await setDoc(doc(db, 'events', event.id), { isOnNow: value }, { merge: true });
+      const updatedEvent = new Event({...event, id: event.id, isOnNow: value })
+      setEvent(updatedEvent);
+      setIsOnNow(value);
+    } catch (err) {
+      console.log('Error updating event');
+      console.log(err);
+    }
+    
+  }
+
 
   const frequencyOptions = [ {value: 'DAILY', label: 'Daily'}, {value: 'WEEKLY', label: 'Weekly'}, {value: 'MONTHLY', label: 'Monthly'} ];
   
@@ -77,7 +96,7 @@ export default function EventPage({setNewEvent}) {
       { error? <ErrorPage /> :
       <Container component="main" maxWidth="xs" sx={{}}>
         <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center',height:'80%',  }} >
-          <Typography component="h1" variant="h5">{event.name.toUpperCase()}</Typography>
+          <Typography component="h1" variant="h5">{event?.name.toUpperCase()}</Typography>
           <Box component="form" onSubmit={updateEvent} sx={{ mt: 3,  height:'100%', overflowY: 'auto', paddingTop:1}} onChange={() => setUpdated(true)}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -103,19 +122,26 @@ export default function EventPage({setNewEvent}) {
               }
             </Grid>
             <Grid item xs={12} >
-            <TextField required fullWidth label="Watch Link" id="watch-link" value={watchLink} onChange={(e) => setWatchLink(e.target.value)}/>
+              <TextField required fullWidth label="Watch Link" id="watch-link" value={watchLink} onChange={(e) => setWatchLink(e.target.value)}/>
             </Grid>
           </Grid>
-          <Button type="submit" fullWidth variant="contained" disabled={!updated} sx={{ mt: 3, mb: 2 }} >Save</Button>
+          <Button type="submit" fullWidth variant="contained" disabled={!updated} sx={{ mt: 3, }} >Save</Button>
+          </Box>
+          <Button type="submit" fullWidth variant="contained" disabled={(!isToday || isOnNow) && !isOnNow} 
+          sx={{ mt: 2, mb: 2 }} 
+          onClick={() => toggleEvent(!isOnNow)} 
+          color={isOnNow? 'error': 'primary'}
+          >
+            {isOnNow? 'End Event' : 'Start Event'}
+          </Button>
           <Grid container justifyContent="space-between">
               <Grid item>
-              <Typography variant='p' onClick={()=> navigate(`/${currentPage.handle}/events`)} >Back</Typography>
+                <Typography variant='p' onClick={toEventsPage} >Back</Typography>
               </Grid>
               <Grid item>
-              <Typography variant='p' onClick={deleteEvent} >Delete</Typography>
+                <Typography variant='p' onClick={deleteEvent} >Delete</Typography>
               </Grid>
           </Grid>
-          </Box>
         </Box>
       </Container>
       }

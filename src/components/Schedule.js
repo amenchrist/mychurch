@@ -1,16 +1,17 @@
 import { Box, Grid, List, ListItem, ListItemText, Typography } from '@mui/material'
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { and, collection, getDocs, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { db } from '../config/firebase';
 import { useMyStore } from '../store';
-import date from 'date-and-time';
+import dayjs from 'dayjs';
+
 
 export default function Schedule() {
 
 
     const [ height, setHeight ] = useState('90%');
     const [ events, setEvents ] = useState([])
-    const { currentPage, setEvent, setNextEvent } = useMyStore();
+    const { currentPage, event, setEvent, nextEvent, setNextEvent } = useMyStore();
 
     useEffect(() => {
         if(window.innerWidth > 900){
@@ -26,23 +27,23 @@ export default function Schedule() {
           const newEvents = []
     
           querySnapshot.forEach((doc) => {
-            const event = doc.data()
-            newEvents.push(event)
-            if(event.date === `2024-15-04`){
-                setEvent(event)
+            const curEvent = doc.data()
+            if(dayjs(curEvent.date).toDate().getTime() >= new Date().getTime() || curEvent.isOnNow){
+                newEvents.push(curEvent)
+                if(curEvent.isOnNow && event === null){
+                    setEvent(curEvent);
+                }
             }
-            // setNextEvent(event)
-          });    
-          setEvents([...newEvents])     
+        });
+        newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
+        if(nextEvent?.id !== newEvents[0].id ){
+            setNextEvent(newEvents[0])
         }
-    
+        setEvents([...newEvents])     
+        }    
         getEvents();
     
-      }, [currentPage, setEvent])
-
-    //   console.log(dayjs('2024-04-17').toDate().toLocaleDateString('en-US', { weekday: 'long' }))
-    //   console.log(date.format(new Date(), 'dddd, MMMM, DDD'))
-
+      }, [currentPage, setEvent, setNextEvent, nextEvent, event])
 
   return (
         <Box sx={{ width: '100%',  padding: 2}}>
@@ -50,7 +51,7 @@ export default function Schedule() {
           <Grid item xs={12} md={12}>
             <Grid container justifyContent="flex-start" sx={{ mt: 1, mb: 2 }}>
               <Grid item>
-                <Typography variant="h6" component="div">Next Events</Typography>
+                <Typography variant="h6" component="div">Schedule</Typography>
               </Grid>
             </Grid>              
               <List sx={{ height:'80vh', overflowY:'auto', }}>
@@ -58,8 +59,8 @@ export default function Schedule() {
                   <div key={`Event ${i}`}>
                   <ListItem sx={{bgcolor: 'background.paper', mb: 2 }}>
                     <ListItemText
-                      primary={`${e.name}`}
-                      secondary={`${date.format(new Date(e.date), 'dddd, MMMM DD')} @ ${e.time}`}
+                      primary={`${e.name} ${e.isOnNow? `[LIVE NOW]`: ''}`}
+                      secondary={dayjs(e.date).format('dddd, MMMM DD @ hh:mm a')}
                     />
                   </ListItem>
                   </div>

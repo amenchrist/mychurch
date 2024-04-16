@@ -15,6 +15,7 @@ import { db } from '../config/firebase';
 import { useNavigate } from 'react-router-dom';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import dayjs from 'dayjs';
 
 export default function Events() {
 
@@ -38,7 +39,7 @@ export default function Events() {
       querySnapshot.forEach((doc) => {
         newEvents.push(doc.data())
       });
-
+      newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
       setEvents([...newEvents])
  
     }
@@ -60,7 +61,7 @@ export default function Events() {
   const deleteEvent = async (e) => {
     try {
         await deleteDoc(doc(db, 'events', e.id));
-        // setEvent(null);
+        setEvent(null);
         navigate(`/${currentPage.handle}/events`);
       } catch (err) {
         console.log('Error deleting event')
@@ -89,7 +90,7 @@ export default function Events() {
                     <ListItemText
                       onClick={() => getEvent(e.id)}
                       primary={`${e.name}`}
-                      secondary={`${e.date}`}
+                      secondary={dayjs(e.date).format('dddd, MMMM DD @ hh:mm a')}
                     />
                       <IconButton edge="end" aria-label="delete" onClick={() => deleteEvent(e)} ><DeleteIcon /></IconButton>
                   </ListItem>

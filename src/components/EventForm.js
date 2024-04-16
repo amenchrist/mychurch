@@ -16,20 +16,20 @@ export default function EventForm({setNewEvent}) {
   const { user, setEvent, currentPage } = useMyStore();
   const navigate = useNavigate();
 
-  const minute = String(dayjs().$m).padStart(2,'0');
-  const hour = String(dayjs().$H).padStart(2,'0');
-  const month = String(dayjs().$M+1).padStart(2,'0');
-  const dayNumber = String(dayjs().$D).padStart(2,'0');
-
-  const [ date, setDate ] = useState(`${dayjs().$y}-${month}-${dayNumber}`);
-  const [ time, setTime ] = useState(`${hour}:${minute}`);
+  const [ date, setDate ] = useState(dayjs().format('YYYY-MM-DD'));
+  const [ time, setTime ] = useState(dayjs().format('HH:mm'));
   const [ name, setName ] = useState('');
   const [ description, setDescription ] = useState('');
-  const [ watchLink, setWatchLink ] = useState('');
+  const [ watchLink, setWatchLink ] = useState('https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8');
   const [ frequency, setFrequency ] = useState('');
   const [ recurring, setRecurring ] = useState(false);
 
-  // console.log(`${dayjs().$H}:${dayjs().$m}`)
+  // console.log(dayjs(`${date} ${time}`).toDate())
+  // console.log(dayjs().format('DD-MM-YYYY'))
+  // console.log(dayjs().format('HH:mm'))
+  // console.log(dayjs().format('dddd, MMMM DD @ HH:mm'))
+  // console.log(dayjs(new Date().toString()))
+  // console.log(dayjs(new Date().toString()).format('dddd, MMMM DD @ HH:mm'))
 
   const createEvent = async (e) => {
     e.preventDefault()
@@ -40,16 +40,15 @@ export default function EventForm({setNewEvent}) {
       creatorID: user.id,
       recurring,
       bio: description,
-      liveStreamURL: watchLink,
+      liveStreamURL: watchLink.trim(),
       name,
-      date,
-      time,
+      date: dayjs(`${date} ${time}`).toDate().toString(),
     }
     const event = new Event(newEvent)
 
     try {
       await setDoc(doc(db, 'events', newEvent.id), {...event});
-      setEvent(event);
+      // setEvent(event);
       navigate(`/${currentPage.handle}/events`);
     } catch (err) {
       console.log('Error creating event')

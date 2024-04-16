@@ -3,10 +3,14 @@ import VideoJS from './VideoJsPlayer';
 import videojs from 'video.js';
 import { useStateContext } from '../../contexts/ContextProvider';
 import './VideoPlayer.css';
+import { useMyStore } from '../../store';
 // import stayTunedBanner from '../../Stay-tuned-.png';
 // import stayTunedVid from "../../stay-tuned.mp4"
 
 function VideoPlayer() {
+
+  const { event } = useMyStore();
+
 
   const barkingChurch = "https://vcpout-sf01-altnetro.internetmultimediaonline.org/vcp/av5xgmrwkg/playlist.m3u8"
   // const customStream = 'https://vcpout-ams01.internetmultimediaonline.org/vcp/GNW2022WPCngykyh/playlist.m3u8';
@@ -32,10 +36,10 @@ function VideoPlayer() {
   }, [user.attendanceSubmitted])
   
   useEffect(()=>{
-    if(videoSource !== barkingZone ){
-      setVideoSource(barkingZone)
+    if(videoSource !== event.liveStreamURL ){
+      setVideoSource(event.liveStreamURL)
     }
-  }, [videoSource])
+  }, [videoSource, event.liveStreamURL])
 
   const playerRef = React.useRef(null);
 

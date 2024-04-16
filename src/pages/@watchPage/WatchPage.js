@@ -9,7 +9,7 @@ import WatchPageSidebar from '../../components/WatchPage/WatchPageSidebar';
 import { Hidden } from '@mui/material';
 import { useMyStore } from '../../store';
 import Schedule from '../../components/Schedule';
-import date from 'date-and-time';
+import dayjs from 'dayjs';
 
 
 function WatchPage() {
@@ -17,15 +17,12 @@ function WatchPage() {
   const { user, isMobileNavOpen, setMobileNavOpen } = useStateContext();
   const { event, nextEvent } = useMyStore();
 
-  console.log(nextEvent)
-
-
   const ServiceMessage = () => {
     return (
-      <div style={{color: 'white', width: "100%", textAlign: 'center', padding: '20px'}}>
-      <p>NEXT EVENT</p>
-      <h3>{nextEvent.name}.toUpperCase()</h3>
-      <p>{`${date.format(new Date(nextEvent.date), 'dddd, MMMM DD')} @ ${nextEvent.time}`}</p>
+      <div style={{color: 'white', width: "100%", height: '30vh',textAlign: 'center', padding: '20px', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
+        <p>NEXT EVENT</p>
+        <h3>{nextEvent?.name.toUpperCase()}</h3>
+        <p>{dayjs(nextEvent?.date).format('dddd, MMMM DD @ hh:mm a')}</p>
       </div>
     )
   }
@@ -42,8 +39,7 @@ function WatchPage() {
           <Grid item xs={12} md={8}  >  
             <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center'}}>
               <div style={{ width: '100%'}}>
-                {event === null ? <ServiceMessage /> : <VideoPlayer event={event} />}
-                {/* <ServiceMessage /> */}
+                {event?.isOnNow ? <VideoPlayer event={event} /> : <ServiceMessage />}
               </div>
             </div>     
           </Grid>
@@ -56,8 +52,7 @@ function WatchPage() {
         <Hidden mdUp>
         <div style={{display: 'flex', height: "100%", width: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
           <div id={'video-container'} style={{ backgroundColor: "black",  width: '100%'}}>
-            <VideoPlayer />
-            {/* <ServiceMessage /> */}
+            {event?.isOnNow ? <VideoPlayer event={event} /> : <ServiceMessage />}
           </div>
           <div id='attendance-div' style={{ flexGrow: 1, overflowY: "hidden", margin: 0, width: "100%",display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {user.attendanceSubmitted? <FullWidthTabs /> : <AttendancePage /> }

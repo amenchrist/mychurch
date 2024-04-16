@@ -305,7 +305,6 @@ export class Event extends Page{
             parentPageID: null,
             creatorID: null,
             date: null,
-            time: null,
             endDateTime: null,
             eventType: LIVESTREAM,
             content: null,
@@ -316,7 +315,8 @@ export class Event extends Page{
             liveStreamURL: null,
             report: null,
             reviews: [],
-            recurring: false
+            recurring: false,
+            isOnNow: false,
         };
         constructorHelper.call(this, data, defaultObj)
     } 
