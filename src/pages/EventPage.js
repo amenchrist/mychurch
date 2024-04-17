@@ -2,7 +2,7 @@ import { Box, Button, Checkbox, Container, FormControlLabel, Grid, MenuItem, Tex
 import React, { useEffect, useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { deleteDoc, doc, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Event } from '../classes';
 import { useMyStore } from '../store';
@@ -50,7 +50,9 @@ export default function EventPage({setNewEvent}) {
       liveStreamURL: watchLink.trim(),
     }
     try {
-      await setDoc(doc(db, 'events', event.id), eventUpdate, { merge: true });
+      
+      await updateDoc(doc(db, `pages/${currentPage.handle}/events`, event.id), eventUpdate);
+
       const updatedEvent = new Event({...eventUpdate, id: event.id })
       setEvent(updatedEvent);
     } catch (err) {
@@ -77,7 +79,8 @@ export default function EventPage({setNewEvent}) {
 
   const toggleEvent = async (value) => {
     try {
-      await setDoc(doc(db, 'events', event.id), { isOnNow: value }, { merge: true });
+      await updateDoc(doc(db, `pages/${currentPage.handle}/events`, event.id), { isOnNow: value });
+
       const updatedEvent = new Event({...event, id: event.id, isOnNow: value })
       setEvent(updatedEvent);
       setIsOnNow(value);

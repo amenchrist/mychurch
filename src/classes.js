@@ -317,6 +317,7 @@ export class Event extends Page{
             reviews: [],
             recurring: false,
             isOnNow: false,
+            attendanceRecords: []
         };
         constructorHelper.call(this, data, defaultObj)
     } 

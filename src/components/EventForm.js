@@ -2,7 +2,7 @@ import { Box, Button, Checkbox, Container, FormControlLabel, Grid, MenuItem, Tex
 import React, { useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { doc, setDoc } from 'firebase/firestore';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Event } from '../classes';
 import { v4 as uuidv4 } from 'uuid';
@@ -47,7 +47,8 @@ export default function EventForm({setNewEvent}) {
     const event = new Event(newEvent)
 
     try {
-      await setDoc(doc(db, 'events', newEvent.id), {...event});
+      await setDoc(doc(db, `pages/${currentPage.handle}/events`, newEvent.id), {...event});
+
       // setEvent(event);
       navigate(`/${currentPage.handle}/events`);
     } catch (err) {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import FullWidthTabs from '../../components/WatchPage/FullWidthTabs'
 import VideoPlayer from '../../components/WatchPage/VideoPlayer'
 import Grid from '@mui/material/Grid';
@@ -10,12 +10,14 @@ import { Hidden } from '@mui/material';
 import { useMyStore } from '../../store';
 import Schedule from '../../components/Schedule';
 import dayjs from 'dayjs';
+import AttendanceCard from '../../components/AttendanceCard';
 
 
 function WatchPage() {
 
   const { user, isMobileNavOpen, setMobileNavOpen } = useStateContext();
   const { event, nextEvent } = useMyStore();
+  const [ attendanceCaptured, setAttendanceCaptured ] = useState(false);
 
   const ServiceMessage = () => {
     return (
@@ -38,8 +40,11 @@ function WatchPage() {
         <Grid container sx={{ height: "100%" }} >
           <Grid item xs={12} md={8}  >  
             <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center'}}>
-              <div style={{ width: '100%'}}>
-                {event?.isOnNow ? <VideoPlayer event={event} /> : <ServiceMessage />}
+              <div style={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
+                { event?.isOnNow ? 
+                attendanceCaptured ? <VideoPlayer event={event} /> : <AttendanceCard setAttendanceCaptured={setAttendanceCaptured} /> 
+                : <ServiceMessage /> 
+                }
               </div>
             </div>     
           </Grid>
@@ -51,11 +56,12 @@ function WatchPage() {
         </Hidden>
         <Hidden mdUp>
         <div style={{display: 'flex', height: "100%", width: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-          <div id={'video-container'} style={{ backgroundColor: "black",  width: '100%'}}>
-            {event?.isOnNow ? <VideoPlayer event={event} /> : <ServiceMessage />}
+          <div id={'video-container'} style={{ backgroundColor: "black",  width: '100%', display: 'flex', justifyContent: 'center'}}>
+            {/* {event?.isOnNow ? <VideoPlayer event={event} /> : <ServiceMessage />} */}
+            {event?.isOnNow ? <AttendanceCard /> : <ServiceMessage />}
           </div>
           <div id='attendance-div' style={{ flexGrow: 1, overflowY: "hidden", margin: 0, width: "100%",display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {user.attendanceSubmitted? <FullWidthTabs /> : <AttendancePage /> }
+            {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }
           </div>
         </div>
         </Hidden>

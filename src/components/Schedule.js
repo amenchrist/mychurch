@@ -22,25 +22,31 @@ export default function Schedule() {
     useEffect(() => {
 
         const getEvents = async () => {
-          const q = query(collection(db, "events"), where("parentPageID", "==", currentPage.id));     
-          const querySnapshot = await getDocs(q); 
-          const newEvents = []
-    
-          querySnapshot.forEach((doc) => {
-            const curEvent = doc.data()
-            if(dayjs(curEvent.date).toDate().getTime() >= new Date().getTime() || curEvent.isOnNow){
-                newEvents.push(curEvent)
-                if(curEvent.isOnNow && event === null){
-                    setEvent(curEvent);
-                }
+
+          try {
+            const querySnapshot = await getDocs(collection(db, `pages/${currentPage.handle}/events`)); 
+            const newEvents = []
+      
+            querySnapshot.forEach((doc) => {
+              const curEvent = doc.data()
+              if(dayjs(curEvent.date).toDate().getTime() >= new Date().getTime() || curEvent.isOnNow){
+                  newEvents.push(curEvent)
+                  if(curEvent.isOnNow && event === null){
+                      setEvent(curEvent);
+                  }
+              }
+            });
+            newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
+            if(nextEvent && nextEvent?.id !== newEvents[0].id ){
+                setNextEvent(newEvents[0])
             }
-        });
-        newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
-        if(nextEvent?.id !== newEvents[0].id ){
-            setNextEvent(newEvents[0])
-        }
-        setEvents([...newEvents])     
-        }    
+            setEvents([...newEvents])        
+          } catch (err) {
+            console.log('Error retrieving scheduled events');
+            console.log(err)
+          }
+        }         
+        
         getEvents();
     
       }, [currentPage, setEvent, setNextEvent, nextEvent, event])

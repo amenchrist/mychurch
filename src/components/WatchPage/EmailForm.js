@@ -110,7 +110,7 @@ export default function EmailForm() {
           sx={{ mt: 2, mb: 2 }}
           disabled={!enableLogIn}
         >
-          Log in
+          Join Meeting
         </Button>
       </Box>
       <Button

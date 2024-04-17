@@ -117,7 +117,7 @@ export const SignInForm = ({setUsePassword}) => {
     })()
   }
 
-  checkEmail() 
+  // checkEmail() 
 
 
   return (

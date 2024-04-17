@@ -31,9 +31,8 @@ export default function Events() {
   useEffect(() => {
 
     const getEvents = async () => {
-      const q = query(collection(db, "events"), where("parentPageID", "==", currentPage.id));      
 
-      const querySnapshot = await getDocs(q); 
+      const querySnapshot = await getDocs(collection(db, `pages/${currentPage.handle}/events`)); 
       const newEvents = []
 
       querySnapshot.forEach((doc) => {
