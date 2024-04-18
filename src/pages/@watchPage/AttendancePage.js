@@ -2,8 +2,8 @@ import React, { useEffect }  from 'react';
 import { Avatar, Link, Box, Typography, Container } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import EmailForm from '../../components/WatchPage/EmailForm';
-import AttendanceForm from '../../components/WatchPage/AttendanceForm';
+import EmailForm from '../../components/WatchPage/OldEmailForm';
+import AttendanceForm from '../../components/WatchPage/OldAttendanceForm';
 import FirstTimersForm from '../../components/WatchPage/FirstTimersForm';
 import { useMyStore } from '../../store';
 

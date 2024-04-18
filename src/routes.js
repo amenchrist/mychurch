@@ -38,6 +38,7 @@ import { getPage } from './dbQueryFunctions';
 import SignInPage from './pages/SignInPage';
 import Sidebar from './components/Sidebar';
 import EventPage from './pages/EventPage';
+import { WatchPageContextProvider } from './contexts/WatchPageContextProvider';
 
 
 export default function Router() {
@@ -122,7 +123,7 @@ export default function Router() {
     // { path: '/', element: <GivingForm /> } ,
     { path: '/', element: isSignedIn? <SignedInScreen /> : <SignInPage /> } ,
     { path: 'register', element: isSignedIn?<SignUpForm />:<><h1>You are already registered</h1></> } ,
-    { path: ':handle/watch', element: currentPage ? <WatchPage /> : <ErrorPage /> } ,   
+    { path: ':handle/watch', element: currentPage ? <WatchPageContextProvider ><WatchPage /></WatchPageContextProvider> : <ErrorPage /> } ,   
     { 
       path: ':handle', 
       element: currentPage ? isSignedIn? <PageContainer /> : <WelcomePage /> : <ErrorPage /> , //if handle doesn't exist, return error page, otherwise check if logged in

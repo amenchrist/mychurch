@@ -1,188 +1,101 @@
-import React, { useState, useEffect } from 'react';
-import { Button, TextField,  Grid, Box, MenuItem,  } from '@mui/material';
-import { useStateContext } from '../../contexts/ContextProvider';
-import { getDateValues } from '../../functions';
-import { attendanceRegex, phoneRegex } from '../../regex';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Button, TextField, Grid, Box, Typography } from '@mui/material';
+import { doc, setDoc, updateDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
+import { osName, deviceDetect, deviceType } from 'react-device-detect';
+import { useGeolocated } from "react-geolocated";
+import { useWatchPageContext } from '../../contexts/WatchPageContextProvider';
 import { useMyStore } from '../../store';
-// import useAttendanceLogger from '../../hooks/useAttendanceLogger';
+import { attendanceRegex } from '../../regex';
+import { db } from '../../config/firebase';
+import { handleValidation } from './formAssets';
 
-export default function AttendanceForm({isAnAdmin}) {
+export default function AttendanceForm() {
 
-    const { orgDetails, geolocation } = useStateContext();    
-    const { user, setUser,} = useMyStore();
+  const { currentPage, event } = useMyStore();
 
-    const [ attendance, setAttendance ] = useState(1)
-    // const [ valid, setValid ] = useState(true);
-    const [ church, setChurch ] = useState('CE BARKING');
-    const [ attendanceRecord, setAttendanceRecord ] = useState({});
-    const [ processingRequested, setProcessingRequested ] = useState(false);
+  const { attendeeEmail, setAttendanceCaptured, userIsParticipant, setEmailCaptured, setAttendeeEmail } = useWatchPageContext();
 
-    const [ phone, setPhone ] = useState('');
+  const [ attendance, setAttendance ] = useState(false);
+  const [ validAttendance, setValidAttendance ] = useState(true);
+  const { coords } = useGeolocated({
+        positionOptions: {
+            enableHighAccuracy: false,
+        },
+        userDecisionTimeout: 5000,
+  });
 
-    const [ validPhone, setValidPhone ] = useState(false);
-    const [ validAttendance, setValidAttendance ] = useState(true);
+  const handleAttendance = async (e) => {
+    e.preventDefault();
 
-    const [ valid, setValid ] = useState(false);
-
-    useEffect(() => {
-       console.log("Valid = ", valid)
-      if( validPhone && validAttendance ){
-        setValid(true)
-      } else if (user.phoneExists && validPhone === false){
-        setValidPhone(true)
+    if(userIsParticipant){
+      //Update Doc
+      try {
+        await updateDoc(doc(db, `pages/${currentPage.handle}/events/${event.id}/attendanceRecords`, attendeeEmail), { attendance: attendance, });
+        setAttendanceCaptured(true);
+      } catch (err) {
+        console.log('Error updating event attendance records');
+        console.log(err);
       }
-      else {
-        setValid(false)
+
+    } else {
+      //add new attendance record
+      const attendanceRecord = {
+        id: `att_${uuidv4().split('-').join("")}`,
+        email: attendeeEmail ,
+        timestamp: new Date().getTime(),
+        church: 'Christ Embassy Barking',
+        attendance: attendance,
+        geolocation: {...coords},
+        // origin: orgDetails.url,
+        osName,  deviceType,
+        device: {...deviceDetect},
       }
-    }, [validPhone, validAttendance, valid, user.phoneExists ])
 
-    const handleValidation = (value, setFunc, valFunc, regex) => {
-        //set email to user input
-        setFunc(value);
-        
-        //define regex     
-        const reg = new RegExp(regex); 
-        
-        //test whether input is valid
-        valFunc(reg.test(value));
-    };
+      try {
+        await setDoc(doc(db, `pages/${currentPage.handle}/events/${event.id}/attendanceRecords`, attendeeEmail), attendanceRecord);
 
-    // const handleValidation = (value) => {
-              
-    //     //define regex     
-    //     const reg = new RegExp(attendanceRegex); 
-        
-    //     //test whether input is valid
-    //     setValid(reg.test(value) );
-
-    //     //set email to user input
-    //     setAttendance(value);
-    // };
-
-    const handleAttendance = (event) => {
-
-      event.preventDefault();
-   
-      if(attendance && valid){
-        
-        const dateValues = getDateValues(new Date());
-
-        setAttendanceRecord({
-            id: uuidv4().split('-').join(""),
-            email: user.email ,
-            date: dateValues.date,
-            day: dateValues.day,
-            time: dateValues.time,
-            church: church,
-            attendance: attendance,
-            origin: orgDetails.url,
-            ip: geolocation.IPv4,
-            deviceWidth: window.innerWidth,
-            deviceHeight: window.innerHeight,
-            phone
-        })
-
-        setProcessingRequested(true)
+        setAttendanceCaptured(true);
+      } catch (err) {
+        console.log('Error adding event attendance records');
+        console.log(err);
       }
-    }
+    }				
 
-    //submit attendance
-    // const attendanceSubmitted = useAttendanceLogger(attendanceRecord, processingRequested);
+  }
 
-    // useEffect(() => {
-    //   if(attendanceSubmitted){
-    //     setProcessingRequested(false)
-    //     const { attendanceRecords } = user
-    //     setUser({...user, attendanceRecords: [attendanceRecord, ...attendanceRecords], attendanceSubmitted})
-    //   }
-    // }, [attendanceSubmitted])
-
-    const churches = [
-      'CE LOVE CHURCH BARKING', 'CE BARKING', 'CE EAST HAM', 'CE ILFORD', 'CE MEDWAY', 'CE PORTSMOUTH', 'CE HARLOW',
-      'CE BELFAST', 'CE BRISTOL 1', 'CE BRISTOL 2', 'CE LOVE CHURCH BRISTOL', 'CE THURROCK', 'CE COLCHESTER',
-      'CE DOCKLANDS', 'CE GLOUCESTER', 'CE BATH', 'CE BASILDON', 'CE ROMFORD', 'CE STRATFORD',
-      'CE CYPRUS', 'CE LOVE CHURCH DAGENHAM', 'OTHER'
-    ]
-    
-    return (
-      <>
-      <Box component="form" onSubmit={handleAttendance} sx={{ mt: 3 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              value={user.email}
-              disabled
-              
-            />
-          </Grid>
-          {user.phoneExists? <></> : 
-          <Grid item xs={12}>
-            <TextField
-              autoFocus
-              required
-              fullWidth
-              id="phone"
-              label="Phone Number"
-              name="phone"
-              autoComplete="phone"
-              error={!validPhone}
-              value={phone}
-              onChange={(e) => handleValidation(e.target.value, setPhone, setValidPhone, phoneRegex)}
-            />
-          </Grid>
-          }
-          <Grid item xs={12} >
-            <TextField required select fullWidth id="title" label="Select Your Church" name="church" value={church} autoComplete="church" autoFocus onChange={(e) => setChurch(e.target.value)} >
-              {churches.map((church) => (<MenuItem key={church} value={church}>{church}</MenuItem>))}
-            </TextField>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              name="attendance"
-              label="Number of People Watching"
-              id="attendance"
-              type='number'
-              min='1'
-              value={attendance}
-              onChange={(e) => handleValidation(e.target.value, setAttendance, setValidAttendance, attendanceRegex)}
-              error={!validAttendance}
-            />
-          </Grid>
+  return (
+  <Box component="form" onSubmit={handleAttendance} sx={{ mt: 3 }}>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+          <TextField
+          required
+          fullWidth
+          name="attendance"
+          label="Number of People Watching"
+          id="attendance"
+          type='number'
+          min='1'
+          value={attendance}
+          onChange={(e) => handleValidation(e.target.value, setAttendance, setValidAttendance, attendanceRegex)}
+          error={!validAttendance}
+          />
+      </Grid>
+    </Grid>
+    <Button
+      type="submit"
+      fullWidth
+      variant="contained"
+      disabled={!validAttendance}
+      sx={{ mt: 3, mb: 2 }}
+    >
+      Submit
+    </Button>
+    <Grid container justifyContent="flex-end">
+        <Grid item>
+          <Typography variant='p' onClick={() => setEmailCaptured(false)} >Back</Typography>
         </Grid>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          disabled={!valid}
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Submit
-        </Button>
-      </Box>
-      
-      {isAnAdmin ? <Link to={'/admin-dashboard'} style={{textDecoration: 'none'}} >
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-        >
-          Visit Admin Portal
-        </Button>
-        </Link>
-        :
-        <></>
-      }
-      </>
-    )
+    </Grid>
+  </Box>
+  )
 }

@@ -65,7 +65,7 @@ export const SignUpForm = () => {
     notes: [],
     reviews: [],
     type: 'USER'
-}
+  }
 
   const navigate = useNavigate();
 

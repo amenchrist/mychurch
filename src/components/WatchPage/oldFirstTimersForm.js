@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { Button, TextField, FormControlLabel, Checkbox, Grid, Box, MenuItem, Typography  } from '@mui/material';
-import { nameRegex, phoneRegex } from '../../regex';
+import { useStateContext } from '../../contexts/ContextProvider';
+import { getDateValues } from '../../functions';
+import { attendanceRegex, nameRegex, phoneRegex } from '../../regex';
 import { v4 as uuidv4 } from 'uuid';
+import { useMyStore } from '../../store';
 import { useWatchPageContext } from '../../contexts/WatchPageContextProvider';
-import { churches, handleValidation, titles } from './formAssets';
-import { Address, Biodata, ContactInfo } from '../../classes';
-import { doc, setDoc } from 'firebase/firestore';
-import { db } from '../../config/firebase';
 
-export default function FirstTimersForm() {
+export default function OldFirstTimersForm() {
+
+  const { user, setUser,} = useMyStore();
   
-  const { attendeeEmail, setIsRegistered, setEmailCaptured } = useWatchPageContext();
+  const { attendeeEmail, setIsRegistered } = useWatchPageContext();
+  const { orgDetails, geolocation } = useStateContext();
 
+
+  const [ attendanceRecord, setAttendanceRecord ] = useState({});
+  const [ processingRequested, setProcessingRequested ] = useState(false);
+
+  const [ attendance, setAttendance ] = useState(1)
   const [ firstName, setFirstName ] = useState('');
   const [ lastName, setLastName ] = useState('');
   const [ phone, setPhone ] = useState('');
   const [ title, setTitle ] = useState('');
   const [ church, setChurch ] = useState('CE BARKING');
-  const [ allowsMarketing, setAllowsMarketing ] = useState(true)
     
+  const [ validAttendance, setValidAttendance ] = useState(true);
   const [ validFirstName, setValidFirstName ] = useState(false);
   const [ validLastName, setValidLastName ] = useState(false);
   const [ validPhone, setValidPhone ] = useState(false);
@@ -27,37 +34,118 @@ export default function FirstTimersForm() {
 
   useEffect(() => {
     // console.log("Valid = ", valid)
-    if(validFirstName && validLastName && validPhone ){
+    if(validFirstName && validLastName && validPhone && validAttendance ){
       setValid(true)
     } else {
       setValid(false)
     }
-  }, [validFirstName, validLastName, validPhone, valid ])
+  }, [validFirstName, validLastName, validPhone, validAttendance, valid ])
 
-  const handleSubmit = async (event) => {
+  const handleValidation = (value, setFunc, valFunc, regex) => {
+      //set email to user input
+      setFunc(value);
+      
+      //define regex     
+      const reg = new RegExp(regex); 
+      
+      //test whether input is valid
+      valFunc(reg.test(value));
+  };
 
+
+  const handleSubmit = (event) => {
     event.preventDefault();
-    const bioData = new Biodata({ title, firstName, lastName })
-    const contactInfo = new ContactInfo({ email: attendeeEmail, phoneNumber: phone, address: {...new Address()} })
 
-    const newUser = {
-      id: `user_${uuidv4()}`,
-      bioData: {...bioData},
-      contactInfo: {...contactInfo},
-      church, allowsMarketing,
-      type: 'USER'
-    }
+    const data = new FormData(event.currentTarget);
+    
+    if(valid){
 
-    try {
-      await setDoc(doc(db, 'userProfiles', attendeeEmail), newUser);
-      console.log('New User Profile Added')
-      setEmailCaptured(true);
-      setIsRegistered(true);
-    } catch (err) {
-      console.log('Error adding user profile')
-      console.log(err);
+      const dateValues = getDateValues(new Date());
+
+      setAttendanceRecord({
+        id: uuidv4().split('-').join(""),
+        email:user.email,
+        date: dateValues.date,
+        day: dateValues.day,
+        time: dateValues.time,
+        church,
+        attendance,
+        origin: orgDetails.url,
+        primaryAttendee: firstName,
+        lastName: lastName,
+        primaryAttendeeTitle: title,
+        phone,
+        ip: geolocation.IPv4,
+        deviceWidth: window.innerWidth,
+        deviceHeight: window.innerHeight
+      })
+
+      setProcessingRequested(true)
+
     }
   };
+
+  //submit attendance
+  // const attendanceSubmitted = useAttendanceLogger(attendanceRecord, processingRequested);
+
+  // useEffect(() => {
+  //   if(attendanceSubmitted){
+  //     setProcessingRequested(false);
+  //     const { attendanceRecords } = user;
+  //     setUser({...user, attendanceRecords: [attendanceRecord, ...attendanceRecords], attendanceSubmitted});
+  //   }
+  // }, [attendanceSubmitted, user, attendanceRecord, setUser])
+
+  const titles = [
+    {
+      value: 'Mr.',
+      label: 'Mr.',
+    },
+    {
+      value: 'Ms.',
+      label: 'Ms.',
+    },
+    {
+      value: 'Mrs.',
+      label: 'Mrs.',
+    },
+    {
+      value: 'Brother',
+      label: 'Brother',
+    },
+    {
+      value: 'Sister',
+      label: 'Sister',
+    },
+    {
+      value: 'Pastor',
+      label: 'Pastor',
+    },
+
+    {
+      value: 'Deacon',
+      label: 'Deacon',
+    },
+    {
+      value: 'Deaconess',
+      label: 'Deaconess',
+    },
+    {
+      value: 'Rev.',
+      label: 'Rev.',
+    },
+    {
+      value: 'Dr.',
+      label: 'Dr.',
+    },
+  ]
+
+  const churches = [
+    'CE LOVE CHURCH BARKING', 'CE BARKING', 'CE EAST HAM', 'CE ILFORD', 'CE MEDWAY', 'CE PORTSMOUTH', 'CE HARLOW',
+    'CE BELFAST', 'CE BRISTOL 1', 'CE BRISTOL 2', 'CE LOVE CHURCH BRISTOL', 'CE THURROCK', 'CE COLCHESTER',
+    'CE DOCKLANDS', 'CE GLOUCESTER', 'CE BATH', 'CE BASILDON', 'CE ROMFORD', 'CE STRATFORD',
+    'CE CYPRUS', 'CE LOVE CHURCH DAGENHAM', 'OTHER'
+  ]
 
   return (
     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, height: '200px', overflowY:'auto'}} >
@@ -127,8 +215,21 @@ export default function FirstTimersForm() {
           </TextField>
         </Grid>
         <Grid item xs={12}>
+        <TextField
+              required
+              fullWidth
+              name="attendance"
+              label="Number of People Watching"
+              id="attendance"
+              type='number'
+              error={!validAttendance}
+              value={attendance}
+              onChange={(e) => handleValidation(e.target.value, setAttendance, setValidAttendance, attendanceRegex)}
+            />
+        </Grid>
+        <Grid item xs={12}>
           <FormControlLabel
-            control={<Checkbox checked={allowsMarketing} onChange={() => { setAllowsMarketing(!allowsMarketing)}} color="primary" />}
+            control={<Checkbox value="allowExtraEmails" color="primary" />}
             label="I want to receive inspiration, and updates via email."
           />
         </Grid>
@@ -138,7 +239,6 @@ export default function FirstTimersForm() {
         fullWidth
         variant="contained"
         sx={{ mt: 3 }}
-        disabled={!valid}
       >
         Submit
       </Button>

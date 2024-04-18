@@ -22,6 +22,8 @@ export class User {
             events: [],
             notes: [],
             reviews: [],
+            church: null,
+            allowsMarketing: true,
             type: 'USER'
         }
         constructorHelper.call(this, data, defaultUser) 
