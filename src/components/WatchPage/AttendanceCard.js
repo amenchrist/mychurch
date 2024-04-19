@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import { useMyStore } from '../store';
-import EmailForm from './WatchPage/EmailForm';
+import { useMyStore } from '../../store';
+import EmailForm from './EmailForm';
 import { Typography } from '@mui/material';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../config/firebase';
-import FirstTimersForm from './WatchPage/FirstTimersForm';
-import { useWatchPageContext } from '../contexts/WatchPageContextProvider';
-import AttendanceForm from './WatchPage/AttendanceForm';
+import { db } from '../../config/firebase';
+import FirstTimersForm from './FirstTimersForm';
+import { useWatchPageContext } from '../../contexts/WatchPageContextProvider';
+import AttendanceForm from './AttendanceForm';
 
 export default function AttendanceCard() {
 
@@ -17,8 +17,6 @@ export default function AttendanceCard() {
 
 	console.log(useWatchPageContext())
   const { event, user, setUser, currentPage } = useMyStore();
-  const [ email, setEmail ] = useState(user?.email || '');
-  const [ valid, setValid ] = useState(true);
   const [ enableLogIn, setEnableLogin ] = useState(true);
 
   // const userIsParticipant = event?.attendanceRecords.some(r => r.email === user.email);

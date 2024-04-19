@@ -9,7 +9,7 @@ import { Hidden } from '@mui/material';
 import { useMyStore } from '../../store';
 import Schedule from '../../components/Schedule';
 import dayjs from 'dayjs';
-import AttendanceCard from '../../components/AttendanceCard';
+import AttendanceCard from '../../components/WatchPage/AttendanceCard';
 import { useWatchPageContext } from '../../contexts/WatchPageContextProvider';
 
 
