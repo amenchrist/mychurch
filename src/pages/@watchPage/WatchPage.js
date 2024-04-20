@@ -11,6 +11,7 @@ import Schedule from '../../components/Schedule';
 import dayjs from 'dayjs';
 import AttendanceCard from '../../components/WatchPage/AttendanceCard';
 import { useWatchPageContext } from '../../contexts/WatchPageContextProvider';
+import Navbar from '../../components/WatchPage/NavBar';
 
 
 function WatchPage() {
@@ -32,6 +33,7 @@ function WatchPage() {
 
   return (
     <>
+    {/* <Navbar /> */}
       <Box sx={{ flexGrow: 1, height: '100vh' }}>
         {/* <WatchPageSidebar 
         onMobileClose={() => setMobileNavOpen(false)}
@@ -59,7 +61,7 @@ function WatchPage() {
         <div style={{display: 'flex', height: "100%", width: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
           <div id={'video-container'} style={{ backgroundColor: "black",  width: '100%', display: 'flex', justifyContent: 'center'}}>
             {/* {event?.isOnNow ? <VideoPlayer event={event} /> : <ServiceMessage />} */}
-            {event?.hasStarted ? <AttendanceCard /> : <ServiceMessage />}
+            { event?.hasStarted ? attendanceCaptured ? <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
           </div>
           <div id='attendance-div' style={{ flexGrow: 1, overflowY: "hidden", margin: 0, width: "100%",display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }

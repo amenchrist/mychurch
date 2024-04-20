@@ -130,15 +130,15 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
 
   return (
     <>
-        <div style={{ borderRadius: '100%', backgroundColor: 'white', padding: 15, position: 'absolute', right: 0}} onClick={() => setOpenMenu(!openMenu)}>
+        <div style={{ borderRadius: '100%', backgroundColor: 'white', padding: 15, position: 'absolute', left: 0 }} onClick={() => setOpenMenu(!openMenu)}>
             {openMenu? <></>: <Menu /> }
         </div>
-    {/* For Mobile Devices */}
+    {/* X Button For Mobile Devices */}
       <Hidden lgUp>
         <Drawer
           anchor="left"
           onClose={onMobileClose}
-          open={!openMenu}
+          open={openMenu}
           variant="temporary"
           PaperProps={{
             sx: {

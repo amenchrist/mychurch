@@ -33,7 +33,7 @@ export default function EventsList() {
             </Grid>              
             <Demo>
               <List sx={{ height:'80vh', overflowY:'auto'}}>
-                {events.map((e,i) => (
+                {events.filter((i) => i.hasStarted === true).map((e,i) => (
                   <div key={`Event ${i}`}>
                   <ListItem >
                     <ListItemText

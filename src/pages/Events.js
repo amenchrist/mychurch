@@ -76,7 +76,7 @@ export default function Events() {
             </Grid>              
             <Demo>
               <List sx={{ height:'80vh', overflowY:'auto'}}>
-                {events.map((event,i) => (
+                {events.filter((i) => i.hasEnded === false).map((event,i) => (
                   <div key={`Event ${i}`}>
                   <ListItem >
                     <ListItemText
