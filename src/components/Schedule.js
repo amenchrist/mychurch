@@ -29,9 +29,9 @@ export default function Schedule() {
       
             querySnapshot.forEach((doc) => {
               const curEvent = doc.data()
-              if(dayjs(curEvent.date).toDate().getTime() >= new Date().getTime() || curEvent.isOnNow){
+              if(dayjs(curEvent.date).toDate().getTime() >= new Date().getTime() || curEvent.hasStarted){
                   newEvents.push(curEvent)
-                  if(curEvent.isOnNow && event === null){
+                  if(curEvent.hasStarted && event === null){
                       setEvent(curEvent);
                   }
               }
@@ -65,7 +65,7 @@ export default function Schedule() {
                   <div key={`Event ${i}`}>
                   <ListItem sx={{bgcolor: 'background.paper', mb: 2 }}>
                     <ListItemText
-                      primary={`${e.name} ${e.isOnNow? `[LIVE NOW]`: ''}`}
+                      primary={`${e.name} ${e.hasStarted? `[LIVE NOW]`: ''}`}
                       secondary={dayjs(e.date).format('dddd, MMMM DD @ hh:mm a')}
                     />
                   </ListItem>

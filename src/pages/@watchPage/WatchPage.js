@@ -23,9 +23,9 @@ function WatchPage() {
   const ServiceMessage = () => {
     return (
       <div style={{color: 'white', width: "100%", height: '30vh',textAlign: 'center', padding: '20px', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
-        <p>NEXT EVENT</p>
+        {nextEvent ? <><p>NEXT EVENT</p>
         <h3>{nextEvent?.name.toUpperCase()}</h3>
-        <p>{dayjs(nextEvent?.date).format('dddd, MMMM DD @ hh:mm a')}</p>
+        <p>{dayjs(nextEvent?.date).format('dddd, MMMM DD @ hh:mm a')}</p></> : <p>NO UPCOMING EVENTS</p>}
       </div>
     )
   }
@@ -42,7 +42,7 @@ function WatchPage() {
           <Grid item xs={12} md={8}  >  
             <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center'}}>
               <div style={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
-                { event?.isOnNow ? attendanceCaptured ? <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
+                { event?.hasStarted ? attendanceCaptured ? <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
               </div>
             </div>     
           </Grid>
@@ -59,7 +59,7 @@ function WatchPage() {
         <div style={{display: 'flex', height: "100%", width: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
           <div id={'video-container'} style={{ backgroundColor: "black",  width: '100%', display: 'flex', justifyContent: 'center'}}>
             {/* {event?.isOnNow ? <VideoPlayer event={event} /> : <ServiceMessage />} */}
-            {event?.isOnNow ? <AttendanceCard /> : <ServiceMessage />}
+            {event?.hasStarted ? <AttendanceCard /> : <ServiceMessage />}
           </div>
           <div id='attendance-div' style={{ flexGrow: 1, overflowY: "hidden", margin: 0, width: "100%",display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }

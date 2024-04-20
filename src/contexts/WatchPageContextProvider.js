@@ -68,7 +68,7 @@ export const WatchPageContextProvider = ({ children }) => {
 
     attendeeEmail, setAttendeeEmail, emailCaptured, setEmailCaptured, attendanceCaptured, setAttendanceCaptured, isRegistered, setIsRegistered,
     isAdmin, setIsAdmin, attendanceSubmitted, setAttendanceSubmitted,
-    user, setUser, blankUser
+    user, setUser, blankUser, userIsParticipant, setUserIsParticipant
 
   }
 

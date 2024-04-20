@@ -1,5 +1,5 @@
-import { Box, Button, Checkbox, Container, FormControlLabel, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { Box, Button, Checkbox, Container, FormControlLabel, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
@@ -39,20 +39,18 @@ export default function EventPage({setNewEvent}) {
   const [ watchLink, setWatchLink ] = useState(event?.liveStreamURL || '');
   const [ frequency, setFrequency ] = useState(event?.frequency || '');
   const [ recurring, setRecurring ] = useState(event?.recurring);
-  const [ isOnNow, setIsOnNow ] = useState(event?.isOnNow)
+  const [ hasStarted, setHasStarted ] = useState(event?.hasStarted)
 
   const updateEvent = async (e) => {
     e?.preventDefault();
     const eventUpdate = {
       date: dayjs(`${date} ${time}`).toDate().toString(),
-      recurring, name, isOnNow,
-      bio: description,
+      recurring, name, hasStarted,
+      bio: description.trim(),
       liveStreamURL: watchLink.trim(),
     }
     try {
-      
       await updateDoc(doc(db, `pages/${currentPage.handle}/events`, event.id), eventUpdate);
-
       const updatedEvent = new Event({...eventUpdate, id: event.id })
       setEvent(updatedEvent);
     } catch (err) {
@@ -63,7 +61,7 @@ export default function EventPage({setNewEvent}) {
 
   const deleteEvent = async (e) => {
     try {
-      await deleteDoc(doc(db, 'events', event.id));
+      await deleteDoc(doc(db, `pages/${currentPage.handle}/events`, e.id));;
       navigate(`/${currentPage.handle}/events`);
       setEvent(null);
     } catch (err) {
@@ -77,19 +75,30 @@ export default function EventPage({setNewEvent}) {
     navigate(`/${currentPage.handle}/events`);
   }
 
-  const toggleEvent = async (value) => {
-    try {
-      await updateDoc(doc(db, `pages/${currentPage.handle}/events`, event.id), { isOnNow: value });
-
-      const updatedEvent = new Event({...event, id: event.id, isOnNow: value })
-      setEvent(updatedEvent);
-      setIsOnNow(value);
-    } catch (err) {
-      console.log('Error updating event');
-      console.log(err);
+  const toggleEvent = () => {
+    const toggleEventInDB = async (update) => {
+      try {
+        await updateDoc(doc(db, `pages/${currentPage.handle}/events`, event.id), update);
+        const updatedEvent = new Event({...event, id: event.id, ...update })
+        setEvent(updatedEvent);
+       
+      } catch (err) {
+        console.log('Error updating event');
+        console.log(err);
+      }
     }
-    
+
+    if(hasStarted){
+      //end event
+      const update = { hasEnded: true, endTimestamp: new Date().getTime() }
+      toggleEventInDB(update);
+    } else {
+      //start event
+      const update = { hasStarted: true, startTimestamp: new Date().getTime() }
+      toggleEventInDB(update);
+    }
   }
+
 
 
   const frequencyOptions = [ {value: 'DAILY', label: 'Daily'}, {value: 'WEEKLY', label: 'Weekly'}, {value: 'MONTHLY', label: 'Monthly'} ];
@@ -130,12 +139,12 @@ export default function EventPage({setNewEvent}) {
           </Grid>
           <Button type="submit" fullWidth variant="contained" disabled={!updated} sx={{ mt: 3, }} >Save</Button>
           </Box>
-          <Button type="submit" fullWidth variant="contained" disabled={(!isToday || isOnNow) && !isOnNow} 
+          <Button fullWidth variant="contained" disabled={((isToday === false) || event.hasEnded)} 
           sx={{ mt: 2, mb: 2 }} 
-          onClick={() => toggleEvent(!isOnNow)} 
-          color={isOnNow? 'error': 'primary'}
+          onClick={toggleEvent} 
+          color={event?.hasStarted? 'error': 'primary'}
           >
-            {isOnNow? 'End Event' : 'Start Event'}
+            {event?.hasStarted? 'End Event' : 'Start Event'}
           </Button>
           <Grid container justifyContent="space-between">
               <Grid item>

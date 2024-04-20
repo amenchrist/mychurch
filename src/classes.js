@@ -307,7 +307,6 @@ export class Event extends Page{
             parentPageID: null,
             creatorID: null,
             date: null,
-            endDateTime: null,
             eventType: LIVESTREAM,
             content: null,
             announcements: [], 
@@ -318,7 +317,12 @@ export class Event extends Page{
             report: null,
             reviews: [],
             recurring: false,
-            isOnNow: false,
+            hasStarted: false,
+            startTimestamp: null,
+            hasEnded: false,
+            endTimestamp: null,
+            hasFinalAttendance: false,
+            totalAttendance: null,
             attendanceRecords: []
         };
         constructorHelper.call(this, data, defaultObj)

@@ -51,7 +51,8 @@ export default function Events() {
 
   const deleteEvent = async (e) => {
     try {
-        await deleteDoc(doc(db, 'events', e.id));
+        await deleteDoc(doc(db, `pages/${currentPage.handle}/events`, e.id));
+        
         setEvent(null);
         navigate(`/${currentPage.handle}/events`);
       } catch (err) {
@@ -75,15 +76,15 @@ export default function Events() {
             </Grid>              
             <Demo>
               <List sx={{ height:'80vh', overflowY:'auto'}}>
-                {events.map((e,i) => (
+                {events.map((event,i) => (
                   <div key={`Event ${i}`}>
                   <ListItem >
                     <ListItemText
-                      onClick={() => getEvent(e.id)}
-                      primary={`${e.name}`}
-                      secondary={dayjs(e.date).format('dddd, MMMM DD @ hh:mm a')}
+                      onClick={() => getEvent(event.id)}
+                      primary={`${event.name}`}
+                      secondary={dayjs(event.date).format('dddd, MMMM DD @ hh:mm a')}
                     />
-                      <IconButton edge="end" aria-label="delete" onClick={() => deleteEvent(e)} ><DeleteIcon /></IconButton>
+                      <IconButton edge="end" aria-label="delete" onClick={() => deleteEvent(event)} ><DeleteIcon /></IconButton>
                   </ListItem>
                   <Divider  component="li" />
                   </div>
