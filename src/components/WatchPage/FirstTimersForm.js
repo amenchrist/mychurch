@@ -7,6 +7,7 @@ import { churches, handleValidation, titles } from './formAssets';
 import { Address, Biodata, ContactInfo } from '../../classes';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
+import { MuiTelInput } from 'mui-tel-input';
 
 export default function FirstTimersForm() {
   
@@ -108,18 +109,14 @@ export default function FirstTimersForm() {
             onChange={(e) => handleValidation(e.target.value, setLastName, setValidLastName, nameRegex)}
           />
         </Grid>            
-        <Grid item xs={12}>
-          <TextField
-            required
-            fullWidth
-            id="phone"
-            label="Phone Number"
-            name="phone"
-            autoComplete="phone"
-            error={!validPhone}
+        {/* <Grid item xs={12}>
+          <TextField required fullWidth id="phone" label="Phone Number" name="phone" autoComplete="phone" error={!validPhone}
             value={phone}
             onChange={(e) => handleValidation(e.target.value, setPhone, setValidPhone, phoneRegex)}
           />
+        </Grid> */}
+        <Grid item xs={12}>
+          <MuiTelInput label="Phone Number" fullWidth value={phone} onChange={(e) => setPhone(e)} />
         </Grid>
         <Grid item xs={12} >
           <TextField required select fullWidth id="title" label="Select Your Church" name="church" value={church} autoComplete="church" onChange={(e) => setChurch(e.target.value)} >

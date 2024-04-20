@@ -50,6 +50,8 @@ export default function AttendanceForm() {
         // origin: orgDetails.url,
         osName,  deviceType,
         device: {...deviceDetect},
+        playerStartTime: null,
+        playerStopTime: null
       }
 
       try {

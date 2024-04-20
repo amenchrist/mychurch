@@ -39,6 +39,7 @@ import SignInPage from './pages/SignInPage';
 import Sidebar from './components/Sidebar';
 import EventPage from './pages/EventPage';
 import { WatchPageContextProvider } from './contexts/WatchPageContextProvider';
+import { DashboardContextProvider } from './contexts/DashboardContextProvider';
 
 
 export default function Router() {
@@ -128,7 +129,7 @@ export default function Router() {
       path: ':handle', 
       element: currentPage ? isSignedIn? <PageContainer /> : <WelcomePage /> : <ErrorPage /> , //if handle doesn't exist, return error page, otherwise check if logged in
       children: [
-            { path: '', element: user?.email? <Dashboard />: <WelcomePage /> },
+            { path: '', element: user?.email? <DashboardContextProvider ><Dashboard /></DashboardContextProvider>: <WelcomePage /> },
             { path: 'giving-records', element: isSignedIn? <GivingRecords/>: <SignInForm /> },
             { path: 'conversations', element: <ComingSoon /> }, //user.email?<Conversations />: <SignInForm /> },
             { path: 'notifications', element: <ComingSoon /> }, //user.email?<Notifications/>: <SignInForm /> },
