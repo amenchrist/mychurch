@@ -21,8 +21,9 @@ export default function EventForm({setNewEvent}) {
   const [ name, setName ] = useState('');
   const [ description, setDescription ] = useState('');
   const [ watchLink, setWatchLink ] = useState('https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8');
-  const [ frequency, setFrequency ] = useState('');
+  const [ frequency, setFrequency ] = useState('WEEKLY');
   const [ recurring, setRecurring ] = useState(false);
+  const [ reEndDate, setReEndDate ] = useState(dayjs().format('YYYY-MM-DD'));
 
   // console.log(dayjs(`${date} ${time}`).toDate())
   // console.log(dayjs().format('DD-MM-YYYY'))
@@ -31,9 +32,49 @@ export default function EventForm({setNewEvent}) {
   // console.log(dayjs(new Date().toString()))
   // console.log(dayjs(new Date().toString()).format('dddd, MMMM DD @ HH:mm'))
 
-  const createEvent = async (e) => {
-    e.preventDefault()
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(recurring){
+      const start = dayjs(date).toDate();
+      const current = dayjs(date).toDate();
+      const end = dayjs(reEndDate).toDate();
 
+      const dates = [];
+      while (current <= end){
+        switch(frequency){
+          case 'WEEKLY':
+            if(current.getDay() === start.getDay()){
+              dates.push(dayjs(new Date(current)).format('YYYY-MM-DD'))
+            }
+            current.setDate(current.getDate()+ 1)
+            break;
+          case 'MONTHLY':
+            //SAME Day EVERY MONTH
+            if(current.getDate() === start.getDate()){
+              dates.push(dayjs(new Date(current)).format('YYYY-MM-DD'))
+            }
+            current.setMonth(current.getMonth() + 1);
+            current.setDate(1);
+            break;
+          default:
+            //Every day till end date
+            dates.push(dayjs(new Date(current)).format('YYYY-MM-DD'))
+            current.setDate(current.getDate()+ 1)
+        }
+      }
+
+      dates.forEach(d => {
+        createEvent(d)
+      } )
+
+    } else {
+      createEvent(date)
+    }
+
+
+  }
+
+  const createEvent = async (startDate) => { 
     const newEvent = {
       id: `ev_${uuidv4()}`,
       parentPageID: currentPage.id,
@@ -42,7 +83,7 @@ export default function EventForm({setNewEvent}) {
       bio: description,
       liveStreamURL: watchLink.trim(),
       name,
-      date: dayjs(`${date} ${time}`).toDate().toString(),
+      date: dayjs(`${startDate} ${time}`).toDate().toString(),
     }
     const event = new Event(newEvent)
 
@@ -64,30 +105,37 @@ export default function EventForm({setNewEvent}) {
       <Container component="main" maxWidth="xs" sx={{}}>
         <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center',height:'80%', }} >
           <Typography component="h1" variant="h5">New Event</Typography>
-          <Box component="form" onSubmit={createEvent} sx={{ mt: 3,  height:'100%', overflowY: 'auto', paddingTop:1}}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3,  height:'100%', overflowY: 'auto', paddingTop:1}}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <TextField autoFocus required fullWidth label="Event Title" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+              <TextField autoFocus required fullWidth label="Event Title" value={name} onChange={(e) => setName(e.target.value)} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField required fullWidth type="date" label="Date" id="date" value={date} onChange={(e) => setDate(e.target.value)} />
+              <TextField required fullWidth type="date" label="Date" value={date} onChange={(e) => setDate(e.target.value)} />
             </Grid>
             <Grid item xs={12} sm={6} >
-              <TextField required fullWidth type="time" label="Time" id="time" value={time} onChange={(e) => setTime(e.target.value)} />
+              <TextField required fullWidth type="time" label="Time" value={time} onChange={(e) => setTime(e.target.value)} />
             </Grid>
             <Grid item xs={12}>
-              <TextField required fullWidth multiline label="Description" id="description" value={description} onChange={(e) => setDescription(e.target.value)}/>
+              <TextField required fullWidth multiline label="Description" value={description} onChange={(e) => setDescription(e.target.value)}/>
             </Grid>
-            <Grid item xs={12} sm={6} >
-              <FormControlLabel control={<Checkbox onChange={() => setRecurring(!recurring)} />} label="Recurring" />
+            <Grid item xs={12} >
+              <FormControlLabel control={<Checkbox onChange={() => setRecurring(!recurring)} checked={recurring} />} label="Recurring" />
+              </Grid>
               { !recurring? <></> :
-              <TextField required={recurring} fullWidth select id="frequency" value={frequency} onChange={(e) => setFrequency(e.target.value)}>
+              <>
+              <Grid item xs={12} sm={6} >
+                <TextField required={recurring} fullWidth select label="Frequency" value={frequency} onChange={(e) => setFrequency(e.target.value)}>
                 {frequencyOptions.map((e,i) => (
                   <MenuItem key={i} value={e.value}>{e.value}</MenuItem>
                 ))}
               </TextField>
+              </Grid>
+                <Grid item xs={12} sm={6} >
+                  <TextField required fullWidth type="date" label="End Date" value={reEndDate} onChange={(e) => setReEndDate(e.target.value)} />
+                </Grid>
+              </>              
               }
-            </Grid>
             <Grid item xs={12} >
             <TextField required fullWidth label="Watch Link" id="watch-link" value={watchLink} onChange={(e) => setWatchLink(e.target.value)}/>
             </Grid>

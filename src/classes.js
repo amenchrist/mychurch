@@ -109,7 +109,8 @@ export class Page {
             creatorID: null,
             id: null,
             creationTimestamp: new Date().getTime(),
-            websiteURL: null
+            websiteURL: null,
+            liveStreamURL: null,
         }
 
         //create all object properties

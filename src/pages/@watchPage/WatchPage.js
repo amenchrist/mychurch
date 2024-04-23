@@ -42,10 +42,10 @@ function WatchPage() {
         <Hidden mdDown>
         <Grid container sx={{ height: "100%" }} >
           <Grid item xs={12} md={8}  >  
-            <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center'}}>
-              <div style={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
+            <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+              {/* <div style={{ border: '2px solid', height: '100%', width: '100%', display: 'flex', justifyContent: 'center'}}></div> */}
                 { event?.hasStarted ? attendanceCaptured ? <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
-              </div>
+                {/* <VideoPlayer event={event} />  */}
             </div>     
           </Grid>
           <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  alignItems: 'center'}} >
@@ -59,9 +59,11 @@ function WatchPage() {
         
         <Hidden mdUp>
         <div style={{display: 'flex', height: "100%", width: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-          <div id={'video-container'} style={{ backgroundColor: "black",  width: '100%', display: 'flex', justifyContent: 'center'}}>
+          <div id={'video-container'} style={{ backgroundColor: "black", height:'40vh', width: '100%', display: 'flex', justifyContent: 'center'}}>
             {/* {event?.isOnNow ? <VideoPlayer event={event} /> : <ServiceMessage />} */}
             { event?.hasStarted ? attendanceCaptured ? <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
+                {/* <VideoPlayer event={event} />  */}
+
           </div>
           <div id='attendance-div' style={{ flexGrow: 1, overflowY: "hidden", margin: 0, width: "100%",display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }

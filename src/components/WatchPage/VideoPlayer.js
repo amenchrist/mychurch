@@ -9,7 +9,7 @@ import { useMyStore } from '../../store';
 
 function VideoPlayer() {
 
-  const { event } = useMyStore();
+  const { event, currentPage } = useMyStore();
 
 
   const barkingChurch = "https://vcpout-sf01-altnetro.internetmultimediaonline.org/vcp/av5xgmrwkg/playlist.m3u8"
@@ -36,17 +36,17 @@ function VideoPlayer() {
   }, [user.attendanceSubmitted])
   
   useEffect(()=>{
-    if(videoSource !== event.liveStreamURL ){
-      setVideoSource(event.liveStreamURL)
+    if(videoSource !== currentPage.liveStreamURL ){
+      setVideoSource(currentPage.liveStreamURL)
     }
-  }, [videoSource, event.liveStreamURL])
+  }, [videoSource, currentPage.liveStreamURL])
 
   const playerRef = React.useRef(null);
 
   const videoJsOptions = {
     autoplay: true,
-    controls: !muted,
-    muted: muted,
+    controls: true,
+    muted: false,
     responsive: true,
     fluid: true,
     sources: [
@@ -56,7 +56,6 @@ function VideoPlayer() {
       }
     ]
   };
-
 
   const handlePlayerReady = (player) => {
     playerRef.current = player;
@@ -84,28 +83,29 @@ function VideoPlayer() {
   
 
   return (
-    <>
-      <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
-        {/* {stayTuned? <img src={stayTunedBanner} alt='stay-tuned' width={'100%'} height={'100%'} /> : attendanceSubmitted? 
-        <ReactPlayer config={config} pip={true} stopOnUnmount={false} url={videoSource} width={"100%"} height={'100%'} id={"video-player"} controls playing={true} light={true} onError={handleMediaError}  />
-        :
-        // <MutedVideoPlayer />
-        <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
-        } */}
+    <div style={{width: '100%'}}>
+    <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
+    </div>
+    //     {/* {stayTuned? <img src={stayTunedBanner} alt='stay-tuned' width={'100%'} height={'100%'} /> : attendanceSubmitted? 
+    //     <ReactPlayer config={config} pip={true} stopOnUnmount={false} url={videoSource} width={"100%"} height={'100%'} id={"video-player"} controls playing={true} light={true} onError={handleMediaError}  />
+    //     :
+    //     // <MutedVideoPlayer />
+    //     <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
+    //     } */}
   
-        {/* <div style={{border: '2px solid grey', width: '100%', height: '50px', display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
-            <div style={{color: "white"}}>SHARE</div>
-            <div style={{color: "white"}}>CHURCH DASHBOARD</div>
-            <div style={{color: "white"}}>MY DASHBOARD</div>
-          <Link to="/admin-dashboard" className="link">
-            <div style={{color: "white"}}>CHURCH DASHBOARD</div>
-          </Link>
-          <Link to="/my-dashboard" className="link">
-            <div style={{color: "white"}}>MY DASHBOARD</div>
-          </Link>
-        </div> */}
+    //     {/* <div style={{border: '2px solid grey', width: '100%', height: '50px', display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
+    //         <div style={{color: "white"}}>SHARE</div>
+    //         <div style={{color: "white"}}>CHURCH DASHBOARD</div>
+    //         <div style={{color: "white"}}>MY DASHBOARD</div>
+    //       <Link to="/admin-dashboard" className="link">
+    //         <div style={{color: "white"}}>CHURCH DASHBOARD</div>
+    //       </Link>
+    //       <Link to="/my-dashboard" className="link">
+    //         <div style={{color: "white"}}>MY DASHBOARD</div>
+    //       </Link>
+    //     </div> */}
       
-    </>
+   
   )
 }
 

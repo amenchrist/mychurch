@@ -65,7 +65,7 @@ export default function Schedule() {
                   <div key={`Event ${i}`}>
                   <ListItem sx={{bgcolor: 'background.paper', mb: 2 }}>
                     <ListItemText
-                      primary={`${e.name} ${e.hasStarted? `[LIVE NOW]`: ''}`}
+                      primary={`${e.name} ${e.hasStarted && !e.hasEnded ? `[LIVE NOW]`: ''}`}
                       secondary={dayjs(e.date).format('dddd, MMMM DD @ hh:mm a')}
                     />
                   </ListItem>

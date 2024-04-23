@@ -48,8 +48,8 @@ export default function AttendanceCard() {
 
 
   return (
-    <div style={{padding: 30,}}>
-			<Card sx={{ maxWidth: 600, height: '70vh', borderRadius: 0.5, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}} >
+    // <div style={{padding: 30,}}>
+			<Card sx={{ maxWidth: 450, height: '70vh', borderRadius: 0.5, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}} >
         <CardMedia
             component="img"
             alt="green iguana"
@@ -68,7 +68,7 @@ export default function AttendanceCard() {
             </Typography>
             { userIsParticipant || emailCaptured ? <AttendanceForm /> : isRegistered? <EmailForm /> : <FirstTimersForm /> }
         </CardContent>
+        {/* </div> */}
 			</Card>
-    </div>
   )
 }
