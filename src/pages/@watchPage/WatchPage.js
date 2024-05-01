@@ -33,12 +33,12 @@ function WatchPage() {
 
   return (
     <>
-    {/* <Navbar /> */}
       <Box sx={{ flexGrow: 1, height: '100vh' }}>
-        {/* <WatchPageSidebar 
+      <Navbar />
+        <WatchPageSidebar 
         onMobileClose={() => setMobileNavOpen(false)}
         openMobile={isMobileNavOpen}
-        /> */}
+        />
         <Hidden mdDown>
         <Grid container sx={{ height: "100%" }} >
           <Grid item xs={12} md={8}  >  

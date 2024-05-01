@@ -1,16 +1,18 @@
 import { auth, db } from "../config/firebase";
-import { signInWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
 import { useMyStore } from "../store";
 import { doc, getDoc } from "firebase/firestore";
-import { Avatar, Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, Link, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, Link, TextField, Typography } from "@mui/material";
 import { emailRegex } from "../regex";
+import { useNavigate } from "react-router-dom";
 
 
 export const SignInForm = ({setUsePassword}) => {
 
   const setUser = useMyStore((store) => store.setUser)
   const { setIsSignedIn } = useMyStore();
+  const navigate = useNavigate()
 
   const [ email, setEmail ] = useState(window.localStorage.getItem("emailForSignIn") || "");
   const [ password, setPassword ] = useState("");
@@ -43,6 +45,7 @@ export const SignInForm = ({setUsePassword}) => {
         if (docSnap.exists()){
           setUser({...userCred, ...docSnap.data()});
           setIsSignedIn(true);
+          navigate('/pages')
         } else {
           // console.log('User Profile not found');
           setIsRegistered(false)

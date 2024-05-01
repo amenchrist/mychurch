@@ -37,6 +37,7 @@ import GivingForm from './components/WatchPage/GivingForm';
 import { getPage } from './dbQueryFunctions';
 import SignInPage from './pages/SignInPage';
 import Sidebar from './components/Sidebar';
+import PageProfile from './components/PageProfile';
 import EventPage from './pages/EventPage';
 import { WatchPageContextProvider } from './contexts/WatchPageContextProvider';
 import { DashboardContextProvider } from './contexts/DashboardContextProvider';
@@ -111,8 +112,6 @@ export default function Router() {
   }
 
   const PageContainer = () => {
-
-
     return(
       <div>
       <Sidebar />
@@ -123,6 +122,7 @@ export default function Router() {
   const routes = [
     // { path: '/', element: <GivingForm /> } ,
     { path: '/', element: isSignedIn? <SignedInScreen /> : <SignInPage /> } ,
+    { path: 'pages', element: isSignedIn? <Pages /> : <SignInPage /> } ,
     { path: 'register', element: isSignedIn?<SignUpForm />:<><h1>You are already registered</h1></> } ,
     { path: ':handle/watch', element: currentPage ? <WatchPageContextProvider ><WatchPage /></WatchPageContextProvider> : <ErrorPage /> } ,   
     { 
@@ -144,6 +144,7 @@ export default function Router() {
             { path: 'members', element: <MemberDatabase /> },
             { path: 'admins', element: <Admins /> },
             { path: 'pages', element: user?.type === 'SUPERUSER'? <Pages />: 'hello amen' },
+            { path: 'page-profile', element: <PageProfile /> } ,
             { path: 'create-page', element: user?.type === 'SUPERUSER'? <NewPage/>: <ErrorPage /> },
             { path: 'page-profile', element:  isAdmin ? <Pages />: <ErrorPage /> },
             { path: 'admin', element: <AdminPage /> },

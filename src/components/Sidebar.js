@@ -114,7 +114,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
         }
 
         {user.type === 'SUPERUSER'?
-        <NavItem href={`${currentPage?.handle || ''}/pages`} title={'Pages'} icon={MinusSquare} />
+        <NavItem href={`pages`} title={'Pages'} icon={MinusSquare} />
         : <></>
         }
 

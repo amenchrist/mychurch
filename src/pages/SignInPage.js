@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { SignInForm } from '../components/SignInForm';
-import { SignUpForm } from '../components/SignUpForm';
 import { Avatar, Box, Container, CssBaseline, Link, Typography } from '@mui/material';
 import { EmailSignInForm } from '../components/EmailSignInForm';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -8,7 +7,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 export default function SignInPage() {
 
-    const [ isRegistered, setIsRegistered ] = useState(true);
     const [ usePassword, setUsePassword ] = useState(true);
     
 

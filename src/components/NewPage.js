@@ -1,4 +1,4 @@
-import { collection, setDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, setDoc, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Page } from '../classes';
@@ -15,6 +15,7 @@ function NewPage({setCreatePageMode}) {
     const [ handle, setHandle ] = useState('');
     const [ bio, setBio ] = useState('');
     const [ websiteURL, setWebsiteURL ] = useState('');
+    const [ liveStreamURL, setLiveStreamURL ] = useState('');
     const [ email, setEmail ] = useState("");
     const [ phoneNumber, setPhoneNumber ] = useState('');
     
@@ -44,7 +45,7 @@ function NewPage({setCreatePageMode}) {
     const newPage = {
         id: uuidv4(),
         type: 'CHURCH',
-        avatarURL, bannerURL, name, handle, bio, contactInfo, websiteURL,
+        avatarURL, bannerURL, name, handle, bio, contactInfo, websiteURL, liveStreamURL,
         followers: [firstFollower],
         events: [],
         posts: [],
@@ -60,11 +61,13 @@ function NewPage({setCreatePageMode}) {
         try {
             console.log(newPage)
             await setDoc(doc(pagesRef, handle), newPage);
-            await updateDoc(doc(db,'userProfiles', user.email), {pages: user.pages.push(newPage.handle)});
+            // await updateDoc(doc(db,'userProfiles', user.email), {pages: user.pages.push(newPage.handle)});
+            await updateDoc(doc(db,'userProfiles', user.email), {pages: arrayUnion(newPage.handle)
+          });
             setCurrentPage(new Page((newPage)));
             console.log('New User Added');
             toggleAdminMode(true);
-            navigate('/');
+            navigate('/pages');
         } catch (err) {
             console.log(err);
         }
@@ -81,6 +84,7 @@ function NewPage({setCreatePageMode}) {
         <textarea required placeholder="Bio" onChange={(e) => setBio(e.target.value)} />
         <input required placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
         <input required placeholder="Website URL" onChange={(e) => setWebsiteURL(e.target.value)} />
+        <input required placeholder="Stream URL" onChange={(e) => setLiveStreamURL(e.target.value)} />
         <input required placeholder="Avatar URL" onChange={(e) => setAvatarURL(e.target.value)} />
         <input required placeholder="Banner URL" onChange={(e) => setBannerURL(e.target.value)} />
 

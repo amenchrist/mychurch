@@ -10,22 +10,7 @@ export const ContextProvider = ({ children }) => {
   useEffect(() => {
     rendered.current++
     console.log(`Context provider Renders = ${rendered.current}`)
-  }, []);
-
-//   //Set server location
-//   const server = useMemo(() => {
-//     // console.log("Setting Server");
-//     const localHost = "http://localhost:5000";
-//     const host = 'https://arcane-anchorage-41306.herokuapp.com';
-//     // return host
-//     if(window.location.href.includes('localhost')){
-//       return localHost
-//     } else {
-//       return host
-//     }
-//   }, []);
-
-  
+  }, []);  
 
   //Get info on parent website
 //   const orgDetails = useMemo(() => getOrgDetails(), []); 

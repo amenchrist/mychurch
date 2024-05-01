@@ -91,7 +91,7 @@ export const allItems = [
       mode: 'ADMIN'
     },
     {
-      href: 'pages',
+      href: '/pages',
       icon: Users,
       title: 'Pages',
       mode: 'ADMIN'
