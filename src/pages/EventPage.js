@@ -39,7 +39,7 @@ export default function EventPage({setNewEvent}) {
   const [ watchLink, setWatchLink ] = useState(event?.liveStreamURL || '');
   const [ frequency, setFrequency ] = useState(event?.frequency || '');
   const [ recurring, setRecurring ] = useState(event?.recurring);
-  const [ hasStarted, setHasStarted ] = useState(event?.hasStarted)
+  const [ hasStarted, setHasStarted ] = useState(event?.hasStarted);
 
   const updateEvent = async (e) => {
     e?.preventDefault();

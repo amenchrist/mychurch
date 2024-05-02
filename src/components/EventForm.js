@@ -136,9 +136,9 @@ export default function EventForm({setNewEvent}) {
                 </Grid>
               </>              
               }
-            <Grid item xs={12} >
+            {/* <Grid item xs={12} >
             <TextField required fullWidth label="Watch Link" id="watch-link" value={watchLink} onChange={(e) => setWatchLink(e.target.value)}/>
-            </Grid>
+            </Grid> */}
           </Grid>
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >Save</Button>
           <Grid container justifyContent="flex-start">

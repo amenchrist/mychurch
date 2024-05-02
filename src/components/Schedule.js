@@ -9,47 +9,57 @@ import dayjs from 'dayjs';
 export default function Schedule() {
 
 
-    const [ height, setHeight ] = useState('90%');
     const [ events, setEvents ] = useState([])
     const { currentPage, event, setEvent, nextEvent, setNextEvent } = useMyStore();
 
     useEffect(() => {
-        if(window.innerWidth > 900){
-        setHeight('80%');
+
+      const getEvents = async () => {
+
+        if (event !== null ) {
+          // setEvent(null)
         }
-    }, [])
-
-    useEffect(() => {
-
-        const getEvents = async () => {
-
-          try {
-            const querySnapshot = await getDocs(collection(db, `pages/${currentPage.handle}/events`)); 
-            const newEvents = []
-      
-            querySnapshot.forEach((doc) => {
-              const curEvent = doc.data()
-              if(dayjs(curEvent.date).toDate().getTime() >= new Date().getTime() || curEvent.hasStarted){
-                  newEvents.push(curEvent)
-                  if(curEvent.hasStarted && event === null){
-                      setEvent(curEvent);
-                  }
-              }
-            });
-            newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
-            if(nextEvent && nextEvent?.id !== newEvents[0].id ){
-                setNextEvent(newEvents[0])
-            }
-            setEvents([...newEvents])        
-          } catch (err) {
-            console.log('Error retrieving scheduled events');
-            console.log(err)
-          }
-        }         
-        
-        getEvents();
+        try {
+          const querySnapshot = await getDocs(collection(db, `pages/${currentPage.handle}/events`)); 
+          const newEvents = [];
     
-      }, [currentPage, setEvent, setNextEvent, nextEvent, event])
+          querySnapshot.forEach((doc) => {
+            const curEvent = doc.data()
+            //Populate the schedule with upcoming and ongoing events
+            if(dayjs(curEvent.date).toDate().getTime() >= new Date().getTime() || (curEvent.hasStarted && !curEvent.hasEnded)){
+                newEvents.push(curEvent)
+            }
+          });
+          //
+          const ongoingEvent = newEvents.find(e => e.hasStarted && e.hasEnded === false);
+          console.log(event)
+          if (ongoingEvent === undefined && event !== null){
+            console.log("there's no ongoing event")
+            setEvent(null)
+          }
+          newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
+          if(nextEvent && nextEvent?.id !== newEvents[0].id ){
+              setNextEvent(newEvents[0])
+          }
+          setEvents([...newEvents])
+          newEvents.find(e => e.hasStarted)
+        } catch (err) {
+          console.log('Error retrieving scheduled events');
+          console.log(err)
+        }
+      }         
+      
+      getEvents();
+  
+    }, [currentPage, setEvent, setNextEvent, nextEvent, event])
+
+    const ongoingEvent = events.find(e => e.hasStarted && e.hasEnded === false);
+    useEffect(() => {
+      if(ongoingEvent !== undefined && ongoingEvent?.id !== event?.id){
+        setEvent(ongoingEvent);
+      } 
+    }, [ongoingEvent, event, setEvent]);
+
 
   return (
         <Box sx={{ width: '100%',  padding: 2}}>

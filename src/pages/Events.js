@@ -19,20 +19,28 @@ export default function Events() {
     backgroundColor: theme.palette.background.paper,
   }));
 
+  useEffect(() => {
+    console.log('getting events')
+    // setEvents();
+  }, [currentPage.handle, setEvents])
+
   
   useEffect(() => {
 
     const getEvents = async () => {
 
-      const querySnapshot = await getDocs(collection(db, `pages/${currentPage.handle}/events`)); 
-      const newEvents = []
+      try {
+        const querySnapshot = await getDocs(collection(db, `pages/${currentPage.handle}/events`)); 
+        const newEvents = []
 
-      querySnapshot.forEach((doc) => {
-        newEvents.push(doc.data())
-      });
-      newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
-      setEvents([...newEvents])
- 
+        querySnapshot.forEach((doc) => {
+          newEvents.push(doc.data())
+        });
+        newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
+        setEvents([...newEvents])
+        }catch (err) {
+          console.log("Error getting Events")
+        } 
     }
 
     getEvents();
@@ -61,6 +69,9 @@ export default function Events() {
       }    
   }
 
+  console.log(events)
+
+
   const EventsList = () => {
     return(
       <Box sx={{ flexGrow: 1, maxWidth: '800px', width: '80vw', }}>
@@ -76,7 +87,7 @@ export default function Events() {
             </Grid>              
             <Demo>
               <List sx={{ height:'80vh', overflowY:'auto'}}>
-                {events.filter((i) => i.hasEnded === false).map((event,i) => (
+                {events?.filter((i) => i.hasEnded === false).map((event,i) => (
                   <div key={`Event ${i}`}>
                   <ListItem >
                     <ListItemText

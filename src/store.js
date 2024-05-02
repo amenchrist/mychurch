@@ -28,6 +28,7 @@ function store(set) {
     } catch (err) {
       console.log('Error retrieving scheduled events');
       console.log(err)
+      return []
     }
   } 
 
@@ -48,8 +49,33 @@ function store(set) {
       setEvent: (newEvent) => set(() => ({event: newEvent})),
       nextEvent: null,
       setNextEvent: (newEvent) => set(() => ({nextEvent: newEvent})),
-      events: events,
-      setEvents: () => set(() => ({events: events}))
+      events: [],
+      // setEvents: async () => {
+      //   try {
+      //     const querySnapshot = await getDocs(collection(db, `pages/cebarking/events`)); 
+      //     const newEvents = []
+    
+      //     querySnapshot.forEach((doc) => {
+      //       const curEvent = doc.data()
+      //       newEvents.push(curEvent)
+    
+      //       // if(dayjs(curEvent.date).toDate().getTime() >= new Date().getTime() || curEvent.isOnNow){
+      //       //     newEvents.push(curEvent)
+      //       // }
+      //     });
+      //     newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
+      //     // if(nextEvent && nextEvent?.id !== newEvents[0].id ){
+      //     //     setNextEvent(newEvents[0])
+      //     // }
+      //     set(() => ({events: [...newEvents]}))
+    
+      //   } catch (err) {
+      //     console.log('Error retrieving scheduled events');
+      //     console.log(err)
+      //     return []
+      //   }
+      // } ,
+      setEvents: (events) => set(() => ({events: events}))
   }
 
 }
