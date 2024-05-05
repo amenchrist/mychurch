@@ -6,9 +6,7 @@ import { useDashboardContext } from '../contexts/DashboardContextProvider';
 
 function Dashboard() {
 
-  const { showEventReport } = useDashboardContext()
-
-
+  const { showEventReport } = useDashboardContext();
   
   return (
     <>

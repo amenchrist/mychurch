@@ -32,17 +32,21 @@ export default function Schedule() {
           });
           //
           const ongoingEvent = newEvents.find(e => e.hasStarted && e.hasEnded === false);
-          console.log(event)
           if (ongoingEvent === undefined && event !== null){
             console.log("there's no ongoing event")
             setEvent(null)
           }
+
           newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
           if(nextEvent && nextEvent?.id !== newEvents[0].id ){
               setNextEvent(newEvents[0])
           }
+          if(nextEvent === null ){
+            setNextEvent(newEvents[0])
+        }
+          
           setEvents([...newEvents])
-          newEvents.find(e => e.hasStarted)
+
         } catch (err) {
           console.log('Error retrieving scheduled events');
           console.log(err)

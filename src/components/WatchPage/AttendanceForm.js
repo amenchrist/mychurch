@@ -14,7 +14,7 @@ export default function AttendanceForm() {
 
   const { currentPage, event } = useMyStore();
 
-  const { attendeeEmail, setAttendanceCaptured, userIsParticipant, setEmailCaptured, setAttendeeEmail } = useWatchPageContext();
+  const { attendeeEmail, setAttendanceCaptured, userIsParticipant, setEmailCaptured, setAttendeeEmail, setUserIsParticipant } = useWatchPageContext();
 
   const [ attendance, setAttendance ] = useState(false);
   const [ validAttendance, setValidAttendance ] = useState(true);
@@ -95,7 +95,7 @@ export default function AttendanceForm() {
     </Button>
     <Grid container justifyContent="flex-end">
         <Grid item>
-          <Typography variant='p' onClick={() => setEmailCaptured(false)} >Back</Typography>
+          <Typography variant='p' onClick={() => {setEmailCaptured(false); setUserIsParticipant(false)}} >Back</Typography>
         </Grid>
     </Grid>
   </Box>

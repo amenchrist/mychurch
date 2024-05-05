@@ -27,7 +27,7 @@ export default function FirstTimersForm() {
   const [ valid, setValid ] = useState(false);
 
   useEffect(() => {
-    // console.log("Valid = ", valid)
+    console.log("Valid = ", valid)
     if(validFirstName && validLastName && validPhone ){
       setValid(true)
     } else {
@@ -116,13 +116,13 @@ export default function FirstTimersForm() {
           />
         </Grid> */}
         <Grid item xs={12}>
-          <MuiTelInput label="Phone Number" fullWidth value={phone} onChange={(e) => setPhone(e)} />
+          <MuiTelInput label="Phone Number" fullWidth value={phone} onChange={(e) => {setValidPhone(true); setPhone(e) }} />
         </Grid>
-        <Grid item xs={12} >
+        {/* <Grid item xs={12} >
           <TextField required select fullWidth id="title" label="Select Your Church" name="church" value={church} autoComplete="church" onChange={(e) => setChurch(e.target.value)} >
             {churches.map((church) => (<MenuItem key={church} value={church}>{church}</MenuItem>))}
           </TextField>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <FormControlLabel
             control={<Checkbox checked={allowsMarketing} onChange={() => { setAllowsMarketing(!allowsMarketing)}} color="primary" />}

@@ -18,7 +18,7 @@ import Notes from './pages/Notes';
 import Testimonies from './pages/Testimonies';
 import Notifications from './pages/Notifications';
 import Conversations from './pages/Conversations';
-import { SignUpForm } from './components/SignUpForm';
+import { SignUpForm, SignUpPage } from './pages/SignUpPage';
 import AdminPage from './pages/AdminPage';
 import { useMyStore } from './store';
 import { SignInForm } from './components/SignInForm';
@@ -41,6 +41,7 @@ import PageProfile from './components/PageProfile';
 import EventPage from './pages/EventPage';
 import { WatchPageContextProvider } from './contexts/WatchPageContextProvider';
 import { DashboardContextProvider } from './contexts/DashboardContextProvider';
+import { RegistrationPageContextProvider } from './contexts/RegistrationContextProvider';
 
 
 export default function Router() {
@@ -123,7 +124,7 @@ export default function Router() {
     // { path: '/', element: <GivingForm /> } ,
     { path: '/', element: isSignedIn? <SignedInScreen /> : <SignInPage /> } ,
     { path: 'pages', element: isSignedIn? <Pages /> : <SignInPage /> } ,
-    { path: 'register', element: isSignedIn?<SignUpForm />:<><h1>You are already registered</h1></> } ,
+    { path: 'register', element: isSignedIn? <><h1>You are already registered</h1></> : <RegistrationPageContextProvider ><SignUpPage /></RegistrationPageContextProvider> } ,
     { path: ':handle/watch', element: currentPage ? <WatchPageContextProvider ><WatchPage /></WatchPageContextProvider> : <ErrorPage /> } ,   
     { 
       path: ':handle', 
@@ -139,7 +140,7 @@ export default function Router() {
             { path: 'profile', element: <Profile/> },
             { path: 'church', element: <Church /> },
             { path: 'signin', element: <SignInForm /> },
-            { path: 'signup', element: <SignUpForm /> },
+            // { path: 'signup', element: <SignUpPage /> },
             { path: 'reports', element: <Reports /> },
             { path: 'members', element: <MemberDatabase /> },
             { path: 'admins', element: <Admins /> },

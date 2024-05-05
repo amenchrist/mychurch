@@ -64,38 +64,6 @@ export const SignInForm = ({setUsePassword}) => {
     } catch (err) {
       console.error(err);
     }
-    // if(!isRegistered){
-    //   try {
-    //     const docRef = doc(db, 'userProfiles', email)
-    //     const docSnap = await getDoc(docRef);
-    //     if (docSnap.exists()){
-    //       setIsRegistered(true)
-    //       try {
-    //         const userCred = await signInWithEmailAndPassword(auth, email, password);
-    //         getUser(userCred.user)
-    //         setIsSignedIn(true)
-            
-    //       } catch (err) {
-    //         console.error(err);
-    //       }
-    //       return
-    //     } 
-    //   } catch (err) {
-    //     console.log("Error fetching doc");
-    //     console.log(err)
-    //     setIsRegistered(false);
-    //     return
-    //   }
-    // } else {
-    //   try {
-    //     const userCred = await signInWithEmailAndPassword(auth, email, password);
-    //     getUser(userCred.user)
-    //     setIsSignedIn(true)
-        
-    //   } catch (err) {
-    //     console.error(err);
-    //   }
-    // }
   };
 
   

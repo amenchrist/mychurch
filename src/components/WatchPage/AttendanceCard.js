@@ -15,7 +15,6 @@ export default function AttendanceCard() {
 
   const { emailCaptured, isRegistered, attendanceCaptured, setAttendanceCaptured, userIsParticipant, setUserIsParticipant } = useWatchPageContext();
 
-	console.log(useWatchPageContext())
   const { event, user, setUser, currentPage } = useMyStore();
   const [ enableLogIn, setEnableLogin ] = useState(true);
 

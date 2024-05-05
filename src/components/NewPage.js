@@ -36,42 +36,42 @@ function NewPage({setCreatePageMode}) {
     const contactInfo = { email, phoneNumber, address };
 
     const firstFollower = {
-        id: user.id,
-        isMember: false,
-        role: 'ADMINISTRATOR',
-        pagePosts: []
+      id: user.id,
+      isMember: false,
+      role: 'ADMINISTRATOR',
+      pagePosts: []
     }
 
     const newPage = {
-        id: uuidv4(),
-        type: 'CHURCH',
-        avatarURL, bannerURL, name, handle, bio, contactInfo, websiteURL, liveStreamURL,
-        followers: [firstFollower],
-        events: [],
-        posts: [],
-        bankDetails: [],
-        transactions: [],
-        chats: [],
-        creatorID: user.id,
-        creationTimestamp: new Date().getTime()
+      id: uuidv4(),
+      type: 'CHURCH',
+      avatarURL, bannerURL, name, handle, bio, contactInfo, websiteURL, liveStreamURL,
+      followers: [firstFollower],
+      events: [],
+      posts: [],
+      bankDetails: [],
+      transactions: [],
+      chats: [],
+      creatorID: user.id,
+      creationTimestamp: new Date().getTime()
     }
 
     const createPage = async () => {
 
-        try {
-            console.log(newPage)
-            await setDoc(doc(pagesRef, handle), newPage);
-            // await updateDoc(doc(db,'userProfiles', user.email), {pages: user.pages.push(newPage.handle)});
-            await updateDoc(doc(db,'userProfiles', user.email), {pages: arrayUnion(newPage.handle)
-          });
-            setCurrentPage(new Page((newPage)));
-            console.log('New User Added');
-            toggleAdminMode(true);
-            navigate('/pages');
-        } catch (err) {
-            console.log(err);
-        }
+      try {
+          console.log(newPage)
+          await setDoc(doc(pagesRef, handle), newPage);
+          // await updateDoc(doc(db,'userProfiles', user.email), {pages: user.pages.push(newPage.handle)});
+          await updateDoc(doc(db,'userProfiles', user.email), {pages: arrayUnion(newPage.handle)
+        });
+          setCurrentPage(new Page((newPage)));
+          console.log('New User Added');
+          toggleAdminMode(true);
+          navigate('/pages');
+      } catch (err) {
+          console.log(err);
       }
+    }
 
   return (
     

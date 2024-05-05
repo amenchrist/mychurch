@@ -21,6 +21,7 @@ function WatchPage() {
   const { event, nextEvent } = useMyStore();
   const { attendanceCaptured } = useWatchPageContext();
 
+
   const ServiceMessage = () => {
     return (
       <div style={{color: 'white', width: "100%", height: '30vh',textAlign: 'center', padding: '20px', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
