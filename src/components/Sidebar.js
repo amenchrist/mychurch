@@ -50,13 +50,15 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
       <Box sx={{alignItems: 'center', display: 'flex', flexDirection: 'column', p: 2 }} >
         <Avatar component={RouterLink} src={''} sx={{cursor: 'pointer', width: 64, height: 64 }} to="#" />
         <Typography color="textPrimary" variant="h5" align='center' >
-          {user?.email? `${user.bioData?.title} ${user.bioData?.firstName} ${user.bioData?.lastName}` :'Guest'}
+          {/* {user?.email? `${user.bioData?.title} ${user.bioData?.firstName} ${user.bioData?.lastName}` :'Guest'} */}
+          {currentPage?.name}
         </Typography> 
         {/* <Typography color="textPrimary" variant="h5" align='center' >
           {user?.email? 'Sign Amen Out' : 'Sign Amen In'}
         </Typography> */}
         <Typography color="textSecondary" variant="body2" >
-          {currentPage? currentPage.name : 'Christ Embassy'}
+          {/* {currentPage? currentPage.name : 'Christ Embassy'} */}
+          {`${user.bioData?.title} ${user.bioData?.firstName} ${user.bioData?.lastName}`}
         </Typography>
       </Box>
     )
@@ -86,15 +88,18 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
         height: '100%'
       }}
     >
-      {adminMode? <AdminHeader /> : <Header /> }
+      {adminMode? <Header /> : <AdminHeader />}
       <Divider />
       <Box sx={{ p: 2 }}>
         <List>
           {items.map((item) => {
+            const { type } = currentPage;
+
             if (item.title === 'Home' && currentPage?.websiteURL ){
               item.href = currentPage.websiteURL;
             }
 
+          if(item.mode === type || item.mode === 'ALL'){
             return (
               <NavItem
                 href={`${item.href}`}
@@ -103,20 +108,18 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
                 icon={item.icon}
               />
             )
+          }
           })}
           {user.emailChecked? <NavItem href={'#'} key={'reset'} title={'Reset'} icon={RefreshCw} onClick={() => setUser({})}/>  : <></>}
         </List>
 
-        {currentPage?.followers?.filter(f => f.id === user.id)[0]?.role === 'ADMINISTRATOR'?
+        {/* {currentPage?.followers?.filter(f => f.id === user.id)[0]?.role === 'ADMINISTRATOR'?
         !adminMode ? <NavItem onClick={toggleMode} key={'Open Admin Mode'} title={'Open Admin Mode'} icon={Square}/> 
         : <NavItem onClick={toggleMode} key={'Close Admin Mode'} title={'Close Admin Mode'} icon={Square}/>
         : <></>
-        }
-
-        {user.type === 'SUPERUSER'?
-        <NavItem href={`pages`} title={'Pages'} icon={MinusSquare} />
-        : <></>
-        }
+        } */}
+        <NavItem href={`/pages`} title={'Pages'} icon={MinusSquare} />
+      
 
         {user?.email?
         <NavItem onClick={logOut} key={'Sign Out'} title={'Sign Out'} icon={LogOut} />

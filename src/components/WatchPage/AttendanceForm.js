@@ -44,7 +44,7 @@ export default function AttendanceForm() {
         id: `att_${uuidv4().split('-').join("")}`,
         email: attendeeEmail ,
         timestamp: new Date().getTime(),
-        church: 'Christ Embassy Barking',
+        church: currentPage.name,
         attendance: attendance,
         geolocation: {...coords},
         // origin: orgDetails.url,

@@ -9,19 +9,19 @@ export const allItems = [
       href: '',
       icon: BarChart,
       title: 'Dashboard',
-      mode: 'BOTH'
+      mode: 'ALL'
     },
     {
       href: 'giving-records',
       icon: CreditCard,
       title: 'Giving Records',
-      mode: 'BOTH'
+      mode: 'ALL'
     },
     {
       href: 'events',
       icon: Calendar,
       title: 'Upcoming Events',
-      mode: 'BOTH'
+      mode: 'CHURCH'
     },
     {
       href: 'watch',
@@ -33,67 +33,67 @@ export const allItems = [
       href: 'church',
       icon: Home,
       title: 'Home',
-      mode: 'USER'
+      mode: ''
     },
     {
       href: 'conversations',
       icon: Mail,
       title: 'Conversations',
-      mode: 'BOTH'
+      mode: 'ALL'
     },
     {
       href: 'notifications',
       icon: Bell,
       title: 'Notifications',
-      mode: 'BOTH'
+      mode: 'ALL'
     },
     {
       href: 'testimonies',
       icon: Bell,
       title: 'Testimonies',
-      mode: 'USER'
+      mode: 'CHURCH'
     },
     {
       href: 'notes',
       icon: Clipboard,
       title: 'Notes',
-      mode: 'USER'
+      mode: 'PERSON'
     },
     
     {
       href: 'news-feed',
       icon: Rss,
       title: 'News Feed',
-      mode: 'USER'
+      mode: 'ALL'
     },
     {
       href: 'profile',
       icon: User,
       title: 'Profile',
-      mode: 'BOTH'
+      mode: 'ALL'
     },
     {
       href: 'reports',
       icon: Archive,
       title: 'Reports',
-      mode: 'ADMIN'
+      mode: 'CHURCH'
     },
     {
       href: 'members',
       icon: Users,
-      title: 'Member Database',
-      mode: 'ADMIN'
+      title: 'Members',
+      mode: 'CHURCH'
     },
     {
       href: 'admins',
       icon: Users,
       title: 'Manage Admins',
-      mode: 'ADMIN'
+      mode: 'CHURCH'
     },
     {
       href: '/pages',
       icon: Users,
       title: 'Pages',
-      mode: 'ADMIN'
+      mode: ''
     }
   ];

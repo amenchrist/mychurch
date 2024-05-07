@@ -1,18 +1,22 @@
 import React from 'react'
 import ProfileForm from '../components/ProfileForm'
 import { useMyStore } from '../store'
+import ChurchProfile from '../components/Profile/ChurchProfile'
+import UserProfile from '../components/Profile/UserProfile'
 
 function Profile() {
 
-  const {user} = useMyStore()
+  const { currentPage } = useMyStore()
 
-  console.log(user)
-  return (
-    <div>
-      <h1>Profile</h1>
-      <ProfileForm data={user} />
-    </div>
-  )
+
+  switch(currentPage.type){
+    case 'CHURCH':
+      return <ChurchProfile />;
+    case 'PERSON':
+      return <UserProfile />
+    default:
+      return <UserProfile />
+  }
 }
 
 export default Profile

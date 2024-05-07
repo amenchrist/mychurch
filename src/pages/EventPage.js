@@ -39,13 +39,12 @@ export default function EventPage({setNewEvent}) {
   const [ watchLink, setWatchLink ] = useState(event?.liveStreamURL || '');
   const [ frequency, setFrequency ] = useState(event?.frequency || '');
   const [ recurring, setRecurring ] = useState(event?.recurring);
-  const [ hasStarted, setHasStarted ] = useState(event?.hasStarted);
 
   const updateEvent = async (e) => {
     e?.preventDefault();
     const eventUpdate = {
       date: dayjs(`${date} ${time}`).toDate().toString(),
-      recurring, name, hasStarted,
+      recurring, name,
       bio: description.trim(),
       liveStreamURL: watchLink.trim(),
     }
@@ -75,31 +74,31 @@ export default function EventPage({setNewEvent}) {
     navigate(`/${currentPage.handle}/events`);
   }
 
-  const toggleEvent = () => {
-    const toggleEventInDB = async (update) => {
-      try {
-        await updateDoc(doc(db, `pages/${currentPage.handle}/events`, event.id), update);
-        const updatedEvent = new Event({...event, id: event.id, ...update })
-        setEvent(updatedEvent);
-       
-      } catch (err) {
-        console.log('Error updating event');
-        console.log(err);
-      }
-    }
-
-    if(hasStarted){
-      //end event
-      const update = { hasEnded: true, endTimestamp: new Date().getTime() }
-      toggleEventInDB(update);
-    } else {
-      //start event
+  const startEvent = async () => {
+    try {
       const update = { hasStarted: true, startTimestamp: new Date().getTime() }
-      toggleEventInDB(update);
+      await updateDoc(doc(db, `pages/${currentPage.handle}/events`, event.id), update);
+      const updatedEvent = new Event({...event, id: event.id, ...update })
+      setEvent(updatedEvent);
+     
+    } catch (err) {
+      console.log('Error updating event');
+      console.log(err);
     }
   }
 
-
+  const endEvent = async () => {
+    try {
+      const update = { hasEnded: true, endTimestamp: new Date().getTime() }
+      await updateDoc(doc(db, `pages/${currentPage.handle}/events`, event.id), update);
+      const updatedEvent = new Event({...event, id: event.id, ...update })
+      setEvent(updatedEvent);
+     
+    } catch (err) {
+      console.log('Error updating event');
+      console.log(err);
+    }
+  }
 
   const frequencyOptions = [ {value: 'DAILY', label: 'Daily'}, {value: 'WEEKLY', label: 'Weekly'}, {value: 'MONTHLY', label: 'Monthly'} ];
   
@@ -139,13 +138,13 @@ export default function EventPage({setNewEvent}) {
           </Grid>
           <Button type="submit" fullWidth variant="contained" disabled={!updated} sx={{ mt: 3, }} >Save</Button>
           </Box>
-          <Button fullWidth variant="contained" disabled={((isToday === false) || event.hasEnded)} 
-          sx={{ mt: 2, mb: 2 }} 
-          onClick={toggleEvent} 
-          color={event?.hasStarted? 'error': 'primary'}
-          >
-            {event?.hasStarted? 'End Event' : 'Start Event'}
+          {event.hasStarted && !event.hasEnded? 
+          <Button fullWidth variant="contained" sx={{ mt: 2, mb: 2 }} onClick={endEvent} color={'error'}>
+            End Event
+          </Button> : <Button fullWidth variant="contained" disabled={!isToday} sx={{ mt: 2, mb: 2 }} onClick={startEvent} color={'primary'}>
+            Start Event
           </Button>
+          }
           <Grid container justifyContent="space-between">
               <Grid item>
                 <Typography variant='p' onClick={toEventsPage} >Back</Typography>
