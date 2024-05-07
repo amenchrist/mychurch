@@ -27,7 +27,7 @@ export const allItems = [
       href: 'watch',
       icon: Monitor,
       title: 'Watch',
-      mode: 'USER'
+      mode: 'ALL'
     },
     {
       href: 'church',

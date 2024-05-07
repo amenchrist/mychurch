@@ -4,36 +4,27 @@ import videojs from 'video.js';
 import { useStateContext } from '../../contexts/ContextProvider';
 import './VideoPlayer.css';
 import { useMyStore } from '../../store';
-// import stayTunedBanner from '../../Stay-tuned-.png';
-// import stayTunedVid from "../../stay-tuned.mp4"
+import ReactPlayer from "react-player";
 
-function VideoPlayer() {
+
+export default function VideoPlayer() {
 
   const { event, currentPage } = useMyStore();
 
 
-  const barkingChurch = "https://vcpout-sf01-altnetro.internetmultimediaonline.org/vcp/av5xgmrwkg/playlist.m3u8"
-  // const customStream = 'https://vcpout-ams01.internetmultimediaonline.org/vcp/GNW2022WPCngykyh/playlist.m3u8';
-  const lsat = "https://c6v6m6p7.stackpathcdn.com/lwsat/lwsatmobile/playlist.m3u8"
-  let youtube = 'https://www.youtube.com/watch?v=ysz5S6PUM-U'
-  const barkingZone = "https://vcpout-sf01-altnetro.internetmultimediaonline.org/vcp/e877c883/playlist.m3u8";
+  // const barkingChurch = "https://vcpout-sf01-altnetro.internetmultimediaonline.org/vcp/av5xgmrwkg/playlist.m3u8"
+  // // const customStream = 'https://vcpout-ams01.internetmultimediaonline.org/vcp/GNW2022WPCngykyh/playlist.m3u8';
+  // const lsat = "https://c6v6m6p7.stackpathcdn.com/lwsat/lwsatmobile/playlist.m3u8"
+  // let youtube = 'https://www.youtube.com/watch?v=ysz5S6PUM-U'
+  // const barkingZone = "https://vcpout-sf01-altnetro.internetmultimediaonline.org/vcp/e877c883/playlist.m3u8";
   // const stayTuned = "../../stay-tuned.mp4"
  
 
-  const { user } = useStateContext();
-  const [videoSource, setVideoSource] = useState(barkingZone);
-  const [muted, setMuted] = useState(true)
-
+  const [ videoSource, setVideoSource ] = useState(currentPage?.liveStreamURL);
   const [ stayTuned, setStayTuned ] = useState(false)
   const [ playing, setPlaying ] = useState(true)
 
   // const aspectRatio = 0.5625;
-
-  useEffect(()=>{
-    if(user.attendanceSubmitted ){
-     setMuted(false)
-    }
-  }, [user.attendanceSubmitted])
   
   useEffect(()=>{
     if(videoSource !== currentPage.liveStreamURL ){
@@ -42,6 +33,8 @@ function VideoPlayer() {
   }, [videoSource, currentPage.liveStreamURL])
 
   const playerRef = React.useRef(null);
+
+  // data-setup='{"techOrder": ["vimeo"], "sources": [{ "type":"video/vimeo", "src": "https://www.vimeo.com/380886323"}] }'
 
   const videoJsOptions = {
     autoplay: true,
@@ -56,6 +49,12 @@ function VideoPlayer() {
       }
     ]
   };
+
+  if(videoSource.includes('vimeo.com')){
+    console.log(videoSource)
+    delete videoJsOptions.sources;
+    videoJsOptions['data-setup'] = `{"techOrder": ["vimeo"], "sources": [{ "type":"video/vimeo", "src": "${videoSource}"}] }`
+  }
 
   const handlePlayerReady = (player) => {
     playerRef.current = player;
@@ -80,11 +79,13 @@ function VideoPlayer() {
     }, 5000)
     setStayTuned(true)
   }
+
+  const isVimeo = currentPage.liveStreamURL.includes('vimeo.com')
   
 
   return (
     <div style={{width: '100%'}}>
-    <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
+      {isVimeo ? <ReactPlayer controls url="https://vimeo.com/3155182" /> : <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />}
     </div>
     //     {/* {stayTuned? <img src={stayTunedBanner} alt='stay-tuned' width={'100%'} height={'100%'} /> : attendanceSubmitted? 
     //     <ReactPlayer config={config} pip={true} stopOnUnmount={false} url={videoSource} width={"100%"} height={'100%'} id={"video-player"} controls playing={true} light={true} onError={handleMediaError}  />
@@ -108,5 +109,3 @@ function VideoPlayer() {
    
   )
 }
-
-export default VideoPlayer

@@ -20,6 +20,7 @@ export default function UserProfile() {
 
   return (
     <Container component="main" maxWidth="xs" sx={{}}>
+      <Typography component="h1" variant="h5">Profile</Typography>
       <Box component="form"  sx={{ mt:2, p:1, overflowY: 'auto'}} onChange={() => setUpdated(true)} >
         <Grid container spacing={2}>
           <Grid item xs={12}>
