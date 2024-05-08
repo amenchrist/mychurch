@@ -38,12 +38,16 @@ export default function Schedule() {
           }
 
           newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
-          if(nextEvent && nextEvent?.id !== newEvents[0].id ){
+          if(nextEvent && nextEvent?.id !== newEvents[0]?.id ){
+            if(newEvents[0] === undefined){
+              setNextEvent(null)
+            }else {
               setNextEvent(newEvents[0])
+            }
           }
           if(nextEvent === null ){
             setNextEvent(newEvents[0])
-        }
+          }
           
           setEvents([...newEvents])
 
