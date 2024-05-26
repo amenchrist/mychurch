@@ -7,7 +7,7 @@ export default function VimeoPlayer() {
 
     useEffect(() => {
         const script = document.createElement('script');
-        const videoWidth = document.getElementById('made-in-ny').clientWidth    
+        const videoWidth = document.getElementById('my-vimeo-player')?.clientWidth    
         script.innerHTML = `
         //Var was used because the component mounts twice before unmounting, for some weird reason, and throws errors about variables being already existing
         //var happily reassigns existing variables unlike let and const
