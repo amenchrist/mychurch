@@ -308,6 +308,7 @@ export class Event extends Page{
             parentPageID: null,
             creatorID: null,
             date: null,
+            time: null,
             eventType: LIVESTREAM,
             content: null,
             announcements: [], 
