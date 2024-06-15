@@ -28,7 +28,7 @@ function WatchPage() {
       <div style={{color: 'white', width: "100%", height: '30vh',textAlign: 'center', padding: '20px', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
         {nextEvent ? <><p>NEXT EVENT</p>
         <h3>{nextEvent?.name.toUpperCase()}</h3>
-        <p>{dayjs(nextEvent?.date).format('dddd, MMMM DD @ hh:mm a')}</p></> : <p>NO UPCOMING EVENTS</p>}
+        <p>{dayjs(`${nextEvent?.date} ${nextEvent?.time}`).format('dddd, MMMM DD @ hh:mm a')}</p></> : <p>NO UPCOMING EVENTS</p>}
       </div>
     )
   }

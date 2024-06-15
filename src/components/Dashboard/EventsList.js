@@ -44,7 +44,7 @@ export default function EventsList() {
                     <ListItemText
                       onClick={() => getEvent(e.id)}
                       primary={`${e.name}`}
-                      secondary={dayjs(e.date).format('dddd, MMMM DD @ hh:mm a')}
+                      secondary={dayjs(`${e.date} ${e.time}`).format('dddd, MMMM DD @ hh:mm a')}
                     />
                       <IconButton edge="end" >{e.totalAttendance}</IconButton>
                   </ListItem>

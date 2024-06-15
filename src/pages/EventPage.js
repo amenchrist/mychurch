@@ -33,7 +33,7 @@ export default function EventPage({setNewEvent}) {
   }, [event, setEvent, isToday])
   
   const [ date, setDate ] = useState(dayjs(event?.date).format('YYYY-MM-DD'));
-  const [ time, setTime ] = useState(dayjs(event?.date).format('HH:mm') || '');
+  const [ time, setTime ] = useState(dayjs(`${event?.date} ${event?.time}`).format('HH:mm') || '');
   const [ name, setName ] = useState(event?.name);
   const [ description, setDescription ] = useState(event?.bio || '');
   const [ watchLink, setWatchLink ] = useState(event?.liveStreamURL || '');

@@ -83,7 +83,7 @@ export default function EventForm({setNewEvent}) {
       bio: description,
       liveStreamURL: watchLink.trim(),
       name,
-      date: dayjs(`${startDate} ${time}`).toDate().toString(),
+      date: dayjs(`${startDate}`).toDate().toString(),
       time
     }
     const event = new Event(newEvent)

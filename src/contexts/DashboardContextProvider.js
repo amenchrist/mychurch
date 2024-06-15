@@ -80,7 +80,7 @@ export const DashboardContextProvider = ({ children }) => {
   
   const contextStateVars = {
 
-    showEventReport, setShowEventReport, events, event, setEvent
+    showEventReport, setShowEventReport, events, event, setEvent, setEvents
   }
 
   return (

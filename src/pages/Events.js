@@ -93,7 +93,7 @@ export default function Events() {
                     <ListItemText
                       onClick={() => getEvent(event.id)}
                       primary={`${event.name}`}
-                      secondary={dayjs(event.date).format('dddd, MMMM DD @ hh:mm a')}
+                      secondary={dayjs(`${event.date} ${event.time}`).format('dddd, MMMM DD @ hh:mm a')}
                     />
                       <IconButton edge="end" aria-label="delete" onClick={() => deleteEvent(event)} ><DeleteIcon /></IconButton>
                   </ListItem>
