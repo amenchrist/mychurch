@@ -1,27 +1,14 @@
 import {  useRoutes, Navigate, useLocation, useParams, useNavigate, Outlet } from 'react-router-dom';
-// import DashboardLayout from './components/adminDashboard/DashboardLayout';
-// import MemberDashboardLayout from './components/memberDashboard/MemberDashboardLayout';
-// import { Offerings, Tithes, Partnerships, SpecialSeeds, OtherGiving, GivingSummary } from './pages/@memberDashboard';
-// import { ServiceSummary, Attendees, FirstTimers, Absentees, GivingRecord, Members, YearOverview } from './pages/@adminDashboard';
-// import WatchPage from './pages/@watchPage/WatchPage';
-import SignInSide from './pages/SignIn';
-// import Home from './pages/Home';
-import { auth, db } from './config/firebase';
 import WatchPage from './pages/@watchPage/WatchPage';
 import Dashboard from './pages/Dashboard';
-import NewsFeed from './pages/NewsFeed';
 import Profile from './pages/Profile';
 import GivingRecords from './pages/GivingRecords';
 import Church from './pages/Church';
 import Events from './pages/Events';
-import Notes from './pages/Notes';
-import Testimonies from './pages/Testimonies';
-import Notifications from './pages/Notifications';
-import Conversations from './pages/Conversations';
 import { SignUpForm, SignUpPage } from './pages/SignUpPage';
 import AdminPage from './pages/AdminPage';
 import { useMyStore } from './store';
-import { SignInForm } from './components/SignInForm';
+import { SignInForm } from './components/Auth/signInForm/SignInForm';
 import Reports from './pages/Reports';
 import MemberDatabase from './pages/MemberDatabase';
 import Admins from './pages/Admins';
@@ -29,11 +16,8 @@ import NewPage from './components/NewPage';
 import ErrorPage from './pages/ErrorPage';
 import Pages from './pages/Pages';
 import { useEffect, useMemo, useState } from 'react';
-import Home from './layouts/Home';
-import { doc, getDoc } from "firebase/firestore";
-import { Page } from './classes';
+import { Page } from './classes/Page'
 import ComingSoon from './pages/ComingSoon';
-import GivingForm from './components/WatchPage/GivingForm';
 import { getPage } from './dbQueryFunctions';
 import SignInPage from './pages/SignInPage';
 import Sidebar from './components/Sidebar';
@@ -66,8 +50,10 @@ export default function Router() {
   useEffect(() => {
     if(pageRef !== urlHandle){
       (async () => {
-          setCurrentPage(await getPage(pageRef))
-          setUrlHandle(pageRef)
+        const page = new Page({handle: pageRef})
+
+        setCurrentPage(await getPage(pageRef))
+        setUrlHandle(pageRef)
       })()
     }
   },[setCurrentPage, pageRef, currentPage, urlHandle, setUrlHandle])

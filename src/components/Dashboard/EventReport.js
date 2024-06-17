@@ -53,8 +53,6 @@ export default function EventReport() {
     },
   ];
 
-
-
   return (
     
     <div style={{  width: '100%', overflowY: 'auto', height: 500 }}>

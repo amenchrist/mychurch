@@ -60,3 +60,14 @@ export const createUserProfile = async (newUser) => {
     return false
   }
 }
+
+export const createEvent = async (event, page) => {
+  try {
+    await setDoc(doc(db, `pages/${page.handle}/events`, event.id), {...event});
+    return { success: true }
+  } catch (err) {
+    console.log('Error creating event')
+    console.log(err);
+    return { success: false }
+  }
+}

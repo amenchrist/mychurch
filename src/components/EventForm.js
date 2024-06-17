@@ -4,11 +4,11 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import { Event } from '../classes';
 import { v4 as uuidv4 } from 'uuid';
 import { useMyStore } from '../store';
 import { useNavigate,} from 'react-router-dom';
 import dayjs from 'dayjs';
+import Event from '../classes/Event';
 
 
 export default function EventForm({setNewEvent}) {  
@@ -24,13 +24,6 @@ export default function EventForm({setNewEvent}) {
   const [ frequency, setFrequency ] = useState('WEEKLY');
   const [ recurring, setRecurring ] = useState(false);
   const [ reEndDate, setReEndDate ] = useState(dayjs().format('YYYY-MM-DD'));
-
-  // console.log(dayjs(`${date} ${time}`).toDate())
-  // console.log(dayjs().format('DD-MM-YYYY'))
-  // console.log(dayjs().format('HH:mm'))
-  // console.log(dayjs().format('dddd, MMMM DD @ HH:mm'))
-  // console.log(dayjs(new Date().toString()))
-  // console.log(dayjs(new Date().toString()).format('dddd, MMMM DD @ HH:mm'))
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -77,7 +70,7 @@ export default function EventForm({setNewEvent}) {
   const createEvent = async (startDate) => { 
     const newEvent = {
       id: `ev_${uuidv4()}`,
-      parentPageID: currentPage.id,
+      parentPageHandle: currentPage.handle,
       creatorID: user.id,
       recurring,
       bio: description,
@@ -87,16 +80,19 @@ export default function EventForm({setNewEvent}) {
       time
     }
     const event = new Event(newEvent)
-
-    try {
-      await setDoc(doc(db, `pages/${currentPage.handle}/events`, newEvent.id), {...event});
-
-      // setEvent(event);
+    const success = await event.uploadToDb()
+    if(success){
       navigate(`/${currentPage.handle}/events`);
-    } catch (err) {
-      console.log('Error creating event')
-      console.log(err);
     }
+
+    // try {
+    //   await setDoc(doc(db, `pages/${currentPage.handle}/events`, newEvent.id), {...event});
+
+    //   navigate(`/${currentPage.handle}/events`);
+    // } catch (err) {
+    //   console.log('Error creating event')
+    //   console.log(err);
+    // }
   }
 
   const frequencyOptions = [ {value: 'DAILY', label: 'Daily'}, {value: 'WEEKLY', label: 'Weekly'}, {value: 'MONTHLY', label: 'Monthly'} ];
@@ -118,7 +114,7 @@ export default function EventForm({setNewEvent}) {
               <TextField required fullWidth type="time" label="Time" value={time} onChange={(e) => setTime(e.target.value)} />
             </Grid>
             <Grid item xs={12}>
-              <TextField required fullWidth multiline label="Description" value={description} onChange={(e) => setDescription(e.target.value)}/>
+              <TextField fullWidth multiline label="Description" value={description} onChange={(e) => setDescription(e.target.value)}/>
             </Grid>
             <Grid item xs={12} >
               <FormControlLabel control={<Checkbox onChange={() => setRecurring(!recurring)} checked={recurring} />} label="Recurring" />

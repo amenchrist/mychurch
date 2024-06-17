@@ -1,11 +1,12 @@
-import { auth, db } from "../config/firebase";
+import { auth, db } from "../../../config/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { useMyStore } from "../store";
+import { useMyStore } from "../../../store";
 import { doc, getDoc } from "firebase/firestore";
 import { Box, Button, Grid, Link, TextField, Typography } from "@mui/material";
-import { emailRegex } from "../regex";
+import { emailRegex } from "../../../regex";
 import { useNavigate } from "react-router-dom";
+import User from "../../../classes/User";
 
 
 export const SignInForm = ({setUsePassword}) => {
@@ -43,7 +44,8 @@ export const SignInForm = ({setUsePassword}) => {
         const docRef = doc(db, 'userProfiles', userCred.email);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()){
-          setUser({...userCred, ...docSnap.data()});
+          const user = new User({...userCred, ...docSnap.data()})
+          setUser(user);
           setIsSignedIn(true);
           navigate('/pages')
         } else {

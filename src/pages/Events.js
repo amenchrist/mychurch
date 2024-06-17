@@ -69,8 +69,6 @@ export default function Events() {
       }    
   }
 
-  console.log(events)
-
 
   const EventsList = () => {
     return(
