@@ -13,7 +13,6 @@ import { useMyStore } from '../../store';
 export default function EventReport() {
   
   const { event, setShowEventReport, } = useDashboardContext();
-  const { name, date, time, bio: description, liveStreamURL: watchLink} = event;
   const { currentPage } = useMyStore();
 
   const [ rows, setRows ] = useState([])
