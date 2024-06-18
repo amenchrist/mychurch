@@ -9,8 +9,8 @@ import EventsList from './EventsList';
 
 export default function ChurchDashboard() {
 
-  const { showEventReport, setEvents, setShowEventReport, } = useDashboardContext();
   const { currentPage } = useMyStore();
+  const { showEventReport, setEvents, setShowEventReport, } = useDashboardContext();
 
 
   const [ date, setDate ] = useState(dayjs().format('YYYY-MM-DD'));
@@ -28,10 +28,10 @@ export default function ChurchDashboard() {
       try {
         const events = await currentPage.getEventsByDate(date)
         if(events){
+          // const relevantEvents = events.filter((e)=> e.hasStarted)
           setEventsFound(events.length > 0)
           setEvents(events)
         }
-        console.log(events)
       }catch (err) {
         console.log("Error getting Events by date")
         console.log(err)

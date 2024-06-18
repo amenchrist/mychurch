@@ -1,4 +1,4 @@
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 import Page from "./Page";
 import { EVENT, LIVESTREAM, constructorHelper } from "./helpers";
 import { db } from "../config/firebase";
@@ -34,6 +34,7 @@ export default class Event extends Page{
             attendanceRecords: []
         };
         constructorHelper.call(this, data, defaultObj)
+        // this.totalAttendance = this.getTotalAttendance();
     }
 
     // async uploadToDb() {
@@ -57,6 +58,43 @@ export default class Event extends Page{
         console.log(err);
         return false
       }
+    }
+
+    async getTotalAttendance() {
+      if(this.hasFinalAttendance){
+        console.log(this.totalAttendance)
+        return this.totalAttendance
+      } else {
+        //Calculate total attendance
+        let total = 0
+        try {
+          const attendanceSnapshot = await getDocs(collection(db, `pages/${this.parentPageHandle}/events/${this.id}/attendanceRecords`));
+          const attendanceRecords = [];
+          attendanceSnapshot.forEach((rec) => {
+            attendanceRecords.push(rec.data())
+          });
+          total = attendanceRecords.reduce((accumulator, curVal) => accumulator + parseInt(curVal.attendance), 0);
+          
+          if(this.hasStarted){
+            //update the event
+            try {
+                const update = { totalAttendance: total, hasFinalAttendance: this.hasEnded }
+                await this.update(update);       
+            } catch (err) {
+                console.log('Error updating final event attendance');
+                console.log(err);
+            }
+          }
+          console.log(total)
+          return total
+        } catch (err) {
+          console.log('Error fetching Event Attendance')
+          console.log(err)
+          return false
+        }
+
+      }
+
     }
 
     addParticipants(){}

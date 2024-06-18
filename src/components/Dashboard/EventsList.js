@@ -21,7 +21,6 @@ export default function EventsList() {
     }  
   }
 
-  console.log(events)
   
   return (
     <>

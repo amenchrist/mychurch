@@ -5,7 +5,7 @@ import Event from "./Event";
 
 export default class Page {
   constructor(data){
-    const fields = ["type", "avatarURL", "bannerURL", "name", "handle", "bio", "contactInfo", "followers", "events", "posts", "bankDetails", "transactions", "chats"];
+    const fields = ["type","liveStreamURL", "avatarURL", "bannerURL", "name", "handle", "bio", "contactInfo", "followers", "events", "posts", "bankDetails", "transactions", "chats"];
     const defaultPage = {
       type: "USER",
       followers: [],
@@ -80,7 +80,6 @@ export default class Page {
   
   async getEventsByDate(d){
     const date = dayjs(d).toDate().toString()
-    console.log(date)
     try {
       const q = query(collection(db, `pages/${this.handle}/events`), where("date", "==", date));
       const querySnapshot = await getDocs(q); 
@@ -90,7 +89,6 @@ export default class Page {
         newEvents.push(new Event(doc.data()))
       });
       newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
-      console.log(newEvents)
       return newEvents
       // setEventsFound(newEvents.length > 0)
       // setEvents([...newEvents])
