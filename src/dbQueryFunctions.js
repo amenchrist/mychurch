@@ -1,15 +1,16 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { Page } from './classes';
 import { db } from './config/firebase';
+import User  from "./classes/User";
 
 export const getPage = async (handle) => {
 
-  console.log('running get page');
+  // console.log('running get page');
   try {
     const docRef = doc(db, 'pages', handle)
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()){
-      console.log('page found')
+      // console.log('page found')
       return docSnap.data();
     } else {
       console.log('Page not found');
@@ -37,6 +38,27 @@ export const getEvent = async (id) => {
     console.log(err);
     return null
   } 
+}
+
+export const getUser = async (email) => {
+  //Used to load profile after successful auth
+  try {
+    const docRef = doc(db, 'userProfiles', email);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()){
+      const user = new User({...docSnap.data()})
+      return user;
+      // setUser(user); 
+      // setIsSignedIn(true);
+      // navigate('/pages')
+    } else {
+      console.log('User Profile not found');
+      return false
+    }
+  } catch (err) {
+    console.log(err);
+    return false
+  }
 }
 
 export const createPage = async (newPage) => {

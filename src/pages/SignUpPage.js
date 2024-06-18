@@ -3,9 +3,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Copyright from "../components/Copyright";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import AccountInfo from "../components/Registration/AccountInfo";
-import BiodataForm from "../components/Registration/BiodataForm";
-import ContactInfoForm from "../components/Registration/ContactInfoForm";
+import AccountInfo from "../components/Auth/Registration/AccountInfo";
+import BiodataForm from "../components/Auth/Registration/BiodataForm";
+import ContactInfoForm from "../components/Auth/Registration/ContactInfoForm";
 import {  useRegistrationPageContext } from "../contexts/RegistrationContextProvider";
 
 export const SignUpPage = () => {

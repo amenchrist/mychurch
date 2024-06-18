@@ -2,8 +2,6 @@ import { Box, Button, Checkbox, Container, FormControlLabel, Grid, MenuItem, Tex
 import React, { useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { collection, doc, setDoc } from 'firebase/firestore';
-import { db } from '../config/firebase';
 import { v4 as uuidv4 } from 'uuid';
 import { useMyStore } from '../store';
 import { useNavigate,} from 'react-router-dom';
@@ -13,7 +11,7 @@ import Event from '../classes/Event';
 
 export default function EventForm({setNewEvent}) {  
 
-  const { user, setEvent, currentPage } = useMyStore();
+  const { user, currentPage } = useMyStore();
   const navigate = useNavigate();
 
   const [ date, setDate ] = useState(dayjs().format('YYYY-MM-DD'));
@@ -64,7 +62,6 @@ export default function EventForm({setNewEvent}) {
       createEvent(date)
     }
 
-
   }
 
   const createEvent = async (startDate) => { 
@@ -79,20 +76,10 @@ export default function EventForm({setNewEvent}) {
       date: dayjs(`${startDate}`).toDate().toString(),
       time
     }
-    const event = new Event(newEvent)
-    const success = await event.uploadToDb()
+    const success = await currentPage.addEvent(new Event(newEvent))
     if(success){
       navigate(`/${currentPage.handle}/events`);
     }
-
-    // try {
-    //   await setDoc(doc(db, `pages/${currentPage.handle}/events`, newEvent.id), {...event});
-
-    //   navigate(`/${currentPage.handle}/events`);
-    // } catch (err) {
-    //   console.log('Error creating event')
-    //   console.log(err);
-    // }
   }
 
   const frequencyOptions = [ {value: 'DAILY', label: 'Daily'}, {value: 'WEEKLY', label: 'Weekly'}, {value: 'MONTHLY', label: 'Monthly'} ];

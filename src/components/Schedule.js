@@ -16,9 +16,6 @@ export default function Schedule() {
 
       const getEvents = async () => {
 
-        if (event !== null ) {
-          // setEvent(null)
-        }
         try {
           const querySnapshot = await getDocs(collection(db, `pages/${currentPage.handle}/events`)); 
           const newEvents = [];

@@ -1,24 +1,24 @@
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { PERSON } from "./helpers";
 import dayjs from "dayjs";
+import Event from "./Event";
 
 export default class Page {
   constructor(data){
     const fields = ["type", "avatarURL", "bannerURL", "name", "handle", "bio", "contactInfo", "followers", "events", "posts", "bankDetails", "transactions", "chats"];
     const defaultPage = {
-        type: PERSON,
-        followers: [],
-        events: [],
-        posts: [],
-        bankDetails: [],
-        transactions: [],
-        chats: [],
-        creatorID: null,
-        id: null,
-        creationTimestamp: new Date().getTime(),
-        websiteURL: null,
-        liveStreamURL: null,
+      type: "USER",
+      followers: [],
+      events: [],
+      posts: [],
+      bankDetails: [],
+      transactions: [],
+      chats: [],
+      creatorID: null,
+      id: null,
+      creationTimestamp: new Date().getTime(),
+      websiteURL: null,
+      liveStreamURL: null,
     }
 
     //create all object properties
@@ -48,20 +48,55 @@ export default class Page {
   makePayment(senderID, recipientID){}
   registerForEvents(eventID){}
 
+  async addEvent(event) {
+    try {
+        await setDoc(doc(db, `pages/${this.handle}/events`, event.id), {...event});
+        return true
+    } catch (err) {
+      console.log('Error creating event')
+      console.log(err);
+      return false
+    }
+  }
+
   async getEvents() {
     try {
       const querySnapshot = await getDocs(collection(db, `pages/${this.handle}/events`)); 
       const newEvents = []
 
       querySnapshot.forEach((doc) => {
-        newEvents.push(doc.data())
+        newEvents.push(new Event(doc.data()))
       });
       newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date));
       // setEvents([...newEvents])
       // this.events = [...newEvents]
       return [...newEvents]
     }catch (err) {
-      console.log("Error getting Events")
+      console.log("Error getting Events from db")
+      console.log(err)
+      return false
+    } 
+  }
+  
+  async getEventsByDate(d){
+    const date = dayjs(d).toDate().toString()
+    console.log(date)
+    try {
+      const q = query(collection(db, `pages/${this.handle}/events`), where("date", "==", date));
+      const querySnapshot = await getDocs(q); 
+      const newEvents = []
+      
+      querySnapshot.forEach((doc) => {
+        newEvents.push(new Event(doc.data()))
+      });
+      newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
+      console.log(newEvents)
+      return newEvents
+      // setEventsFound(newEvents.length > 0)
+      // setEvents([...newEvents])
+    }catch (err) {
+      console.log("Error getting Events by date")
+      console.log(err)
       return false
     } 
   }
@@ -69,9 +104,6 @@ export default class Page {
   async deleteEvent(e) {
     try {
       await deleteDoc(doc(db, `pages/${this.handle}/events`, e.id));
-      
-      // setEvent(null);
-      // navigate(`/${currentPage.handle}/events`);
       return true
     } catch (err) {
       console.log('Error deleting event')

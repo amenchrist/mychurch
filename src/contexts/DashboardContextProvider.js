@@ -3,6 +3,7 @@ import { useMyStore } from '../store';
 import { collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import dayjs from 'dayjs';
+import Event from '../classes/Event';
 
 const StateContext = createContext();
 
@@ -15,9 +16,7 @@ export const DashboardContextProvider = ({ children }) => {
     // console.log(`Dashboard Context provider Renders = ${rendered.current}`)
   }, []);
 
-  const { user, setUser, currentPage } = useMyStore();
-//   console.log(useMyStore())
-
+  const { currentPage } = useMyStore();
   const [ events, setEvents ] = useState([]);
   const [ event, setEvent ] = useState([]);
   const [ showEventReport, setShowEventReport ] = useState(false);
@@ -31,12 +30,12 @@ export const DashboardContextProvider = ({ children }) => {
         const querySnapshot = await getDocs(collection(db, `pages/${currentPage.handle}/events`)); 
         const newEvents = [];
         querySnapshot.forEach( async (docSnap) => {
-          const ev = docSnap.data()
+          const ev = new Event(docSnap.data())
           if(ev.hasFinalAttendance){
             console.log('Has final attendance')
-            newEvents.push(ev) 
+            newEvents.push(ev)
             newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
-            setEvents([...newEvents])
+            setEvents(newEvents)
           } else {
             //Calculate total attendance
             let total = 0

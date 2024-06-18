@@ -78,7 +78,6 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
     )
   }
 
-  // console.log(currentPage.handle);
   
   const content = (
     <Box
@@ -121,7 +120,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
         <NavItem href={`/pages`} title={'Pages'} icon={MinusSquare} />
       
 
-        {user?.email?
+        {user?.contactInfo?.email?
         <NavItem onClick={logOut} key={'Sign Out'} title={'Sign Out'} icon={LogOut} />
         : <></>
         }

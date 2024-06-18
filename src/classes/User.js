@@ -6,8 +6,10 @@ export default class User {
     constructor(data){
         const defaultUser = {
             id: null,
+            emailVerified: false,
             biodata: new Biodata(),
             contactInfo: new ContactInfo(),
+            primaryPage: null,
             pages: [],
             likedPosts: [],
             savedPosts: [],
@@ -16,7 +18,6 @@ export default class User {
             reviews: [],
             church: null,
             allowsMarketing: true,
-            type: 'USER'
         }
         constructorHelper.call(this, data, defaultUser) 
     }

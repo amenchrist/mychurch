@@ -45,7 +45,6 @@ function WatchPage() {
           <Grid item xs={12} md={8}  >  
             <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                 { event?.hasStarted ? attendanceCaptured ? currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />:<VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
-                {/* { event?.hasStarted ? attendanceCaptured ?<VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> } */}
             </div>     
           </Grid>
           <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  alignItems: 'center'}} >

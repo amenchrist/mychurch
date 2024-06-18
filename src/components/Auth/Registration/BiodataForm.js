@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { useRegistrationPageContext } from '../../contexts/RegistrationContextProvider';
+import { useRegistrationPageContext } from '../../../contexts/RegistrationContextProvider';
 
 export default function BiodataForm({setStage}) {
   

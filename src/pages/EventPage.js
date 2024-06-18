@@ -14,7 +14,6 @@ export default function EventPage({setNewEvent}) {
 
   const { setEvent, currentPage, event } = useMyStore();
   const navigate = useNavigate();
-  const location = useLocation();
   const { id } = useParams();
   const [ error, setError ] = useState(false);
   const [ updated, setUpdated ] = useState(false);  
@@ -33,7 +32,7 @@ export default function EventPage({setNewEvent}) {
   }, [event, setEvent, isToday])
   
   const [ date, setDate ] = useState(dayjs(event?.date).format('YYYY-MM-DD'));
-  const [ time, setTime ] = useState(dayjs(`${event?.date} ${event?.time}`).format('HH:mm') || '');
+  const [ time, setTime ] = useState(event?.time);
   const [ name, setName ] = useState(event?.name);
   const [ description, setDescription ] = useState(event?.bio || '');
   const [ watchLink, setWatchLink ] = useState(event?.liveStreamURL || '');
@@ -43,30 +42,35 @@ export default function EventPage({setNewEvent}) {
   const updateEvent = async (e) => {
     e?.preventDefault();
     const eventUpdate = {
-      date: dayjs(`${date} ${time}`).toDate().toString(),
+      date: dayjs(date).toDate().toString(),
+      time,
       recurring, name,
       bio: description.trim(),
       liveStreamURL: watchLink.trim(),
     }
     try {
-      await updateDoc(doc(db, `pages/${currentPage.handle}/events`, event.id), eventUpdate);
-      const updatedEvent = new Event({...eventUpdate, id: event.id })
-      setEvent(updatedEvent);
+      // await updateDoc(doc(db, `pages/${currentPage.handle}/events`, event.id), eventUpdate);
+      const updatedEvent = await event.update(eventUpdate)
+      if(updatedEvent){
+        setEvent(updatedEvent);
+      }
     } catch (err) {
       console.log('Error updating event')
       console.log(err);
     }
   }
 
-  const deleteEvent = async (e) => {
+  const removeEvent = async (e) => {
     try {
-      await deleteDoc(doc(db, `pages/${currentPage.handle}/events`, e.id));;
-      navigate(`/${currentPage.handle}/events`);
-      setEvent(null);
-    } catch (err) {
-      console.log('Error deleting event')
-      console.log(err);
-    }    
+        const success = await currentPage.deleteEvent(e);
+        if(success){
+          navigate(`/${currentPage.handle}/events`);
+          setEvent(null);
+        }
+      } catch (err) {
+        console.log('Error deleting event')
+        console.log(err);
+      }    
   }
 
   const toEventsPage = () => {
@@ -75,27 +79,27 @@ export default function EventPage({setNewEvent}) {
   }
 
   const startEvent = async () => {
+    const update = { hasStarted: true, startTimestamp: new Date().getTime() }
     try {
-      const update = { hasStarted: true, startTimestamp: new Date().getTime() }
-      await updateDoc(doc(db, `pages/${currentPage.handle}/events`, event.id), update);
-      const updatedEvent = new Event({...event, id: event.id, ...update })
-      setEvent(updatedEvent);
-     
+      const updatedEvent = await event.update(update)
+      if(updatedEvent){
+        setEvent(updatedEvent);
+      }
     } catch (err) {
-      console.log('Error updating event');
+      console.log('Error updating event')
       console.log(err);
     }
   }
 
   const endEvent = async () => {
+    const update = { hasEnded: true, endTimestamp: new Date().getTime() }
     try {
-      const update = { hasEnded: true, endTimestamp: new Date().getTime() }
-      await updateDoc(doc(db, `pages/${currentPage.handle}/events`, event.id), update);
-      const updatedEvent = new Event({...event, id: event.id, ...update })
-      setEvent(updatedEvent);
-     
+      const updatedEvent = await event.update(update)
+      if(updatedEvent){
+        setEvent(updatedEvent);
+      }
     } catch (err) {
-      console.log('Error updating event');
+      console.log('Error updating event')
       console.log(err);
     }
   }
@@ -120,7 +124,7 @@ export default function EventPage({setNewEvent}) {
                 <TextField required fullWidth type="time" id="time" label="Time" value={time} onChange={(e) => setTime(e.target.value)} />
             </Grid>
             <Grid item xs={12}>
-                <TextField required fullWidth multiline label="Description" id="description" value={description} onChange={(e) => setDescription(e.target.value)}/>
+                <TextField fullWidth multiline label="Description" id="description" value={description} onChange={(e) => setDescription(e.target.value)}/>
             </Grid>            
             <Grid item xs={12} sm={6} >
               <FormControlLabel control={<Checkbox onChange={() => setRecurring(!recurring)} />} label="Recurring" />
@@ -132,16 +136,16 @@ export default function EventPage({setNewEvent}) {
               </TextField>
               }
             </Grid>
-            <Grid item xs={12} >
+            {/* <Grid item xs={12} >
               <TextField required fullWidth label="Watch Link" id="watch-link" value={watchLink} onChange={(e) => setWatchLink(e.target.value)}/>
-            </Grid>
+            </Grid> */}
           </Grid>
           <Button type="submit" fullWidth variant="contained" disabled={!updated} sx={{ mt: 3, }} >Save</Button>
           </Box>
-          {event.hasStarted && !event.hasEnded? 
+          {event?.hasStarted && !event?.hasEnded? 
           <Button fullWidth variant="contained" sx={{ mt: 2, mb: 2 }} onClick={endEvent} color={'error'}>
             End Event
-          </Button> : <Button fullWidth variant="contained" disabled={!isToday} sx={{ mt: 2, mb: 2 }} onClick={startEvent} color={'primary'}>
+          </Button> : <Button fullWidth variant="contained" disabled={!isToday || event.hasEnded} sx={{ mt: 2, mb: 2 }} onClick={startEvent} color={'primary'}>
             Start Event
           </Button>
           }
@@ -150,7 +154,7 @@ export default function EventPage({setNewEvent}) {
                 <Typography variant='p' onClick={toEventsPage} >Back</Typography>
               </Grid>
               <Grid item>
-                <Typography variant='p' onClick={deleteEvent} >Delete</Typography>
+                <Typography variant='p' onClick={() => removeEvent(event)} >Delete</Typography>
               </Grid>
           </Grid>
         </Box>

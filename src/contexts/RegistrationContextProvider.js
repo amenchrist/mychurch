@@ -48,7 +48,8 @@ export const RegistrationPageContextProvider = ({ children }) => {
         events: [],
         notes: [],
         reviews: [],
-        type: 'USER'
+        type: 'USER',
+        primaryPage: handle
       }
       const userCreated = await createUserProfile(newUser);
 
