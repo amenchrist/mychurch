@@ -1,7 +1,6 @@
 import React from 'react';
 import { List, Button, Box, IconButton, Grid, Divider, Typography, ListItemText, ListItem } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import dayjs from 'dayjs';
 import { useDashboardContext } from '../../contexts/DashboardContextProvider';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,6 +21,7 @@ export default function EventsList() {
     }  
   }
 
+  
   return (
     <>
       {/* {adminMode? <AdminDashboard /> : <MemberDashboard />} */}
@@ -43,8 +43,8 @@ export default function EventsList() {
                   <ListItem >
                     <ListItemText
                       onClick={() => getEvent(e.id)}
-                      primary={`${e.name}`}
-                      secondary={dayjs(e.date).format('dddd, MMMM DD @ hh:mm a')}
+                      primary={`${e?.name}`}
+                      secondary={e?.formattedDate()}
                     />
                       <IconButton edge="end" >{e.totalAttendance}</IconButton>
                   </ListItem>

@@ -1,17 +1,15 @@
 import React from 'react';
 import { useMyStore } from '../store';
-import EventReport from '../components/Dashboard/EventReport';
-import EventsList from '../components/Dashboard/EventsList';
-import { useDashboardContext } from '../contexts/DashboardContextProvider';
+import UserDashboard from '../components/Dashboard/UserDashboard';
+import ChurchDashboard from '../components/Dashboard/ChurchDashboard';
 
 function Dashboard() {
 
-  const { showEventReport } = useDashboardContext();
+  const { currentPage } = useMyStore();
   
   return (
     <>
-      {/* {adminMode? <AdminDashboard /> : <MemberDashboard />} */}
-      { showEventReport ? <EventReport /> : <EventsList />}
+      {currentPage.type === "USER"? <UserDashboard /> : <ChurchDashboard />}
     </>
   )
 }

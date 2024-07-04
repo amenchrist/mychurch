@@ -16,9 +16,6 @@ export default function Schedule() {
 
       const getEvents = async () => {
 
-        if (event !== null ) {
-          // setEvent(null)
-        }
         try {
           const querySnapshot = await getDocs(collection(db, `pages/${currentPage.handle}/events`)); 
           const newEvents = [];
@@ -26,7 +23,7 @@ export default function Schedule() {
           querySnapshot.forEach((doc) => {
             const curEvent = doc.data()
             //Populate the schedule with upcoming and ongoing events
-            if(dayjs(curEvent.date).toDate().getTime() >= new Date().getTime() || (curEvent.hasStarted && !curEvent.hasEnded)){
+            if(dayjs(`${curEvent.date} ${curEvent.time}`).toDate().getTime() >= new Date().getTime() || (curEvent.hasStarted && !curEvent.hasEnded)){
                 newEvents.push(curEvent)
             }
           });
@@ -37,7 +34,7 @@ export default function Schedule() {
             setEvent(null)
           }
 
-          newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
+          newEvents.sort((e1,e2) => dayjs(`${e1.date} ${e1.time}`) - dayjs(`${e2.date} ${e2.time}`))
           if(nextEvent && nextEvent?.id !== newEvents[0]?.id ){
             if(newEvents[0] === undefined){
               setNextEvent(null)
@@ -84,7 +81,7 @@ export default function Schedule() {
                   <ListItem sx={{bgcolor: 'background.paper', mb: 2 }}>
                     <ListItemText
                       primary={`${e.name} ${e.hasStarted && !e.hasEnded ? `[LIVE NOW]`: ''}`}
-                      secondary={dayjs(e.date).format('dddd, MMMM DD @ hh:mm a')}
+                      secondary={dayjs(`${e.date} ${e.time}`).format('dddd, MMMM DD @ hh:mm a')}
                     />
                   </ListItem>
                   </div>

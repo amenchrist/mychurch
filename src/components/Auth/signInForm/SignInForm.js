@@ -1,18 +1,20 @@
-import { auth, db } from "../config/firebase";
+import { auth, db } from "../../../config/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { useMyStore } from "../store";
+import { useMyStore } from "../../../store";
 import { doc, getDoc } from "firebase/firestore";
 import { Box, Button, Grid, Link, TextField, Typography } from "@mui/material";
-import { emailRegex } from "../regex";
+import { emailRegex } from "../../../regex";
 import { useNavigate } from "react-router-dom";
+import User from "../../../classes/User";
+import { getUser } from "../../../dbQueryFunctions";
 
 
 export const SignInForm = ({setUsePassword}) => {
 
   const setUser = useMyStore((store) => store.setUser)
   const { setIsSignedIn } = useMyStore();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [ email, setEmail ] = useState(window.localStorage.getItem("emailForSignIn") || "");
   const [ password, setPassword ] = useState("");
@@ -20,7 +22,6 @@ export const SignInForm = ({setUsePassword}) => {
   const [ valid, setValid ] = useState(true);
 
   const handleValidation = (value) => {
-
     // setIsRegistered(true)
     //set email to user input
     setEmail(value.toLowerCase());
@@ -30,43 +31,25 @@ export const SignInForm = ({setUsePassword}) => {
       
     //test whether input is valid
     setValid(reg.test(value));
-
   };
 
   const signIn = async (e) => {
     //Submit will only be enabled if email is registered
     e.preventDefault();
-
-    const getUser = async (userCred) => {
-      //Used to load profile after successful auth
-      try {
-        const docRef = doc(db, 'userProfiles', userCred.email);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()){
-          setUser({...userCred, ...docSnap.data()});
-          setIsSignedIn(true);
-          navigate('/pages')
-        } else {
-          // console.log('User Profile not found');
-          setIsRegistered(false)
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
     //Sign in flow
     try {
-      const userCred = await signInWithEmailAndPassword(auth, email, password);
-      getUser(userCred.user)
-      // setIsSignedIn(true)
+      await signInWithEmailAndPassword(auth, email, password);
+      const user = await getUser(email)
+      if(user){
+        setUser(user)
+        setIsSignedIn(true);
+        navigate(`/${user.primaryPage}`);
+      }
       
     } catch (err) {
       console.error(err);
     }
   };
-
-  
 
   const checkEmail = () => {
     // console.log('checking if email is registered')

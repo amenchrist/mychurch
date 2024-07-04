@@ -11,12 +11,12 @@ export const allItems = [
       title: 'Dashboard',
       mode: 'ALL'
     },
-    {
-      href: 'giving-records',
-      icon: CreditCard,
-      title: 'Giving Records',
-      mode: 'ALL'
-    },
+    // {
+    //   href: 'giving-records',
+    //   icon: CreditCard,
+    //   title: 'Giving Records',
+    //   mode: 'ALL'
+    // },
     {
       href: 'events',
       icon: Calendar,
@@ -35,18 +35,18 @@ export const allItems = [
       title: 'Home',
       mode: ''
     },
-    {
-      href: 'conversations',
-      icon: Mail,
-      title: 'Conversations',
-      mode: 'ALL'
-    },
-    {
-      href: 'notifications',
-      icon: Bell,
-      title: 'Notifications',
-      mode: 'ALL'
-    },
+    // {
+    //   href: 'conversations',
+    //   icon: Mail,
+    //   title: 'Conversations',
+    //   mode: 'ALL'
+    // },
+    // {
+    //   href: 'notifications',
+    //   icon: Bell,
+    //   title: 'Notifications',
+    //   mode: 'ALL'
+    // },
     {
       href: 'testimonies',
       icon: Bell,
@@ -59,13 +59,12 @@ export const allItems = [
       title: 'Notes',
       mode: 'PERSON'
     },
-    
-    {
-      href: 'news-feed',
-      icon: Rss,
-      title: 'News Feed',
-      mode: 'ALL'
-    },
+    // {
+    //   href: 'news-feed',
+    //   icon: Rss,
+    //   title: 'News Feed',
+    //   mode: 'ALL'
+    // },
     {
       href: 'profile',
       icon: User,

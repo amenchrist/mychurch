@@ -21,14 +21,14 @@ function WatchPage() {
   const { event, nextEvent, currentPage } = useMyStore();
   const { attendanceCaptured } = useWatchPageContext();
 
-
+  console.log(currentPage)
 
   const ServiceMessage = () => {
     return (
       <div style={{color: 'white', width: "100%", height: '30vh',textAlign: 'center', padding: '20px', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
         {nextEvent ? <><p>NEXT EVENT</p>
         <h3>{nextEvent?.name.toUpperCase()}</h3>
-        <p>{dayjs(nextEvent?.date).format('dddd, MMMM DD @ hh:mm a')}</p></> : <p>NO UPCOMING EVENTS</p>}
+        <p>{dayjs(`${nextEvent?.date} ${nextEvent?.time}`).format('dddd, MMMM DD @ hh:mm a')}</p></> : <p>NO UPCOMING EVENTS</p>}
       </div>
     )
   }
@@ -45,7 +45,6 @@ function WatchPage() {
           <Grid item xs={12} md={8}  >  
             <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                 { event?.hasStarted ? attendanceCaptured ? currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />:<VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
-                {/* { event?.hasStarted ? attendanceCaptured ?<VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> } */}
             </div>     
           </Grid>
           <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  alignItems: 'center'}} >

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from "react";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import { useRegistrationPageContext } from '../../contexts/RegistrationContextProvider';
+import { useRegistrationPageContext } from '../../../contexts/RegistrationContextProvider';
 
 export default function ContactInfoForm() {
 

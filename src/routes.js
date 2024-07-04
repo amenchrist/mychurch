@@ -1,27 +1,14 @@
 import {  useRoutes, Navigate, useLocation, useParams, useNavigate, Outlet } from 'react-router-dom';
-// import DashboardLayout from './components/adminDashboard/DashboardLayout';
-// import MemberDashboardLayout from './components/memberDashboard/MemberDashboardLayout';
-// import { Offerings, Tithes, Partnerships, SpecialSeeds, OtherGiving, GivingSummary } from './pages/@memberDashboard';
-// import { ServiceSummary, Attendees, FirstTimers, Absentees, GivingRecord, Members, YearOverview } from './pages/@adminDashboard';
-// import WatchPage from './pages/@watchPage/WatchPage';
-import SignInSide from './pages/SignIn';
-// import Home from './pages/Home';
-import { auth, db } from './config/firebase';
 import WatchPage from './pages/@watchPage/WatchPage';
 import Dashboard from './pages/Dashboard';
-import NewsFeed from './pages/NewsFeed';
 import Profile from './pages/Profile';
 import GivingRecords from './pages/GivingRecords';
 import Church from './pages/Church';
 import Events from './pages/Events';
-import Notes from './pages/Notes';
-import Testimonies from './pages/Testimonies';
-import Notifications from './pages/Notifications';
-import Conversations from './pages/Conversations';
 import { SignUpForm, SignUpPage } from './pages/SignUpPage';
 import AdminPage from './pages/AdminPage';
 import { useMyStore } from './store';
-import { SignInForm } from './components/SignInForm';
+import { SignInForm } from './components/Auth/signInForm/SignInForm';
 import Reports from './pages/Reports';
 import MemberDatabase from './pages/MemberDatabase';
 import Admins from './pages/Admins';
@@ -29,11 +16,8 @@ import NewPage from './components/NewPage';
 import ErrorPage from './pages/ErrorPage';
 import Pages from './pages/Pages';
 import { useEffect, useMemo, useState } from 'react';
-import Home from './layouts/Home';
-import { doc, getDoc } from "firebase/firestore";
-import { Page } from './classes';
+import Page  from './classes/Page'
 import ComingSoon from './pages/ComingSoon';
-import GivingForm from './components/WatchPage/GivingForm';
 import { getPage } from './dbQueryFunctions';
 import SignInPage from './pages/SignInPage';
 import Sidebar from './components/Sidebar';
@@ -47,8 +31,8 @@ import { RegistrationPageContextProvider } from './contexts/RegistrationContextP
 export default function Router() {
 
   //IMPORTING RELEVANT VARIABLES
-  const { isSignedIn, setIsSignedIn, user, setUser, currentPage, setCurrentPage } = useMyStore();
-  const { urlHandle, setUrlHandle, event } = useMyStore();
+  const { isSignedIn, user, currentPage, setCurrentPage } = useMyStore();
+  const { urlHandle, setUrlHandle } = useMyStore();
 
   const navigate = useNavigate()
   
@@ -64,10 +48,19 @@ export default function Router() {
 
   //Validating the handle and getting the relevant page
   useEffect(() => {
+    // console.log('Checking handle')
     if(pageRef !== urlHandle){
       (async () => {
-          setCurrentPage(await getPage(pageRef))
-          setUrlHandle(pageRef)
+        try{
+          const page = await getPage(pageRef)
+          if(page){
+            setCurrentPage(new Page(page))
+            setUrlHandle(page.handle)
+          }
+        }catch (err) {
+          console.log('Error getting page')
+        }
+        
       })()
     }
   },[setCurrentPage, pageRef, currentPage, urlHandle, setUrlHandle])
@@ -83,34 +76,14 @@ export default function Router() {
   //       setIsAdmin(true)
   //     }
   //   }
-  // }, [isAdmin, currentPage, user])
+  // }, [isAdmin, currentPage, user])''
 
-  const WelcomePage = () => {
-    
-    return(
-      <div>
-        <h2>Welcome to {currentPage?.name}</h2>
-        <SignInForm />
-      </div>
-    )
-  }
-
-  
-  const SignedInScreen = () => {
-    const listStyle = {width: '100%', height: '50px', border:'1px solid', padding: '5px'}
-    const pagesManaged = ['My Dashboard','cebarking', 'ceilford', 'celovechurchbkg', ]
-    return (
-      <div>
-      <h1> You are signed in with {user.email}</h1>
-      <button onClick={() => {setIsSignedIn(false); setUser(null)}}>Sign Out</button>
-      <div style={{width: '300px', height: '500px', border:'2px solid', }}>
-        {pagesManaged.map((p,i) => 
-         <div onClick={() => navigate(p)} style={listStyle} key={i}><h4>{p}</h4></div>
-        )}
-      </div>
-      </div>
-    )
-  }
+  //Force redirect to primary page when visiting root
+  useEffect(() => {
+    if((isSignedIn && pageRef === "") || (isSignedIn && pageRef === "register")){
+      navigate(`/${user.primaryPage}`);
+    }
+  },[user, pageRef, isSignedIn, navigate])
 
   const PageContainer = () => {
     return(
@@ -121,48 +94,43 @@ export default function Router() {
     )
   }  
   const routes = [
-    // { path: '/', element: <GivingForm /> } ,
-    { path: '/', element: isSignedIn? <SignedInScreen /> : <SignInPage /> } ,
+    { path: '/', element: <SignInPage /> } , //Form will only show if user is not signed in due to forced redirect setting
     { path: 'pages', element: isSignedIn? <Pages /> : <SignInPage /> } ,
-    { path: 'register', element: isSignedIn? <><h1>You are already registered</h1></> : <RegistrationPageContextProvider ><SignUpPage /></RegistrationPageContextProvider> } ,
-    { path: ':handle/watch', element: currentPage ? <WatchPageContextProvider ><WatchPage /></WatchPageContextProvider> : <ErrorPage /> } ,   
+    { path: 'register', element: <RegistrationPageContextProvider ><SignUpPage /></RegistrationPageContextProvider> } , //Form will only show if user is not signed in due to forced redirect setting
+    { path: ':handle/watch', element: currentPage?.type === "CHURCH" ? <WatchPageContextProvider ><WatchPage /></WatchPageContextProvider> : <ErrorPage /> } ,   
     { 
       path: ':handle', 
-      element: currentPage ? isSignedIn? <PageContainer /> : <WelcomePage /> : <ErrorPage /> , //if handle doesn't exist, return error page, otherwise check if logged in
+      element: currentPage ? isSignedIn? <PageContainer /> : <SignInPage /> : <ErrorPage /> , //if handle doesn't exist, return error page, otherwise check if logged in
       children: [
-            { path: '', element: user?.email? <DashboardContextProvider ><Dashboard /></DashboardContextProvider>: <WelcomePage /> },
-            { path: 'giving-records', element: isSignedIn? <GivingRecords/>: <SignInForm /> },
-            { path: 'conversations', element: <ComingSoon /> }, //user.email?<Conversations />: <SignInForm /> },
-            { path: 'notifications', element: <ComingSoon /> }, //user.email?<Notifications/>: <SignInForm /> },
-            { path: 'testimonies', element: <ComingSoon /> }, //user.email?<Testimonies/>: <SignInForm /> },
-            { path: 'notes', element: <ComingSoon /> }, //user.email?<Notes/>: <SignInForm /> },
-            { path: 'news-feed', element: <ComingSoon /> }, //user.email?<NewsFeed/>: <SignInForm /> },
-            { path: 'profile', element: <Profile/> },
-            { path: 'church', element: <Church /> },
-            { path: 'signin', element: <SignInForm /> },
-            // { path: 'signup', element: <SignUpPage /> },
-            { path: 'reports', element: <Reports /> },
-            { path: 'members', element: <MemberDatabase /> },
-            { path: 'admins', element: <Admins /> },
-            { path: 'pages', element: user?.type === 'SUPERUSER'? <Pages />: 'hello amen' },
-            { path: 'page-profile', element: <PageProfile /> } ,
-            { path: 'create-page', element: user?.type === 'SUPERUSER'? <NewPage/>: <ErrorPage /> },
-            { path: 'page-profile', element:  isAdmin ? <Pages />: <ErrorPage /> },
-            { path: 'admin', element: <AdminPage /> },
-            { 
-              path: 'events', 
-              children: [
-                { path: '', element: <Events />,},
-                { path: ':id', element: <EventPage /> }
-              ]
-            },
+        { path: '', element: <DashboardContextProvider ><Dashboard /></DashboardContextProvider> },
+        { path: 'giving-records', element: isSignedIn? <GivingRecords/>: <SignInForm /> },
+        { path: 'conversations', element: <ComingSoon /> }, //user.email?<Conversations />: <SignInForm /> },
+        { path: 'notifications', element: <ComingSoon /> }, //user.email?<Notifications/>: <SignInForm /> },
+        { path: 'testimonies', element: <ComingSoon /> }, //user.email?<Testimonies/>: <SignInForm /> },
+        { path: 'notes', element: <ComingSoon /> }, //user.email?<Notes/>: <SignInForm /> },
+        { path: 'news-feed', element: <ComingSoon /> }, //user.email?<NewsFeed/>: <SignInForm /> },
+        { path: 'profile', element: <Profile/> },
+        { path: 'church', element: <Church /> },
+        { path: 'reports', element: <Reports /> },
+        { path: 'members', element: <MemberDatabase /> },
+        { path: 'admins', element: <Admins /> },
+        { path: 'pages', element: user?.type === 'SUPERUSER'? <Pages />: 'hello amen' },
+        { path: 'page-profile', element: <PageProfile /> } ,
+        { path: 'create-page', element: user?.type === 'SUPERUSER'? <NewPage/>: <ErrorPage /> },
+        { path: 'page-profile', element:  isAdmin ? <Pages />: <ErrorPage /> },
+        { path: 'admin', element: <AdminPage /> },
+        { 
+          path: 'events', 
+          children: [
+            { path: '', element: <Events />,},
+            { path: ':id', element: <EventPage /> }
+          ]
+        },
       ],
     },
     { path: '*', element: <ErrorPage /> },
   ]
 
-
   return useRoutes(routes);
 
 }
-
