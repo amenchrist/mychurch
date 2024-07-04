@@ -1,9 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, useRef, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { useMyStore } from '../store';
-import { collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
-import { db } from '../config/firebase';
-import dayjs from 'dayjs';
-import Event from '../classes/Event';
 
 const StateContext = createContext();
 
@@ -16,7 +12,6 @@ export const DashboardContextProvider = ({ children }) => {
     // console.log(`Dashboard Context provider Renders = ${rendered.current}`)
   }, []);
 
-  const { currentPage } = useMyStore();
   const [ events, setEvents ] = useState([]);
   const [ event, setEvent ] = useState([]);
   const [ showEventReport, setShowEventReport ] = useState(false);
