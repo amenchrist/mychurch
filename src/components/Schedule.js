@@ -13,46 +13,81 @@ export default function Schedule() {
     const { currentPage, event, setEvent, nextEvent, setNextEvent } = useMyStore();
 
     useEffect(() => {
-
       const getEvents = async () => {
-
+        console.log('searching for all events')
         try {
-          const querySnapshot = await getDocs(collection(db, `pages/${currentPage.handle}/events`)); 
-          const newEvents = [];
-    
-          querySnapshot.forEach((doc) => {
-            const curEvent = doc.data()
-            //Populate the schedule with upcoming and ongoing events
-            if(dayjs(`${curEvent.date} ${curEvent.time}`).toDate().getTime() >= new Date().getTime() || (curEvent.hasStarted && !curEvent.hasEnded)){
-                newEvents.push(curEvent)
-            }
-          });
-          //
-          const ongoingEvent = newEvents.find(e => e.hasStarted && e.hasEnded === false);
-          if (ongoingEvent === undefined && event !== null){
-            console.log("there's no ongoing event")
-            setEvent(null)
-          }
+          const events = await currentPage.getEvents()
+          if(events){
+            const relevantEvents = events.filter((e)=> (e.hasStarted && !e.hasEnded) || e.getTimestamp() >= new Date().getTime()).sort((e1,e2) => dayjs(e1.getTimestamp) - dayjs(e2.getTimestamp));
 
-          newEvents.sort((e1,e2) => dayjs(`${e1.date} ${e1.time}`) - dayjs(`${e2.date} ${e2.time}`))
-          if(nextEvent && nextEvent?.id !== newEvents[0]?.id ){
-            if(newEvents[0] === undefined){
-              setNextEvent(null)
-            }else {
-              setNextEvent(newEvents[0])
+            const ongoingEvent = relevantEvents.find(e => e.hasStarted && e.hasEnded === false);
+            if (ongoingEvent === undefined && event !== null){
+              console.log("there's no ongoing event")
+              setEvent(null)
             }
-          }
-          if(nextEvent === null ){
-            setNextEvent(newEvents[0])
-          }
-          
-          setEvents([...newEvents])
 
-        } catch (err) {
-          console.log('Error retrieving scheduled events');
+            if(nextEvent && nextEvent?.id !== relevantEvents[0]?.id ){
+              if(relevantEvents[0] === undefined){
+                setNextEvent(null)
+              }else {
+                setNextEvent(relevantEvents[0])
+              }
+            }
+            if(nextEvent === null ){
+              setNextEvent(relevantEvents[0])
+            }
+            
+            setEvents([...relevantEvents])
+
+            setEvents(relevantEvents)
+            console.log(relevantEvents)
+          }
+        }catch (err) {
+          console.log("Error getting Events by date")
           console.log(err)
-        }
-      }         
+        } 
+      }
+      getEvents()
+
+      // const getEvents = async () => {
+
+      //   try {
+      //     const querySnapshot = await getDocs(collection(db, `pages/${currentPage.handle}/events`)); 
+      //     const newEvents = [];
+    
+      //     querySnapshot.forEach((doc) => {
+      //       const curEvent = doc.data()
+      //       //Populate the schedule with upcoming and ongoing events
+      //       if(dayjs(`${curEvent.date} ${curEvent.time}`).toDate().getTime() >= new Date().getTime() || (curEvent.hasStarted && !curEvent.hasEnded)){
+      //           newEvents.push(curEvent)
+      //       }
+      //     });
+      //     //
+      //     const ongoingEvent = newEvents.find(e => e.hasStarted && e.hasEnded === false);
+      //     if (ongoingEvent === undefined && event !== null){
+      //       console.log("there's no ongoing event")
+      //       setEvent(null)
+      //     }
+
+      //     newEvents.sort((e1,e2) => dayjs(`${e1.date} ${e1.time}`) - dayjs(`${e2.date} ${e2.time}`))
+      //     if(nextEvent && nextEvent?.id !== newEvents[0]?.id ){
+      //       if(newEvents[0] === undefined){
+      //         setNextEvent(null)
+      //       }else {
+      //         setNextEvent(newEvents[0])
+      //       }
+      //     }
+      //     if(nextEvent === null ){
+      //       setNextEvent(newEvents[0])
+      //     }
+          
+      //     setEvents([...newEvents])
+
+      //   } catch (err) {
+      //     console.log('Error retrieving scheduled events');
+      //     console.log(err)
+      //   }
+      // }         
       
       getEvents();
   
@@ -81,7 +116,7 @@ export default function Schedule() {
                   <ListItem sx={{bgcolor: 'background.paper', mb: 2 }}>
                     <ListItemText
                       primary={`${e.name} ${e.hasStarted && !e.hasEnded ? `[LIVE NOW]`: ''}`}
-                      secondary={dayjs(`${e.date} ${e.time}`).format('dddd, MMMM DD @ hh:mm a')}
+                      secondary={e?.formattedDate()}
                     />
                   </ListItem>
                   </div>

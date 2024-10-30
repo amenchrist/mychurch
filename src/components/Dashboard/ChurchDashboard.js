@@ -16,11 +16,33 @@ export default function ChurchDashboard() {
   const [ date, setDate ] = useState(dayjs().format('YYYY-MM-DD'));
   const [ eventsFound, setEventsFound ] = useState(false);
 
+  const [ dateRequested, setDateRequested ] = useState(false)
+
   const submitDate = (e) => {
     setDate(e.target.value);
-    setShowEventReport(false)
+    setShowEventReport(false);
+    setDateRequested(true);
   }
   
+
+  useEffect(() => {
+    const getEvents = async () => {
+      console.log('searching for all events')
+      try {
+        const events = await currentPage.getEvents()
+        if(events){
+          const relevantEvents = events.filter((e)=> e.hasStarted).sort((e1,e2) => dayjs(e2.date) - dayjs(e1.date));
+          setEventsFound(relevantEvents.length > 0)
+          setEvents(relevantEvents)
+          console.log(relevantEvents)
+        }
+      }catch (err) {
+        console.log("Error getting Events in Dashboard")
+        console.log(err)
+      } 
+    }
+    getEvents()
+  }, [currentPage, setEvents,])
 
   useEffect(() => {
     const getEventsByDate = async () => {
@@ -39,10 +61,11 @@ export default function ChurchDashboard() {
 
     }
 
+    if(dateRequested){
       getEventsByDate();
-
-
-  }, [date, currentPage, setEvents])
+      setDateRequested(false)
+    } 
+  }, [date, currentPage, setEvents, dateRequested])
 
   function previousReturn() {
     const style = {
@@ -83,12 +106,13 @@ export default function ChurchDashboard() {
           </Box>
         </Box>
 
-        
-      { showEventReport ? <EventReport /> : eventsFound? <EventsList /> 
-      : <div style={{width: '600px', height: '300px', border: '2px solid', marginTop: 15}}>
-        <p>Graph of attendance figures for the year till date</p>
-      </div> 
-      }
+        <Box sx={{ height:'80%',  }} >
+          { showEventReport ? <EventReport /> : eventsFound? <EventsList /> 
+          : <div style={{width: '600px', height: '300px', border: '2px solid', marginTop: 15}}>
+            <p>Graph of attendance figures for the year till date</p>
+          </div> 
+          }
+        </Box>
       </Container>
     </>
   )

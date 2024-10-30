@@ -37,17 +37,6 @@ export default class Event extends Page{
         // this.totalAttendance = this.getTotalAttendance();
     }
 
-    // async uploadToDb() {
-    //   try {
-    //       await setDoc(doc(db, `pages/${this.parentPageHandle}/events`, this.id), {...this});
-    //       return true
-    //   } catch (err) {
-    //     console.log('Error creating event')
-    //     console.log(err);
-    //     return false
-    //   }
-    // }
-
     async update(eventUpdate) {
       try {
         await updateDoc(doc(db, `pages/${this.parentPageHandle}/events`, this.id), eventUpdate);
@@ -105,6 +94,11 @@ export default class Event extends Page{
     formattedDate () {
       const reformattedDate = dayjs(this.date).format('YYYY-MM-DD');
       return dayjs(`${reformattedDate} ${this.time}`).format('dddd, MMMM DD @ hh:mm a')
+    }
+
+    getTimestamp() {
+      const reformattedDate = dayjs(this.date).format('YYYY-MM-DD');
+      return dayjs(`${reformattedDate} ${this.time}`).unix()
     }
 
 }

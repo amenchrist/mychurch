@@ -39,6 +39,7 @@ export default function EventPage({setNewEvent}) {
   const [ frequency, setFrequency ] = useState(event?.frequency || '');
   const [ recurring, setRecurring ] = useState(event?.recurring);
 
+  console.log(event)
   const updateEvent = async (e) => {
     e?.preventDefault();
     const eventUpdate = {
@@ -92,16 +93,25 @@ export default function EventPage({setNewEvent}) {
   }
 
   const endEvent = async () => {
-    const update = { hasEnded: true, endTimestamp: new Date().getTime() }
     try {
-      const updatedEvent = await event.update(update)
-      if(updatedEvent){
-        setEvent(updatedEvent);
+      console.log('Calculating total attendance')
+      const totalAttendance = await event.getTotalAttendance();
+      const update = { hasEnded: true, endTimestamp: new Date().getTime(), totalAttendance: totalAttendance};
+      try {
+        const updatedEvent = await event.update(update)
+        if(updatedEvent){
+          setEvent(updatedEvent);
+        }
+      } catch (err) {
+        console.log('Error updating event')
+        console.log(err);
       }
-    } catch (err) {
-      console.log('Error updating event')
+
+    }catch (err){
+      console.log('Error calculating total attendance')
       console.log(err);
     }
+    
   }
 
   const frequencyOptions = [ {value: 'DAILY', label: 'Daily'}, {value: 'WEEKLY', label: 'Weekly'}, {value: 'MONTHLY', label: 'Monthly'} ];
