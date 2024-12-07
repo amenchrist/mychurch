@@ -1,13 +1,20 @@
-import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { db } from "../config/firebase";
 import dayjs from "dayjs";
 import Event from "./Event";
+import { constructorHelper } from "./helpers";
+import ContactInfo from "./ContactInfo";
 
 export default class Page {
   constructor(data){
-    const fields = ["type","liveStreamURL", "avatarURL", "bannerURL", "name", "handle", "bio", "contactInfo", "followers", "events", "posts", "bankDetails", "transactions", "chats"];
     const defaultPage = {
       type: "USER",
+      name: null,
+      handle: null,
+      bio: null,
+      avatarURL: null,
+      bannerURL: null,
+      contactInfo: {...new ContactInfo()},
       followers: [],
       events: [],
       posts: [],
@@ -21,22 +28,8 @@ export default class Page {
       liveStreamURL: null,
     }
 
-    //create all object properties
-    for (const value of fields){
-        this[value] = null
-    }
+    constructorHelper.call(this, data, defaultPage)
 
-    //Assign object properties to default values
-    for (const property in defaultPage) {
-        this[property] = defaultPage[property];
-    }
-
-    //Assign property values passed through parameters
-    for (const property in data) {
-        if (fields.includes(property)){
-            this[property] = data[property];
-        }
-    }
   }
 
   getPosts(){}
@@ -47,6 +40,18 @@ export default class Page {
   addFollower(pageID){}
   makePayment(senderID, recipientID){}
   registerForEvents(eventID){}
+
+  async update(pageUpdate) {
+    try {
+      await updateDoc(doc(db, `pages`, this.handle), pageUpdate);
+      const updatedPage = new Page({...this, ...pageUpdate })
+      return updatedPage;
+    } catch (err) {
+      console.log('Error updating event')
+      console.log(err);
+      return false
+    }
+  }
 
   async addEvent(event) {
     try {

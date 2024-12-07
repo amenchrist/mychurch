@@ -26,6 +26,7 @@ import EventPage from './pages/EventPage';
 import { WatchPageContextProvider } from './contexts/WatchPageContextProvider';
 import { DashboardContextProvider } from './contexts/DashboardContextProvider';
 import { RegistrationPageContextProvider } from './contexts/RegistrationContextProvider';
+import Home from './pages/Home';
 
 
 export default function Router() {
@@ -93,8 +94,9 @@ export default function Router() {
       </div>
     )
   }  
+
   const routes = [
-    { path: '/', element: <SignInPage /> } , //Form will only show if user is not signed in due to forced redirect setting
+    { path: '/', element: isSignedIn? <Home /> : <SignInPage /> } , //Form will only show if user is not signed in due to forced redirect setting
     { path: 'pages', element: isSignedIn? <Pages /> : <SignInPage /> } ,
     { path: 'register', element: <RegistrationPageContextProvider ><SignUpPage /></RegistrationPageContextProvider> } , //Form will only show if user is not signed in due to forced redirect setting
     { path: ':handle/watch', element: currentPage?.type === "CHURCH" ? <WatchPageContextProvider ><WatchPage /></WatchPageContextProvider> : <ErrorPage /> } ,   

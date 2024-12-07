@@ -27,14 +27,13 @@ export default function ChurchDashboard() {
 
   useEffect(() => {
     const getEvents = async () => {
-      console.log('searching for all events')
+      // console.log('searching for all events')
       try {
         const events = await currentPage.getEvents()
         if(events){
           const relevantEvents = events.filter((e)=> e.hasStarted).sort((e1,e2) => dayjs(e2.date) - dayjs(e1.date));
           setEventsFound(relevantEvents.length > 0)
           setEvents(relevantEvents)
-          console.log(relevantEvents)
         }
       }catch (err) {
         console.log("Error getting Events in Dashboard")

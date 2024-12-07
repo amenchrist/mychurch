@@ -19,7 +19,9 @@ function store(set) {
       nextEvent: null,
       setNextEvent: (newEvent) => set(() => ({nextEvent: newEvent})),
       events: [],
-      setEvents: (events) => set(() => ({events: events}))
+      setEvents: (events) => set(() => ({events: events})),
+      loading: true,
+      setLoading: (status) => set(() => ({loading: status})),
   }
 
 }

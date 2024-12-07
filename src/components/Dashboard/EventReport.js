@@ -26,10 +26,10 @@ export default function EventReport() {
         const records = []
 
         querySnapshot.forEach((doc,i) => {
-          const { email, church, attendance } = doc.data();
-          records.push({ id:records.length+1, email, church, attendance } )
+          const { email, church, attendance, timestamp } = doc.data();
+          records.push({ id:records.length+1, email, church, attendance, time: dayjs(timestamp).format('HH:mm'), timestamp } )
         });
-        // newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date))
+        records.sort((r1,r2) => r1.timestamp - r2.timestamp)
         setRows([...records])
         // console.log(records)
       }catch (err) {
@@ -41,15 +41,16 @@ export default function EventReport() {
   }, [])
   
   const columns = [
-    { field: 'id', headerName: 'ID', width: 40 },
+    { field: 'time', headerName: 'Time', width: 100 },
+    // { field: 'id', headerName: 'ID', width: 40 },
     { field: 'email', headerName: 'Email', width: 200 },
-    { field: 'church', headerName: 'Church', width: 250 },
     {
       field: 'attendance',
       headerName: 'No of Attendees',
       type: 'number',
       width: 90,
     },
+    { field: 'church', headerName: 'Church', width: 250 },
   ];
 
   return (

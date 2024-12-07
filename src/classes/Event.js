@@ -39,7 +39,7 @@ export default class Event extends Page{
 
     async update(eventUpdate) {
       try {
-        await updateDoc(doc(db, `pages/${this.parentPageHandle}/events`, this.id), eventUpdate);
+        await updateDoc(doc(db, `pages/${this.parentPageHandle}/events`, this.id), {...eventUpdate});
         const updatedEvent = new Event({...this, id: this.id, ...eventUpdate })
         return updatedEvent;
       } catch (err) {
@@ -98,7 +98,7 @@ export default class Event extends Page{
 
     getTimestamp() {
       const reformattedDate = dayjs(this.date).format('YYYY-MM-DD');
-      return dayjs(`${reformattedDate} ${this.time}`).unix()
+      return dayjs(`${reformattedDate} ${this.time}`).valueOf()
     }
 
 }

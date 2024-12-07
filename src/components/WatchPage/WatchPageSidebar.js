@@ -15,7 +15,7 @@ let items = [
   {
     href: '/member-dashboard',
     icon: Briefcase,
-    title: 'To Member Dashboard'
+    title: 'Dashboard'
   },
   {
     href: '/',
@@ -25,7 +25,7 @@ let items = [
   {
     href: '/admin-dashboard/summary',
     icon: BarChartIcon,
-    title: 'To Admin Dashboard'
+    title: 'Admin Page'
   }
 
 ];

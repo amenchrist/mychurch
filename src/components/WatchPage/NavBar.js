@@ -10,7 +10,7 @@ import { useMyStore } from '../../store';
 import { useNavigate } from 'react-router-dom';
 import { Link } from '@mui/material';
 
-export default function Navbar() {
+export default function Navbar({openSideBar}) {
 
   const { currentPage } = useMyStore();
 
@@ -24,12 +24,12 @@ export default function Navbar() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2, color:'black' }}
+            // onClick={() => openSideBar(true)}
           >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} >
             <Link href={currentPage.websiteURL} sx={{color:'black', textDecoration: 'none'}} ><h3>{currentPage.name}</h3></Link>
-            
           </Typography>
           {/* <Button color="inherit">Login</Button> */}
         </Toolbar>
