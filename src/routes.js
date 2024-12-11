@@ -80,11 +80,11 @@ export default function Router() {
   // }, [isAdmin, currentPage, user])''
 
   //Force redirect to primary page when visiting root
-  useEffect(() => {
-    if((isSignedIn && pageRef === "") || (isSignedIn && pageRef === "register")){
-      navigate(`/${user.primaryPage}`);
-    }
-  },[user, pageRef, isSignedIn, navigate])
+  // useEffect(() => {
+  //   if((isSignedIn && pageRef === "") || (isSignedIn && pageRef === "register")){
+  //     navigate(`/${user.primaryPage}`);
+  //   }
+  // },[user, pageRef, isSignedIn, navigate])
 
   const PageContainer = () => {
     return(

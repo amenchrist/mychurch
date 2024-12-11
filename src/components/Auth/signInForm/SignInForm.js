@@ -16,7 +16,6 @@ export const SignInForm = ({setUsePassword}) => {
   const { setIsSignedIn } = useMyStore();
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location)
 
   const [ email, setEmail ] = useState(window.localStorage.getItem("emailForSignIn") || "");
   const [ password, setPassword ] = useState("");
@@ -45,7 +44,7 @@ export const SignInForm = ({setUsePassword}) => {
       if(user){
         setUser(user)
         setIsSignedIn(true);
-        navigate(`/${user.primaryPage}`);
+        navigate(location.pathname);
       }
       
     } catch (err) {
