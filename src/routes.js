@@ -27,6 +27,7 @@ import { WatchPageContextProvider } from './contexts/WatchPageContextProvider';
 import { DashboardContextProvider } from './contexts/DashboardContextProvider';
 import { RegistrationPageContextProvider } from './contexts/RegistrationContextProvider';
 import Home from './pages/Home';
+import BottomNav from './components/BottomNav';
 
 
 export default function Router() {
@@ -91,6 +92,9 @@ export default function Router() {
       <div>
       <Sidebar />
       <Outlet />
+      {/* <div style={{marginTop: 'auto', display: 'flex', justifyContent: 'center'}}>
+        <BottomNav />
+      </div> */}
       </div>
     )
   }  

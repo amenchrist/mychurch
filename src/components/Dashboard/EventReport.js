@@ -26,12 +26,13 @@ export default function EventReport() {
         const records = []
 
         querySnapshot.forEach((doc,i) => {
-          const { email, church, attendance, timestamp } = doc.data();
-          records.push({ id:records.length+1, email, church, attendance, time: dayjs(timestamp).format('HH:mm'), timestamp } )
+          const { email, church, attendance, timestamp, deviceType } = doc.data();
+          records.push({ id:records.length+1, email, church, attendance, time: dayjs(timestamp).format('HH:mm'), timestamp, deviceType } )
         });
         records.sort((r1,r2) => r1.timestamp - r2.timestamp)
         setRows([...records])
-        // console.log(records)
+        // const devices = records.map(r => r.deviceType)
+        // console.log(devices)
       }catch (err) {
         console.log("Error getting Events")
       } 

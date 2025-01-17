@@ -16,7 +16,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 function PostContainer() {
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ minHeight: 500, border: '2px solid', borderRadius: '0'}}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -34,7 +34,7 @@ function PostContainer() {
       <CardMedia
         component="img"
         height="194"
-        image="/static/images/cards/paella.jpg"
+        image="paella.jpg"
         alt="Paella dish"
       />
       <CardContent>

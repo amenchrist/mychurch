@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, TextField, Grid, Box, Typography } from '@mui/material';
+import { Button, TextField, Grid, Box, Typography, MenuItem, } from '@mui/material';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import { osName, deviceDetect, deviceType } from 'react-device-detect';
@@ -8,7 +8,7 @@ import { useWatchPageContext } from '../../contexts/WatchPageContextProvider';
 import { useMyStore } from '../../store';
 import { attendanceRegex } from '../../regex';
 import { db } from '../../config/firebase';
-import { handleValidation } from './formAssets';
+import { handleValidation, churches } from './formAssets';
 
 export default function AttendanceForm() {
 
@@ -18,6 +18,7 @@ export default function AttendanceForm() {
 
   const [ attendance, setAttendance ] = useState(false);
   const [ validAttendance, setValidAttendance ] = useState(true);
+  const [ church, setChurch] = useState('')
   const { coords } = useGeolocated({
         positionOptions: {
             enableHighAccuracy: false,
@@ -44,7 +45,7 @@ export default function AttendanceForm() {
         id: `att_${uuidv4().split('-').join("")}`,
         email: attendeeEmail ,
         timestamp: new Date().getTime(),
-        church: currentPage.name,
+        church,
         attendance: attendance,
         geolocation: {...coords},
         // origin: orgDetails.url,
@@ -69,6 +70,23 @@ export default function AttendanceForm() {
   return (
   <Box component="form" onSubmit={handleAttendance} sx={{ mt: 3 }}>
     <Grid container spacing={2}>
+      {/* <Grid item xs={12} >
+        <TextField required select fullWidth id="Church" label="Church" name="Church" value={church} autoComplete="title" autoFocus onChange={(e) => setChurch(e.target.value)} >
+          {churches.map((church) => (<MenuItem key={church.value} value={church.value}>{church.label}</MenuItem>))}
+        </TextField>
+      </Grid> */}
+      <Grid item xs={12}>
+          <TextField
+            required
+            fullWidth
+            id="church"
+            label="Church"
+            name="church"
+            autoComplete="church"
+            value={church}
+            onChange={(e) => setChurch(e.target.value)}
+          />
+        </Grid>
       <Grid item xs={12}>
           <TextField
           required
