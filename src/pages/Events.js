@@ -57,10 +57,10 @@ export default function Events() {
 
   const EventsList = () => {
     return(
-      <Box sx={{ flexGrow: 1, maxWidth: '800px', width: '80vw', }}>
+      <Box sx={{ flexGrow: 1, maxWidth: '800px', }}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={12}>
-            <Grid container justifyContent="space-between" sx={{ mt: 4, mb: 2 }}>
+            <Grid container justifyContent="space-between" sx={{ mt: 4, mb: 2, p: 2}}>
               <Grid item>
                 <Typography variant="h6" component="div">Events</Typography>
               </Grid>

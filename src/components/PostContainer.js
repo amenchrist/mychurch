@@ -22,7 +22,7 @@ function PostContainer({post} ) {
   const { currentPage, follower } = useMyStore();
 
   return (
-    <Card sx={{ minHeight: 500, border: '2px solid', borderRadius: '0'}}>
+    <Card sx={{ minHeight: 50,  borderRadius: '0'}}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -56,19 +56,10 @@ function PostContainer({post} ) {
           <ShareIcon />
         </IconButton> */}
       </CardActions>
-      {follower?.userID && follower?.role !== 'SUBSCRIBER' ?
-        <></> :
-        <>
-          <CardContent>
-            <Typography variant="body2" sx={{ color: 'text.primary', paddingBottom: 0}}>
-              Attendance: {post?.totalAttendance || "N/A"}
-            </Typography>
-          </CardContent>
-          <CardActions>
-          <Button size="medium">See Report</Button>
-        </CardActions>
-        </>
-      }
+      {follower?.userID && follower?.role === 'SUBSCRIBER' && post.type !== "EVENT"? <></> :
+        <Typography variant="body2" sx={{ pl:1, color: 'text.primary', }}>
+          Attendance: {post?.totalAttendance || "N/A"}
+        </Typography>}
     </Card>
   )
 }

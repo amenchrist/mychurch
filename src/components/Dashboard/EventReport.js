@@ -39,6 +39,8 @@ export default function EventReport() {
 
       }
     getAttendanceRecords()
+
+    
   }, [])
   
   const columns = [
@@ -63,7 +65,7 @@ export default function EventReport() {
         columns={columns}
         initialState={{
           pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
+            paginationModel: { page: 0, pageSize: 100 },
           },
         }}
         pageSizeOptions={[5, 10]}

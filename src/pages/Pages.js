@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import NewPage from '../components/NewPage';
 import { useMyStore } from '../store';
 import { useNavigate } from 'react-router-dom';
+import BottomNav from '../components/BottomNav';
 
 function Pages() {
 
@@ -20,7 +21,7 @@ function Pages() {
 
     return (
       <div>
-        <div style={{height: '95vh', overflowY:'auto'}}>
+        <div style={{height: '90vh', overflowY:'auto'}}>
           {user?.type === 'SUPERUSER'?
               <div style={{...style, padding: '5px'}} onClick={() => setCreatePageMode(true)} >
                   <h3> + Create a Page </h3>
@@ -42,8 +43,11 @@ function Pages() {
 
   return (
     <div>
-      <div>Pages</div>
+      <div style={{height: '5vh',}}>Pages</div>
       {createPageMode? <NewPage setCreatePageMode={setCreatePageMode} /> : <PageList />}
+      <div style={{height: '5vh', width: '100%', border: '2px solid', display: 'flex', justifyContent: 'center'}}>
+        <BottomNav />
+      </div>
     </div>
   )
 }

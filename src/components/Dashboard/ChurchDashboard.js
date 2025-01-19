@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Card, Container, Grid, TextField, Typography } from '@mui/material';
+import { Box, ButtonGroup, Card, Container, Grid, TextField, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { useMyStore } from '../../store';
 import { useDashboardContext } from '../../contexts/DashboardContextProvider';
@@ -12,19 +12,21 @@ import Button from '@mui/material/Button';
 import PostContainer from '../PostContainer';
 import BottomNav from '../BottomNav';
 import Follower from '../../classes/Follower';
+import Events from '../../pages/Events';
 
 
 export default function ChurchDashboard() {
 
   const { currentPage, user, setFollower, follower } = useMyStore();
-  const { showEventReport, setEvents, setShowEventReport, events } = useDashboardContext();
+  const { showEventReport, setEvents, setShowEventReport, events, setEvent } = useDashboardContext();
 
   const [ date, setDate ] = useState(dayjs().format('YYYY-MM-DD'));
   const [ eventsFound, setEventsFound ] = useState(false);
 
-  const [ dateRequested, setDateRequested ] = useState(false)
+  const [ dateRequested, setDateRequested ] = useState(false);
 
-  const [ isFollowing, setIsFollowing ] = useState(follower?.userID ? true : false )
+  const [ isFollowing, setIsFollowing ] = useState(follower?.userID ? true : false );
+  const [ showEvents, setShowEvents ] = useState(false);
 
   const submitDate = (e) => {
     setDate(e.target.value);
@@ -92,9 +94,7 @@ export default function ChurchDashboard() {
         console.log(err)
       } 
     }
-
     checkIfFollower()
-
   }, [ currentPage, setFollower, user, follower?.userID])
 
 
@@ -149,35 +149,57 @@ export default function ChurchDashboard() {
     }
   }
 
+  const getEvent = (e) => {
+    // const e = events.find(e => e.id === id)
+    setShowEventReport(true);
+    setEvent(e)
+    // if(e){
+    // }  
+  }
+
   return (
     <>
       <div style={{height: '95vh', overflowY: 'auto'}}>
-      <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0' }}>
-      <CardMedia
-        sx={{ height: 140 }}
-        image="Jesus.jpg"
-        title="Cover photo"
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-        {currentPage?.name}
-        </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        {currentPage?.bio || 'No bio yet'}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small">Visit Website</Button>
-      </CardActions>
-      { isFollowing ? <></> : <CardActions><Button size="small" onClick={followPage}>Follow</Button></CardActions>}
-      <div style={{ overflowY: 'auto',  width: '100%', display: 'flex', flexDirection:'column', justifyContent: 'center'}}>
-      {events.map((e, i) => <PostContainer key={i} post={e}/>)}
-      </div>
-    </Card>
-        
-      </div>
-      <div style={{height: '5vh', width: '100%', border: '2px solid', display: 'flex', justifyContent: 'center'}}>
-        <BottomNav />
+        <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0' }}>
+          <CardMedia sx={{ height: 140 }} image="Jesus.jpg" title="Cover photo" />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              {currentPage?.name}
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {currentPage?.bio || 'No bio yet'}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button size="small">Visit Website</Button>
+          </CardActions>
+          <ButtonGroup variant="contained" aria-label="Basic button group" fullWidth >
+            <Button sx={{ borderRadius: 0, }} onClick={() => setShowEvents(false)}>Posts</Button>
+            <Button sx={{ borderRadius: 0, }} onClick={() => setShowEvents(true)}>Events</Button>
+            {/* <Button>Three</Button> */}
+          </ButtonGroup>
+          { isFollowing ? <></> : <CardActions><Button size="small" onClick={followPage}>Follow</Button></CardActions>}
+          { showEvents ? <Events />  : 
+          <div style={{ overflowY: 'auto',  width: '100%', display: 'flex', flexDirection:'column', justifyContent: 'center'}}>
+            {showEventReport ? <EventReport /> : events.map((e, i) => (
+              <>
+                <PostContainer key={i} post={e}/>
+                {follower?.userID && follower?.role === 'SUBSCRIBER' ?
+                  <></> :
+                  <>
+                    <Button type="submit" fullWidth variant="contained" onClick={() => getEvent(e)} sx={{ borderRadius:0, mb: 1 }} >See Report</Button>
+                  </>
+                }
+              </>
+            ))}
+            <></>
+          </div> }
+          <Grid container justifyContent="flex-start">
+              <Grid item sx={{ pt:1, pb:2}}>
+              { showEventReport ? <Typography variant='p' onClick={()=> setShowEventReport(false)} >Back</Typography> : <></> }
+              </Grid>
+          </Grid>
+        </Card>        
       </div>
     </>
   )

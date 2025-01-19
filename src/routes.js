@@ -89,12 +89,12 @@ export default function Router() {
 
   const PageContainer = () => {
     return(
-      <div>
+      <div style={{ display: 'flex', flexDirection:'column', justifyContent: 'center', }}>
       <Sidebar />
       <Outlet />
-      {/* <div style={{marginTop: 'auto', display: 'flex', justifyContent: 'center'}}>
+      <div style={{height: '5vh', width: '100%', border: '2px solid', display: 'flex', justifyContent: 'center'}}>
         <BottomNav />
-      </div> */}
+      </div>
       </div>
     )
   }  
