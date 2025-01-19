@@ -6,6 +6,8 @@ function store(set) {
   return {
       user: null,
       setUser: (newUser) => set(() => ({user: newUser})),
+      follower: null,
+      setFollower: (newFollower) => set(() => ({follower: newFollower})),
       adminMode: false,
       toggleAdminMode: (value) => set(() => ({adminMode: value})),
       currentPage: null,

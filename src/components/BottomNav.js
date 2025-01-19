@@ -15,7 +15,7 @@ function BottomNav() {
   const { user } = useMyStore();
   const navigate = useNavigate();
   
-  const church = user.church.toLowerCase().replace(/\s/g, '');
+  const church = user?.church?.toLowerCase().replace(/\s/g, '');
   // console.log(church)
 
   return (

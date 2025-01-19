@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { db } from "../config/firebase";
 import dayjs from "dayjs";
 import Event from "./Event";
@@ -37,7 +37,6 @@ export default class Page {
   deletePost(postID){}
   createChat(pageID){}
   createEvent(pageID){}
-  addFollower(pageID){}
   makePayment(senderID, recipientID){}
   registerForEvents(eventID){}
 
@@ -55,8 +54,8 @@ export default class Page {
 
   async addEvent(event) {
     try {
-        await setDoc(doc(db, `pages/${this.handle}/events`, event.id), {...event});
-        return true
+      await setDoc(doc(db, `pages/${this.handle}/events`, event.id), {...event});
+      return true
     } catch (err) {
       console.log('Error creating event')
       console.log(err);
@@ -113,6 +112,35 @@ export default class Page {
       console.log(err);
       return false
     }
+  }
+
+  /// FOLLOWER METHODS //
+
+  async addFollower(follower) {
+    try {
+      await setDoc(doc(db, `pages/${this.handle}/followers`, follower.userID), {...follower});
+      return true
+    } catch (err) {
+      console.log('Error adding follower')
+      console.log(err);
+      return false
+    }
+  }
+
+  async userFollows(user) {
+    try {
+      const docRef = doc(db, `pages/${this.handle}/followers`, user.id)
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()){
+        return docSnap.data()
+      } else {
+        return false
+      }
+    } catch (err) {
+      console.log("Error validating follower");
+      console.log(err)
+    }
+    
   }
 
 }

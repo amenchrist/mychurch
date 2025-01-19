@@ -1,22 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Container, Grid, TextField, Typography } from '@mui/material';
+import { Box, Card, Container, Grid, TextField, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { useMyStore } from '../../store';
 import { useDashboardContext } from '../../contexts/DashboardContextProvider';
 import EventReport from './EventReport';
 import EventsList from './EventsList';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import PostContainer from '../PostContainer';
+import BottomNav from '../BottomNav';
+import Follower from '../../classes/Follower';
 
 
 export default function ChurchDashboard() {
 
-  const { currentPage } = useMyStore();
-  const { showEventReport, setEvents, setShowEventReport, } = useDashboardContext();
-
+  const { currentPage, user, setFollower, follower } = useMyStore();
+  const { showEventReport, setEvents, setShowEventReport, events } = useDashboardContext();
 
   const [ date, setDate ] = useState(dayjs().format('YYYY-MM-DD'));
   const [ eventsFound, setEventsFound ] = useState(false);
 
   const [ dateRequested, setDateRequested ] = useState(false)
+
+  const [ isFollowing, setIsFollowing ] = useState(follower?.userID ? true : false )
 
   const submitDate = (e) => {
     setDate(e.target.value);
@@ -66,29 +74,38 @@ export default function ChurchDashboard() {
     } 
   }, [date, currentPage, setEvents, dateRequested])
 
-  function previousReturn() {
+
+  useEffect(() => {
+    console.log('Checking if user is a follower')
+    const checkIfFollower = async () => {
+      try {
+        const userFollows = await currentPage.userFollows(user)
+        if(userFollows){
+          console.log('User is a follower')
+          if(follower?.userID !== userFollows?.userID){
+
+            setFollower(userFollows)
+          }
+        }
+      }catch (err) {
+        console.log("Error getting Follower status")
+        console.log(err)
+      } 
+    }
+
+    checkIfFollower()
+
+  }, [ currentPage, setFollower, user, follower?.userID])
+
+
+  function oldReturn() {
     const style = {
       width: '300px',
       height: '30vh',
       border: '2px solid'
     }
     return(
-      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        <div style={{display: 'flex', gap: '5px', flexWrap: 'wrap', width: 950, overflowY: 'auto'}}>
-          <div style={style}>Average Sunday Attendance In Past month</div>
-          <div style={style}>Average Wednesday Attendance In Past month</div>
-          <div style={{...style, width:600}}>Weekly Attendance Trend Graph For the current time period (Sunday and Wednesday)</div>
-          <div style={style}>Average Monthly Giving</div>
-          <div style={{...style, width:600}}>Giving Trend Graph For the current time period (By Category)</div> 
-        </div> 
-        <div style={style}>Membership Strength</div>
-        <div style={style}>No of FirstTimers this month compared with last month</div>
-      </div>
-    )
-  }
-
-  return (
-    <>
+      <>
       {/* {adminMode? <AdminDashboard /> : <MemberDashboard />} */}
       <Container component="main" maxWidth="800px" sx={{maxWidth: '800px', width: '80vw',}}>
         <Box sx={{ marginTop: 8, height:'80%',  }} >
@@ -113,6 +130,55 @@ export default function ChurchDashboard() {
           }
         </Box>
       </Container>
+      </>
+    )
+  }
+
+  const followPage = async (e) => {
+    e?.preventDefault();
+    const newFollower = new Follower({userID: user.id,})
+
+    try {
+      const followerAdded = await currentPage?.addFollower(newFollower)
+      if(followerAdded){
+        setFollower(newFollower)
+      }
+    } catch (err) {
+      console.log('Error updating event')
+      console.log(err);
+    }
+  }
+
+  return (
+    <>
+      <div style={{height: '95vh', overflowY: 'auto'}}>
+      <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0' }}>
+      <CardMedia
+        sx={{ height: 140 }}
+        image="Jesus.jpg"
+        title="Cover photo"
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+        {currentPage?.name}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        {currentPage?.bio || 'No bio yet'}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button size="small">Visit Website</Button>
+      </CardActions>
+      { isFollowing ? <></> : <CardActions><Button size="small" onClick={followPage}>Follow</Button></CardActions>}
+      <div style={{ overflowY: 'auto',  width: '100%', display: 'flex', flexDirection:'column', justifyContent: 'center'}}>
+      {events.map((e, i) => <PostContainer key={i} post={e}/>)}
+      </div>
+    </Card>
+        
+      </div>
+      <div style={{height: '5vh', width: '100%', border: '2px solid', display: 'flex', justifyContent: 'center'}}>
+        <BottomNav />
+      </div>
     </>
   )
 
