@@ -13,6 +13,7 @@ import PostContainer from '../PostContainer';
 import BottomNav from '../BottomNav';
 import Follower from '../../classes/Follower';
 import Events from '../../pages/Events';
+import PageHeader from './PageHeader';
 
 
 export default function ChurchDashboard() {
@@ -150,35 +151,20 @@ export default function ChurchDashboard() {
   }
 
   const getEvent = (e) => {
-    // const e = events.find(e => e.id === id)
     setShowEventReport(true);
     setEvent(e)
-    // if(e){
-    // }  
   }
 
   return (
     <>
       <div style={{height: '95vh', overflowY: 'auto'}}>
         <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0' }}>
-          <CardMedia sx={{ height: 140 }} image="Jesus.jpg" title="Cover photo" />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {currentPage?.name}
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {currentPage?.bio || 'No bio yet'}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button size="small">Visit Website</Button>
-          </CardActions>
+          <PageHeader />
+          { isFollowing ? <></> : <CardActions><Button size="small" onClick={followPage}>Follow</Button></CardActions>}
           <ButtonGroup variant="contained" aria-label="Basic button group" fullWidth >
             <Button sx={{ borderRadius: 0, }} onClick={() => setShowEvents(false)}>Posts</Button>
             <Button sx={{ borderRadius: 0, }} onClick={() => setShowEvents(true)}>Events</Button>
-            {/* <Button>Three</Button> */}
           </ButtonGroup>
-          { isFollowing ? <></> : <CardActions><Button size="small" onClick={followPage}>Follow</Button></CardActions>}
           { showEvents ? <Events />  : 
           <div style={{ overflowY: 'auto',  width: '100%', display: 'flex', flexDirection:'column', justifyContent: 'center'}}>
             {showEventReport ? <EventReport /> : events.map((e, i) => (

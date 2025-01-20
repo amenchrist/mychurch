@@ -13,7 +13,7 @@ function Pages() {
   const style = {
     height: '100px',
     border: '2px solid',
-    width: 300
+    width: '100vw', maxWidth: 500
   }
 
   function PageList() {
@@ -21,7 +21,7 @@ function Pages() {
 
     return (
       <div>
-        <div style={{height: '90vh', overflowY:'auto'}}>
+        <div style={{height: '85vh', overflowY:'auto'}}>
           {user?.type === 'SUPERUSER'?
               <div style={{...style, padding: '5px'}} onClick={() => setCreatePageMode(true)} >
                   <h3> + Create a Page </h3>
@@ -45,7 +45,7 @@ function Pages() {
     <div>
       <div style={{height: '5vh',}}>Pages</div>
       {createPageMode? <NewPage setCreatePageMode={setCreatePageMode} /> : <PageList />}
-      <div style={{height: '5vh', width: '100%', border: '2px solid', display: 'flex', justifyContent: 'center'}}>
+      <div style={{height: '10vh', width: '100%', border: '2px solid', display: 'flex', justifyContent: 'center'}}>
         <BottomNav />
       </div>
     </div>

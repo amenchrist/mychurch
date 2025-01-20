@@ -28,6 +28,7 @@ import { DashboardContextProvider } from './contexts/DashboardContextProvider';
 import { RegistrationPageContextProvider } from './contexts/RegistrationContextProvider';
 import Home from './pages/Home';
 import BottomNav from './components/BottomNav';
+import PageHeader from './components/Dashboard/PageHeader';
 
 
 export default function Router() {
@@ -89,10 +90,10 @@ export default function Router() {
 
   const PageContainer = () => {
     return(
-      <div style={{ display: 'flex', flexDirection:'column', justifyContent: 'center', }}>
+      <div style={{ display: 'flex', flexDirection:'column', justifyContent: 'space-between',  border: '2px solid' }}>
       <Sidebar />
       <Outlet />
-      <div style={{height: '5vh', width: '100%', border: '2px solid', display: 'flex', justifyContent: 'center'}}>
+      <div style={{height: '10vh', width: '100%', border: '2px solid', display: 'flex', justifyContent: 'center', }}>
         <BottomNav />
       </div>
       </div>
@@ -128,7 +129,7 @@ export default function Router() {
         { 
           path: 'events', 
           children: [
-            { path: '', element: <Events />,},
+            { path: '', element: <><PageHeader /><Events /></>,},
             { path: ':id', element: <EventPage /> }
           ]
         },
