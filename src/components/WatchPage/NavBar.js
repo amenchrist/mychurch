@@ -15,8 +15,8 @@ export default function Navbar({openSideBar}) {
   const { currentPage } = useMyStore();
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{backgroundColor:'white'}}>
+    <Box sx={{ flexGrow: 1, height: '10%',  }}>
+      <AppBar position="static" sx={{backgroundColor:'white', height: '100%', display: 'flex', justifyContent: 'center', }}>
         <Toolbar>
           <IconButton
             size="large"

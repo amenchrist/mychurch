@@ -2,6 +2,7 @@ import { Box, Grid, List, ListItem, ListItemText, Typography } from '@mui/materi
 import React, { useEffect, useState } from 'react'
 import { useMyStore } from '../store';
 import dayjs from 'dayjs';
+import BottomNav from './BottomNav';
 
 
 export default function Schedule() {
@@ -57,26 +58,30 @@ export default function Schedule() {
 
 
   return (
-        <Box sx={{ width: '100%',  padding: 2}}>
+      <Box sx={{ width: '100%',  display: 'flex', flexDirection:'column', justifyContent: 'space-between'}}>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={12}>
-            <Grid container justifyContent="flex-start" sx={{ mt: 1, mb: 2 }}>
-              <Grid item>
-                <Typography variant="h6" component="div">Schedule</Typography>
-              </Grid>
-            </Grid>              
-              <List sx={{ height:'80vh', overflowY:'auto', }}>
-                {events.map((e,i) => (
-                  <div key={`Event ${i}`}>
-                  <ListItem sx={{bgcolor: 'background.paper', mb: 2 }}>
-                    <ListItemText
-                      primary={`${e.name} ${e.hasStarted && !e.hasEnded ? `[LIVE NOW]`: ''}`}
-                      secondary={e?.formattedDate()}
-                    />
-                  </ListItem>
-                  </div>
-                ))}
+          <Grid item xs={12} md={12} >
+            <Box>
+              <Grid container justifyContent="flex-start" sx={{ p: 1, }}>
+                <Grid item>
+                  <Typography variant="h6" component="div">Schedule</Typography>
+                </Grid>
+              </Grid>              
+              <List >
+                <Box sx={{ height:'40vh', overflowY:'auto', }}>
+                  {events.map((e,i) => (
+                    <div key={`Event ${i}`}>
+                    <ListItem sx={{bgcolor: 'background.paper', }}>
+                      <ListItemText
+                        primary={`${e.name} ${e.hasStarted && !e.hasEnded ? `[LIVE NOW]`: ''}`}
+                        secondary={e?.formattedDate()}
+                      />
+                    </ListItem>
+                    </div>
+                  ))}
+                </Box>
               </List>
+            </Box>
           </Grid>
         </Grid>
       </Box>

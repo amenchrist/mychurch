@@ -36,22 +36,23 @@ function WatchPage() {
   return (
     <>
       <Box sx={{ flexGrow: 1, height: '100vh' }}>
-      <Navbar openSideBar={setMobileNavOpen} />
+        <Navbar openSideBar={setMobileNavOpen} /> 
         <WatchPageSidebar 
         onMobileClose={() => setMobileNavOpen(false)}
         openMobile={isMobileNavOpen}
         />
-        <Grid container sx={{ height: "100%" }} >
+        <Grid container sx={{ height: "90%" }} >
           <Grid item xs={12} md={8} >  
             <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                 { event?.hasStarted ? attendanceCaptured ? currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />:<VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
             </div>     
           </Grid>
-          <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  alignItems: 'center'}} >
+          <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  justifyContent: 'space-between' ,alignItems: 'center',}} >
             {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }
+            <BottomNav /> 
           </Grid>
         </Grid>
-          {/* <BottomNav />  */}
+          
       </Box>
     </>
   )

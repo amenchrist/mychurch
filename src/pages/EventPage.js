@@ -36,7 +36,6 @@ export default function EventPage({setNewEvent}) {
   const [ frequency, setFrequency ] = useState(event?.frequency || '');
   const [ recurring, setRecurring ] = useState(event?.recurring);
 
-  console.log(event)
   const updateEvent = async (e) => {
     e?.preventDefault();
     const eventUpdate = {
@@ -47,7 +46,6 @@ export default function EventPage({setNewEvent}) {
       liveStreamURL: watchLink.trim(),
     }
     try {
-      // await updateDoc(doc(db, `pages/${currentPage.handle}/events`, event.id), eventUpdate);
       const updatedEvent = await event.update(eventUpdate)
       if(updatedEvent){
         setEvent(updatedEvent);
@@ -119,35 +117,37 @@ export default function EventPage({setNewEvent}) {
       <Container component="main" maxWidth="xs" sx={{}}>
         <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center',height:'80%',  }} >
           <Typography component="h1" variant="h5">{event?.name.toUpperCase()}</Typography>
-          <Box component="form" onSubmit={updateEvent} sx={{ mt: 3,  height:'100%', overflowY: 'auto', paddingTop:1}} onChange={() => setUpdated(true)}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-                <TextField required fullWidth label="Event Title" id="name" value={name} onChange={(e) => setName(e.target.value)} />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <TextField required fullWidth type="date" id="date" label="Date" value={date} onChange={(e) => setDate(e.target.value)} />
-            </Grid>
-            <Grid item xs={12} sm={6} >
-                <TextField required fullWidth type="time" id="time" label="Time" value={time} onChange={(e) => setTime(e.target.value)} />
-            </Grid>
-            <Grid item xs={12}>
-                <TextField fullWidth multiline label="Description" id="description" value={description} onChange={(e) => setDescription(e.target.value)}/>
-            </Grid>            
-            <Grid item xs={12} sm={6} >
-              <FormControlLabel control={<Checkbox onChange={() => setRecurring(!recurring)} />} label="Recurring" />
-              { !recurring? <></> :
-              <TextField required={recurring} fullWidth select id="frequency" value={frequency} onChange={(e) => setFrequency(e.target.value)}>
-                {frequencyOptions.map((e,i) => (
-                  <MenuItem key={i} value={e.value}>{e.value}</MenuItem>
-                ))}
-              </TextField>
-              }
-            </Grid>
-            {/* <Grid item xs={12} >
-              <TextField required fullWidth label="Watch Link" id="watch-link" value={watchLink} onChange={(e) => setWatchLink(e.target.value)}/>
-            </Grid> */}
-          </Grid>
-          <Button type="submit" fullWidth variant="contained" disabled={!updated} sx={{ mt: 3, }} >Save</Button>
+          <Box component="form" onSubmit={updateEvent} onChange={() => setUpdated(true)}>
+            <Box sx={{ mt: 3,  height:'100%', overflowY: 'auto', paddingTop:1}} >
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <TextField required fullWidth label="Event Title" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField required fullWidth type="date" id="date" label="Date" value={date} onChange={(e) => setDate(e.target.value)} />
+                </Grid>
+                <Grid item xs={12} sm={6} >
+                    <TextField required fullWidth type="time" id="time" label="Time" value={time} onChange={(e) => setTime(e.target.value)} />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField fullWidth multiline label="Description" id="description" value={description} onChange={(e) => setDescription(e.target.value)}/>
+                </Grid>            
+                <Grid item xs={12} sm={6} >
+                  <FormControlLabel control={<Checkbox onChange={() => setRecurring(!recurring)} />} label="Recurring" />
+                  { !recurring? <></> :
+                  <TextField required={recurring} fullWidth select id="frequency" value={frequency} onChange={(e) => setFrequency(e.target.value)}>
+                    {frequencyOptions.map((e,i) => (
+                      <MenuItem key={i} value={e.value}>{e.value}</MenuItem>
+                    ))}
+                  </TextField>
+                  }
+                </Grid>
+                {/* <Grid item xs={12} >
+                  <TextField required fullWidth label="Watch Link" id="watch-link" value={watchLink} onChange={(e) => setWatchLink(e.target.value)}/>
+                </Grid> */}
+              </Grid>
+              <Button type="submit" fullWidth variant="contained" disabled={!updated} sx={{ mt: 3, mb: 2 }} >Save</Button>
+            </Box>
           </Box>
           {event?.hasStarted && !event?.hasEnded? 
           <Button fullWidth variant="contained" sx={{ mt: 2, mb: 2 }} onClick={endEvent} color={'error'}>

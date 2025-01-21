@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import Event from '../classes/Event';
 
 
-export default function EventForm({setNewEvent}) {  
+export default function EventForm() {  
 
   const { user, currentPage } = useMyStore();
   const navigate = useNavigate();
@@ -87,51 +87,53 @@ export default function EventForm({setNewEvent}) {
   return (
     <>
       <Container component="main" maxWidth="xs" sx={{}}>
-        <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center',height:'80%', }} >
-          <Typography component="h1" variant="h5">New Event</Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3,  height:'100%', overflowY: 'auto', paddingTop:1}}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField autoFocus required fullWidth label="Event Title" value={name} onChange={(e) => setName(e.target.value)} />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField required fullWidth type="date" label="Date" value={date} onChange={(e) => setDate(e.target.value)} />
-            </Grid>
-            <Grid item xs={12} sm={6} >
-              <TextField required fullWidth type="time" label="Time" value={time} onChange={(e) => setTime(e.target.value)} />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField fullWidth multiline label="Description" value={description} onChange={(e) => setDescription(e.target.value)}/>
-            </Grid>
-            <Grid item xs={12} >
-              <FormControlLabel control={<Checkbox onChange={() => setRecurring(!recurring)} checked={recurring} />} label="Recurring" />
-              </Grid>
-              { !recurring? <></> :
-              <>
-              <Grid item xs={12} sm={6} >
-                <TextField required={recurring} fullWidth select label="Frequency" value={frequency} onChange={(e) => setFrequency(e.target.value)}>
-                {frequencyOptions.map((e,i) => (
-                  <MenuItem key={i} value={e.value}>{e.value}</MenuItem>
-                ))}
-              </TextField>
-              </Grid>
-                <Grid item xs={12} sm={6} >
-                  <TextField required fullWidth type="date" label="End Date" value={reEndDate} onChange={(e) => setReEndDate(e.target.value)} />
+        <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center',height:'90%', }} >
+          <Typography component="h1" variant="h5">{name || 'NEW EVENT'}</Typography>
+          <Box component="form" onSubmit={handleSubmit} >
+            <Box sx={{ mt: 3,  height:'80%', overflowY: 'auto', paddingTop:1, }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField autoFocus required fullWidth label="Event Title" value={name} onChange={(e) => setName(e.target.value)} />
                 </Grid>
-              </>              
-              }
-            {/* <Grid item xs={12} >
-            <TextField required fullWidth label="Watch Link" id="watch-link" value={watchLink} onChange={(e) => setWatchLink(e.target.value)}/>
-            </Grid> */}
-          </Grid>
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >Save</Button>
-          <Grid container justifyContent="flex-start">
+                <Grid item xs={12} sm={6}>
+                  <TextField required fullWidth type="date" label="Date" value={date} onChange={(e) => setDate(e.target.value)} />
+                </Grid>
+                <Grid item xs={12} sm={6} >
+                  <TextField required fullWidth type="time" label="Time" value={time} onChange={(e) => setTime(e.target.value)} />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField fullWidth multiline label="Description" value={description} onChange={(e) => setDescription(e.target.value)}/>
+                </Grid>
+                <Grid item xs={12} >
+                  <FormControlLabel control={<Checkbox onChange={() => setRecurring(!recurring)} checked={recurring} />} label="Recurring" />
+                </Grid>
+                { !recurring? <></> :
+                <>
+                  <Grid item xs={12} sm={6} >
+                    <TextField required={recurring} fullWidth select label="Frequency" value={frequency} onChange={(e) => setFrequency(e.target.value)}>
+                      {frequencyOptions.map((e,i) => (
+                        <MenuItem key={i} value={e.value}>{e.value}</MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={12} sm={6} >
+                    <TextField required fullWidth type="date" label="End Date" value={reEndDate} onChange={(e) => setReEndDate(e.target.value)} />
+                  </Grid>
+                </>              
+                }
+                {/* <Grid item xs={12} >
+                <TextField required fullWidth label="Watch Link" id="watch-link" value={watchLink} onChange={(e) => setWatchLink(e.target.value)}/>
+                </Grid> */}
+              </Grid>
+            </Box>
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 2, }} >Save</Button>
+          </Box>
+          <Grid container justifyContent="flex-start" sx={{ mt: 3, }} >
               <Grid item>
               {/* <Link href="/" variant="body2">Cancel</Link> */}
-              <Typography variant='p' onClick={()=> setNewEvent(false)} >Back</Typography>
+              <Typography variant='p' onClick={()=> navigate(`/${currentPage.handle}/events`)} >Back</Typography>
               </Grid>
           </Grid>
-          </Box>
         </Box>
       </Container>
     </>

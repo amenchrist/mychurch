@@ -21,6 +21,7 @@ export default function ChurchDashboard() {
   const { currentPage, user, setFollower, follower } = useMyStore();
   const { showEventReport, setEvents, setShowEventReport, events, setEvent } = useDashboardContext();
 
+
   const [ date, setDate ] = useState(dayjs().format('YYYY-MM-DD'));
   const [ eventsFound, setEventsFound ] = useState(false);
 
@@ -161,10 +162,7 @@ export default function ChurchDashboard() {
         <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0' }}>
           <PageHeader />
           { isFollowing ? <></> : <CardActions><Button size="small" onClick={followPage}>Follow</Button></CardActions>}
-          <ButtonGroup variant="contained" aria-label="Basic button group" fullWidth >
-            <Button sx={{ borderRadius: 0, }} onClick={() => setShowEvents(false)}>Posts</Button>
-            <Button sx={{ borderRadius: 0, }} onClick={() => setShowEvents(true)}>Events</Button>
-          </ButtonGroup>
+          
           { showEvents ? <Events />  : 
           <div style={{ overflowY: 'auto',  width: '100%', display: 'flex', flexDirection:'column', justifyContent: 'center'}}>
             {showEventReport ? <EventReport /> : events.map((e, i) => (
@@ -181,7 +179,7 @@ export default function ChurchDashboard() {
             <></>
           </div> }
           <Grid container justifyContent="flex-start">
-              <Grid item sx={{ pt:1, pb:2}}>
+              <Grid item sx={{ p:2}}>
               { showEventReport ? <Typography variant='p' onClick={()=> setShowEventReport(false)} >Back</Typography> : <></> }
               </Grid>
           </Grid>

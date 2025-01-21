@@ -38,6 +38,7 @@ export default class Event extends Page{
     }
 
     async update(eventUpdate) {
+      console.log(this.parentPageHandle)
       try {
         await updateDoc(doc(db, `pages/${this.parentPageHandle}/events`, this.id), {...eventUpdate});
         const updatedEvent = new Event({...this, id: this.id, ...eventUpdate })

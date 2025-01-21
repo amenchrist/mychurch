@@ -19,20 +19,24 @@ function BottomNav() {
   // console.log(church)
 
   return (
-  <><Stack direction="row" spacing={1}>
-      <IconButton aria-label="Home" onClick={() => navigate(`/`)}>
-        <HomeIcon />
-      </IconButton>
-      <IconButton aria-label="Pages" onClick={() => navigate('/pages')}>
-        <LayersIcon />
-      </IconButton>
-      <IconButton aria-label="Community" onClick={() => navigate(`/${church}`)}>
-        <Diversity3Icon />
-      </IconButton>
-      <IconButton aria-label="Profile" onClick={() => navigate(`/${user.primaryPage}`)}>
-        <AccountCircleIcon />
-      </IconButton>
-  </Stack></>
+  <>
+    <div style={{height: '10vh', width: '100%', border: '2px solid', display: 'flex', justifyContent: 'center', }}>
+      <Stack direction="row" spacing={1}>
+        <IconButton  aria-label="Home" onClick={() => navigate(`/`)}>
+          <HomeIcon sx={{}} />
+        </IconButton>
+        <IconButton aria-label="Pages" onClick={() => navigate('/pages')}>
+          <LayersIcon />
+        </IconButton>
+        <IconButton aria-label="Community" onClick={() => navigate(`/${church}`)}>
+          <Diversity3Icon />
+        </IconButton>
+        <IconButton aria-label="Profile" onClick={() => navigate(`/${user.primaryPage}`)}>
+          <AccountCircleIcon />
+        </IconButton>
+      </Stack>
+    </div>
+  </>
   )
 }
 
