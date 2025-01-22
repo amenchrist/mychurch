@@ -21,6 +21,7 @@ function WatchPage() {
   
   const { event, nextEvent, currentPage } = useMyStore();
   const { attendanceCaptured } = useWatchPageContext();
+  console.log(event)
 
 
   const ServiceMessage = () => {
@@ -44,12 +45,13 @@ function WatchPage() {
         <Grid container sx={{ height: "90%" }} >
           <Grid item xs={12} md={8} >  
             <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                { event?.hasStarted ? attendanceCaptured ? currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />:<VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
+              {/* { event?.hasEnded && event?.archiveURL ? <VimeoPlayer /> : */}
+                {event?.hasStarted ? attendanceCaptured ? currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />:<VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
             </div>     
           </Grid>
           <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  justifyContent: 'space-between' ,alignItems: 'center',}} >
             {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }
-            <BottomNav /> 
+            {/* <BottomNav showOnLg={true}/>  */}
           </Grid>
         </Grid>
           

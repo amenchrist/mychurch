@@ -31,14 +31,14 @@ export default class Event extends Page{
             endTimestamp: null,
             hasFinalAttendance: false,
             totalAttendance: null,
-            attendanceRecords: []
+            attendanceRecords: [],
+            archiveURL: null
         };
         constructorHelper.call(this, data, defaultObj)
         // this.totalAttendance = this.getTotalAttendance();
     }
 
     async update(eventUpdate) {
-      console.log(this.parentPageHandle)
       try {
         await updateDoc(doc(db, `pages/${this.parentPageHandle}/events`, this.id), {...eventUpdate});
         const updatedEvent = new Event({...this, id: this.id, ...eventUpdate })
@@ -52,7 +52,6 @@ export default class Event extends Page{
 
     async getTotalAttendance() {
       if(this.hasFinalAttendance){
-        console.log(this.totalAttendance)
         return this.totalAttendance
       } else {
         //Calculate total attendance

@@ -9,8 +9,10 @@ import Diversity3Icon from '@mui/icons-material/Diversity3';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
 import { useMyStore } from '../store';
+import MonitorIcon from '@mui/icons-material/Monitor';
+import { Box } from '@mui/material';
 
-function BottomNav() {
+function BottomNav({showOnXs}) {
 
   const { user } = useMyStore();
   const navigate = useNavigate();
@@ -18,15 +20,21 @@ function BottomNav() {
   const church = user?.church?.toLowerCase().replace(/\s/g, '');
   // console.log(church)
 
+  const style =  {height: '10vh', width: '100%', border: '2px solid', }
+  // const show = showOnXs ? 'block' : 
+
   return (
   <>
-    <div style={{height: '10vh', width: '100%', border: '2px solid', display: 'flex', justifyContent: 'center', }}>
-      <Stack direction="row" spacing={1}>
+    <Box sx={{...style, display: { lg: 'none', md: 'none', xs:'block' }, }}>
+      <Stack direction="row" spacing={1} sx={{height: '100%', display: 'flex', justifyContent: 'center',alignItems: 'center'}} >
         <IconButton  aria-label="Home" onClick={() => navigate(`/`)}>
           <HomeIcon sx={{}} />
         </IconButton>
         <IconButton aria-label="Pages" onClick={() => navigate('/pages')}>
           <LayersIcon />
+        </IconButton>
+        <IconButton aria-label="Watch" onClick={() => navigate(`/${church}/watch`)}>
+          <MonitorIcon />
         </IconButton>
         <IconButton aria-label="Community" onClick={() => navigate(`/${church}`)}>
           <Diversity3Icon />
@@ -35,7 +43,7 @@ function BottomNav() {
           <AccountCircleIcon />
         </IconButton>
       </Stack>
-    </div>
+    </Box>
   </>
   )
 }

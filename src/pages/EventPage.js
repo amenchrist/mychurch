@@ -32,6 +32,7 @@ export default function EventPage({setNewEvent}) {
   const [ time, setTime ] = useState(event?.time);
   const [ name, setName ] = useState(event?.name);
   const [ description, setDescription ] = useState(event?.bio || '');
+  const [ archiveURL, setArchiveURL ] = useState(event?.archiveURL || '');
   const [ watchLink, setWatchLink ] = useState(event?.liveStreamURL || '');
   const [ frequency, setFrequency ] = useState(event?.frequency || '');
   const [ recurring, setRecurring ] = useState(event?.recurring);
@@ -44,6 +45,7 @@ export default function EventPage({setNewEvent}) {
       recurring, name,
       bio: description.trim(),
       liveStreamURL: watchLink.trim(),
+      archiveURL: archiveURL.trim(),
     }
     try {
       const updatedEvent = await event.update(eventUpdate)
@@ -132,6 +134,9 @@ export default function EventPage({setNewEvent}) {
                 <Grid item xs={12}>
                     <TextField fullWidth multiline label="Description" id="description" value={description} onChange={(e) => setDescription(e.target.value)}/>
                 </Grid>            
+                <Grid item xs={12}>
+                    <TextField fullWidth multiline label="Archive Link" id="archive-link" value={archiveURL} onChange={(e) => setArchiveURL(e.target.value)}/>
+                </Grid>          
                 <Grid item xs={12} sm={6} >
                   <FormControlLabel control={<Checkbox onChange={() => setRecurring(!recurring)} />} label="Recurring" />
                   { !recurring? <></> :

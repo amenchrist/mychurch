@@ -80,14 +80,11 @@ export default function ChurchDashboard() {
 
 
   useEffect(() => {
-    console.log('Checking if user is a follower')
     const checkIfFollower = async () => {
       try {
         const userFollows = await currentPage.userFollows(user)
         if(userFollows){
-          console.log('User is a follower')
           if(follower?.userID !== userFollows?.userID){
-
             setFollower(userFollows)
           }
         }

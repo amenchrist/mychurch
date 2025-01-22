@@ -15,11 +15,23 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import dayjs from 'dayjs';
 import { Button } from '@mui/material';
 import { useMyStore } from '../store';
+import { useNavigate } from 'react-router-dom';
 
 
 function PostContainer({post} ) {
 
-  const { currentPage, follower } = useMyStore();
+  const { currentPage, follower, setEvent } = useMyStore();
+  const navigate = useNavigate();
+
+  function openEventSettings(){
+    navigate(`/${currentPage.handle}/events/${post.id}/settings`)
+  }
+
+  function openEvent(){
+    setEvent(post);
+    navigate(`/${currentPage.handle}/events/${post.id}/`)
+  }
+  
 
   return (
     <Card sx={{ minHeight: 50,  borderRadius: '0'}}>
@@ -30,7 +42,7 @@ function PostContainer({post} ) {
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
+          <IconButton aria-label="settings" onClick={openEventSettings}>
             <MoreVertIcon />
           </IconButton>
         }
@@ -40,8 +52,9 @@ function PostContainer({post} ) {
       <CardMedia
         component="img"
         height="194"
-        image="paella.jpg"
-        alt="Paella dish"
+        image={currentPage?.bannerURL}
+        alt="Church Experience"
+        onClick={openEvent}
       />
       <CardContent>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>

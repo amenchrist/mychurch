@@ -13,7 +13,8 @@ function Pages() {
   const style = {
     height: '100px',
     border: '2px solid',
-    width: '100vw', maxWidth: 500
+    width: '100vw', maxWidth: 500,
+    paddingLeft: 10
   }
 
   function PageList() {
@@ -21,7 +22,7 @@ function Pages() {
 
     return (
       <div>
-        <div style={{height: '85vh', overflowY:'auto'}}>
+        <div style={{height: '85vh', overflowY:'auto', padding: 5}}>
           {user?.type === 'SUPERUSER'?
               <div style={{...style, padding: '5px'}} onClick={() => setCreatePageMode(true)} >
                   <h3> + Create a Page </h3>
@@ -30,7 +31,7 @@ function Pages() {
           }
           {arr?.map((handle,i) => {
             return (
-              <div style={style} key={i} onClick={() => navigate(`/${handle}`)}>
+              <div style={style} key={i} onClick={() => navigate(`/${handle}`)} >
                 <p>{handle}</p>
               </div>
             )})
