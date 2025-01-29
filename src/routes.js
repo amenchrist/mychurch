@@ -94,14 +94,14 @@ export default function Router() {
       <div style={{ display: 'flex', flexDirection:'column', justifyContent: 'space-between',  border: '2px solid' }}>
         <Sidebar />
         <Outlet />
-        <BottomNav sx={{display: { xl: 'none', xs: 'none' } }} />
+        <BottomNav />
       </div>
     )
   }  
 
   const routes = [
-    { path: '/', element: isSignedIn? <Home /> : <SignInPage /> } , //Form will only show if user is not signed in due to forced redirect setting
-    { path: 'pages', element: isSignedIn? <Pages /> : <SignInPage /> } ,
+    { path: '/', element: isSignedIn? <><Sidebar /><Home /></> : <SignInPage /> } , //Form will only show if user is not signed in due to forced redirect setting
+    { path: 'pages', element: isSignedIn? <><Sidebar /><Pages /></> : <SignInPage /> } ,
     // { path: 'register', element: <RegistrationPageContextProvider ><SignUpPage /></RegistrationPageContextProvider> } , //Form will only show if user is not signed in due to forced redirect setting
     { path: ':handle/watch', element: currentPage?.type === "CHURCH" ? <WatchPageContextProvider ><WatchPage /></WatchPageContextProvider> : <ErrorPage /> } ,   
     { 
@@ -129,7 +129,7 @@ export default function Router() {
           path: 'events', 
           children: [
             { path: '', element: <div style={{height: '95vh', overflowY: 'auto'}}><PageHeader /><Events /></div>,},
-            { path: ':id', element: <WatchPageContextProvider ><WatchPage /></WatchPageContextProvider> },
+            { path: ':id', element: <EventPage /> },
             { path: ':id/settings', element: <EventPage /> },
             { path: 'new', element: <EventForm /> }
           ]

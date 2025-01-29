@@ -12,7 +12,7 @@ import { useMyStore } from '../store';
 import MonitorIcon from '@mui/icons-material/Monitor';
 import { Box } from '@mui/material';
 
-function BottomNav({showOnXs}) {
+function BottomNav({showOnLg}) {
 
   const { user } = useMyStore();
   const navigate = useNavigate();
@@ -22,10 +22,11 @@ function BottomNav({showOnXs}) {
 
   const style =  {height: '10vh', width: '100%', border: '2px solid', }
   // const show = showOnXs ? 'block' : 
+  console.log(showOnLg)
 
   return (
   <>
-    <Box sx={{...style, display: { lg: 'none', md: 'none', xs:'block' }, }}>
+    <Box sx={{...style, display: { lg: showOnLg? 'block' : 'none', md: 'none', xs: 'block' }, }}>
       <Stack direction="row" spacing={1} sx={{height: '100%', display: 'flex', justifyContent: 'center',alignItems: 'center'}} >
         <IconButton  aria-label="Home" onClick={() => navigate(`/`)}>
           <HomeIcon sx={{}} />

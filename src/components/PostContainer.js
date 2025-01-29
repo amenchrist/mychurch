@@ -16,6 +16,7 @@ import dayjs from 'dayjs';
 import { Button } from '@mui/material';
 import { useMyStore } from '../store';
 import { useNavigate } from 'react-router-dom';
+import VimeoPlayer from './WatchPage/VimeoPlayer';
 
 
 function PostContainer({post} ) {
@@ -35,7 +36,7 @@ function PostContainer({post} ) {
 
   return (
     <Card sx={{ minHeight: 50,  borderRadius: '0'}}>
-      <CardHeader
+      <CardHeader onClick={openEvent}
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
             R
@@ -49,13 +50,14 @@ function PostContainer({post} ) {
         title={post?.name || "Shrimp and Chorizo Paella"}
         subheader={ post?.formattedDate() || "September 14, 2016"}
       />
+      {post?.archiveURL? <VimeoPlayer link={post?.archiveURL} /> : 
       <CardMedia
         component="img"
         height="194"
         image={currentPage?.bannerURL}
         alt="Church Experience"
         onClick={openEvent}
-      />
+      /> }
       <CardContent>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {post?.bio || " Lorem Ipsum"}
