@@ -1,16 +1,18 @@
 import { collection, doc, getDocs, setDoc, updateDoc } from "firebase/firestore";
-import Page from "./Page";
 import { EVENT, LIVESTREAM, constructorHelper } from "./helpers";
 import { db } from "../config/firebase";
 import dayjs from "dayjs";
+import Post from "./Post";
 
 //PAGE EVENT
-export default class Event extends Page{
+export default class Event extends Post{
     constructor(data){
         super(data)
         const defaultObj = {
             id: null,
             type: EVENT,
+            name: null,
+            description: null,
             parentPageHandle: null,
             creatorID: null,
             date: null,

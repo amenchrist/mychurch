@@ -43,10 +43,6 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
     toggleAdminMode(!adminMode)
   }
 
-  // const { title, firstName, lastName } = user?.bioData;
-  console.log(user)
-
-
   function Header() {
     return (
       <Box sx={{alignItems: 'center', display: 'flex', flexDirection: 'column', p: 2 }} >

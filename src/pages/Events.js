@@ -19,8 +19,6 @@ export default function Events() {
   }));
   
   useEffect(() => {
-
-
     (async () => {
       try {
         const events = await currentPage.getEvents()
@@ -32,7 +30,6 @@ export default function Events() {
         console.log(err)
       } 
     })()
-
   }, [currentPage])
 
   const getEvent = (id) => {

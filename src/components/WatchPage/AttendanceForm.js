@@ -75,7 +75,7 @@ export default function AttendanceForm() {
           {churches.map((church) => (<MenuItem key={church.value} value={church.value}>{church.label}</MenuItem>))}
         </TextField>
       </Grid> */}
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
           <TextField
             required
             fullWidth
@@ -86,7 +86,7 @@ export default function AttendanceForm() {
             value={church}
             onChange={(e) => setChurch(e.target.value)}
           />
-        </Grid>
+        </Grid> */}
       <Grid item xs={12}>
           <TextField
           required

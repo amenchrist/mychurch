@@ -30,6 +30,7 @@ import Home from './pages/Home';
 import BottomNav from './components/BottomNav';
 import PageHeader from './components/Dashboard/PageHeader';
 import EventForm from './components/EventForm';
+import NewPost from './components/NewPost';
 
 
 export default function Router() {
@@ -125,6 +126,7 @@ export default function Router() {
         { path: 'create-page', element: user?.type === 'SUPERUSER'? <NewPage/>: <ErrorPage /> },
         { path: 'page-profile', element:  isAdmin ? <Pages />: <ErrorPage /> },
         { path: 'admin', element: <AdminPage /> },
+        { path: 'new', element: <NewPost /> },
         { 
           path: 'events', 
           children: [

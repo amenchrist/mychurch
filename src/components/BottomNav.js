@@ -10,19 +10,16 @@ import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
 import { useMyStore } from '../store';
 import MonitorIcon from '@mui/icons-material/Monitor';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 import { Box } from '@mui/material';
 
 function BottomNav({showOnLg}) {
 
-  const { user } = useMyStore();
+  const { user, currentPage } = useMyStore();
   const navigate = useNavigate();
   
   const church = user?.church?.toLowerCase().replace(/\s/g, '');
-  // console.log(church)
-
   const style =  {height: '10vh', width: '100%', border: '2px solid', }
-  // const show = showOnXs ? 'block' : 
-  console.log(showOnLg)
 
   return (
   <>
@@ -34,8 +31,8 @@ function BottomNav({showOnLg}) {
         <IconButton aria-label="Pages" onClick={() => navigate('/pages')}>
           <LayersIcon />
         </IconButton>
-        <IconButton aria-label="Watch" onClick={() => navigate(`/${church}/watch`)}>
-          <MonitorIcon />
+        <IconButton aria-label="Watch" onClick={() => navigate(`/${currentPage.handle}/new`)}>
+          <AddBoxIcon />
         </IconButton>
         <IconButton aria-label="Community" onClick={() => navigate(`/${church}`)}>
           <Diversity3Icon />

@@ -48,7 +48,7 @@ export default function AttendanceCard() {
 
   return (
     // <div style={{padding: 30,}}>
-			<Card sx={{ maxWidth: 450, height: '70vh', borderRadius: 0.5, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}} >
+			<Card sx={{ maxWidth: 450, height: '90%', borderRadius: 0.5, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}} >
         <CardMedia
             component="img"
             alt="green iguana"

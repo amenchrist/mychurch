@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import Event from "./Event";
 import { constructorHelper } from "./helpers";
 import ContactInfo from "./ContactInfo";
+import Post from "./Post";
 
 export default class Page {
   constructor(data){
@@ -32,7 +33,6 @@ export default class Page {
 
   }
 
-  getPosts(){}
   createPost(Post){}
   deletePost(postID){}
   createChat(pageID){}
@@ -141,6 +141,38 @@ export default class Page {
       console.log(err)
     }
     
+  }
+
+  /// POST METHODS ///
+
+  async addPost(post) {
+    try {
+      await setDoc(doc(db, `pages/${this.handle}/posts`, post.id), {...post});
+      return true
+    } catch (err) {
+      console.log('Error creating post')
+      console.log(err);
+      return false
+    }
+  }
+
+  async getPosts() {
+    try {
+      const querySnapshot = await getDocs(collection(db, `pages/${this.handle}/posts`)); 
+      const newPosts = []
+
+      querySnapshot.forEach((doc) => {
+        newPosts.push(new Post(doc.data()))
+      });
+      // newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date));
+      // setEvents([...newEvents])
+      // this.events = [...newEvents]
+      return [...newPosts]
+    }catch (err) {
+      console.log("Error getting Posts from db")
+      console.log(err)
+      return false
+    } 
   }
 
 }

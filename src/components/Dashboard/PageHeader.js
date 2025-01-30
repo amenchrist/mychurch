@@ -5,8 +5,10 @@ import { useMyStore } from '../../store';
 
 function PageHeader() {
 
-  const { currentPage, } = useMyStore();
+  const { currentPage, user } = useMyStore();
   const navigate = useNavigate();
+  const church = user?.church?.toLowerCase().replace(/\s/g, '');
+
 
 
   return (
@@ -22,6 +24,8 @@ function PageHeader() {
       </CardContent>
       <CardActions>
         <Button size="small">Visit Website</Button>
+        {currentPage.type === "USER"? '' : <Button size="small" onClick={() => navigate(`/${church}/watch`)}>Watch Live Stream</Button>}
+        
       </CardActions>
       <ButtonGroup variant="contained" aria-label="Basic button group" fullWidth >
             <Button sx={{ borderRadius: 0, }} onClick={() => navigate(`/${currentPage.handle}`)}>Posts</Button>
