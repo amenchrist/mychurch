@@ -1,49 +1,38 @@
 import React, { useEffect, useState } from 'react'
-import { useMyStore } from '../../store';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import PostContainer from '../PostContainer';
-import { Avatar, CardHeader, IconButton } from '@mui/material';
+import { useMyStore } from '../store';
+import { Avatar, Card, CardActions, CardContent, CardHeader, IconButton, Typography } from '@mui/material';
 import { blue } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import PageHeader from './PageHeader';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
-export default function UserDashboard() {
+
+function PostCollection() {
 
   const { currentPage } = useMyStore();
-  const [ posts, setPosts ] = useState([])
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const posts = await currentPage.getPosts()
-        if(posts){
-          setPosts(posts)
-        }
-      }catch (err) {
-        console.log("Error getting Events")
-        console.log(err)
-      } 
-    })()
-  })
+    const [ posts, setPosts ] = useState([])
+  
+    useEffect(() => {
+      (async () => {
+        try {
+          const posts = await currentPage.getPosts()
+          if(posts){
+            setPosts(posts)
+          }
+        }catch (err) {
+          console.log("Error getting Events")
+          console.log(err)
+        } 
+      })()
+    }) 
 
   return (
-    <>
-    <div style={{height: '95vh', overflowY: 'auto'}}>
-      <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0' }}>
-        <PageHeader />
-        <div style={{ overflowY: 'auto',  width: '100%', border: '2px solid', display: 'flex', flexDirection:'column', justifyContent: 'center'}}>
+    <div style={{ overflowY: 'auto',  width: '100%', border: '2px solid', display: 'flex', flexDirection:'column', justifyContent: 'center'}}>
           { posts.map((post) => 
             <Card sx={{ minHeight: 50,  borderRadius: '0', mb: 1}}>
-            <CardHeader 
+            <CardHeader
               avatar={
                 <Avatar sx={{ bgcolor: blue[500] }} aria-label="recipe">
-                  R
+                  {currentPage.name[0]}
                 </Avatar>
               }
               action={
@@ -77,8 +66,7 @@ export default function UserDashboard() {
           </Card>
           )}
         </div>
-      </Card>
-    </div>
-    </>
   )
 }
+
+export default PostCollection

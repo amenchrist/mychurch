@@ -9,11 +9,30 @@ function PageHeader() {
   const navigate = useNavigate();
   const church = user?.church?.toLowerCase().replace(/\s/g, '');
 
+  const ChurchDashNav = () => {
+    return(
+      <ButtonGroup variant="contained" aria-label="Basic button group" fullWidth >
+        <Button sx={{ borderRadius: 0, }} onClick={() => navigate(`/${currentPage.handle}`)}>Posts</Button>
+        <Button sx={{ borderRadius: 0, }} onClick={() => navigate(`/${currentPage.handle}/events`)}>Events</Button>
+      </ButtonGroup>
+    )
+  }
+
+  const UserDashNav = () => {
+    return(
+      <ButtonGroup variant="contained" aria-label="Basic button group" fullWidth >
+        <Button sx={{ borderRadius: 0, }} onClick={() => navigate(`/${currentPage.handle}`)}>Profile</Button>
+        <Button sx={{ borderRadius: 0, }} onClick={() => navigate(`/${currentPage.handle}/transactions`)}>Giving</Button>
+        <Button sx={{ borderRadius: 0, }} onClick={() => navigate(`/${currentPage.handle}/posts`)}>Posts</Button>
+      </ButtonGroup>
+    )
+  }
+
 
 
   return (
     <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0', }}>
-      <CardMedia sx={{ height: 140 }} image="Jesus.jpg" title="Cover photo" />
+      <CardMedia sx={{ height: 140 }} image={currentPage.type === "USER"? "default bg.jpg" : "Jesus.jpg"} title="Cover photo" />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {currentPage?.name}
@@ -22,15 +41,14 @@ function PageHeader() {
           {currentPage?.bio || 'No bio yet'}
         </Typography>
       </CardContent>
-      <CardActions>
+      {currentPage.type === "USER"? <></> : 
+        <CardActions>
         <Button size="small">Visit Website</Button>
-        {currentPage.type === "USER"? '' : <Button size="small" onClick={() => navigate(`/${church}/watch`)}>Watch Live Stream</Button>}
-        
-      </CardActions>
-      <ButtonGroup variant="contained" aria-label="Basic button group" fullWidth >
-            <Button sx={{ borderRadius: 0, }} onClick={() => navigate(`/${currentPage.handle}`)}>Posts</Button>
-            <Button sx={{ borderRadius: 0, }} onClick={() => navigate(`/${currentPage.handle}/events`)}>Events</Button>
-          </ButtonGroup>
+        {currentPage.type === "USER"? '' : <Button size="small" onClick={() => navigate(`/${currentPage.handle}/watch`)}>Watch Live Stream</Button>}
+        </CardActions>
+      }
+      {currentPage.type === "USER"? <UserDashNav /> : <ChurchDashNav />}
+      
     </Card>
   )
 }

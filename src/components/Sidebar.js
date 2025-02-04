@@ -146,7 +146,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
             }
           }}
         >
-          <div style={{padding: 15, display: 'flex', flexDirection: 'column', alignItems: 'flex-end'}} onClick={() => setOpenMenu(!openMenu)}>
+          <div style={{padding: 15, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', }} onClick={() => setOpenMenu(!openMenu)}>
              <X />
           </div>
           {content}

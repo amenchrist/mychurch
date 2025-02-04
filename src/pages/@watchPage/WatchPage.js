@@ -21,7 +21,6 @@ function WatchPage() {
   
   const { event, nextEvent, currentPage } = useMyStore();
   const { attendanceCaptured } = useWatchPageContext();
-  console.log(event)
 
 
   const ServiceMessage = () => {

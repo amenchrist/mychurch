@@ -136,7 +136,6 @@ export default function ChurchDashboard() {
   const followPage = async (e) => {
     e?.preventDefault();
     const newFollower = new Follower({userID: user.id,})
-
     try {
       const followerAdded = await currentPage?.addFollower(newFollower)
       if(followerAdded){
@@ -159,7 +158,6 @@ export default function ChurchDashboard() {
         <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0' }}>
           <PageHeader />
           { isFollowing ? <></> : <CardActions><Button size="small" onClick={followPage}>Follow</Button></CardActions>}
-          
           { showEvents ? <Events />  : 
           <div style={{ overflowY: 'auto',  width: '100%', display: 'flex', flexDirection:'column', justifyContent: 'center'}}>
             {showEventReport ? <EventReport /> : events.map((e, i) => (

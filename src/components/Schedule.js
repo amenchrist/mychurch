@@ -2,7 +2,6 @@ import { Box, Grid, List, ListItem, ListItemText, Typography } from '@mui/materi
 import React, { useEffect, useState } from 'react'
 import { useMyStore } from '../store';
 import dayjs from 'dayjs';
-import BottomNav from './BottomNav';
 
 
 export default function Schedule() {
@@ -55,6 +54,27 @@ export default function Schedule() {
         setEvent(ongoingEvent);
       } 
     }, [ongoingEvent, event, setEvent]);
+
+    useEffect(() => {
+      const today = dayjs(dayjs().format('YYYY-MM-DD')).toDate().toString()
+      const startEvent = async () => {
+        const update = { hasStarted: true, startTimestamp: new Date().getTime() }
+        try {
+          const updatedEvent = await nextEvent.update(update)
+          if(updatedEvent){
+            setEvent(updatedEvent);
+            console.log('Event Started Automatically')
+          }
+        } catch (err) {
+          console.log('Error updating event')
+          console.log(err);
+        }
+      }
+      if(nextEvent && nextEvent.hasStarted === false && nextEvent.date === today){
+        startEvent()
+        
+      } 
+    }, [nextEvent, setEvent]);
 
 
   return (
