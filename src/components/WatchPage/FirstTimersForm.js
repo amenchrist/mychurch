@@ -38,13 +38,13 @@ export default function FirstTimersForm() {
   const handleSubmit = async (event) => {
 
     event.preventDefault();
-    const bioData = new Biodata({ title, firstName, lastName })
-    const contactInfo = new ContactInfo({ email: attendeeEmail, phoneNumber: phone, address: {...new Address()} })
+    // const bioData = new Biodata({ title, firstName, lastName })
+    // const contactInfo = new ContactInfo({ email: attendeeEmail, phoneNumber: phone, address: {...new Address()} })
 
     const newUser = {
       id: `user_${uuidv4()}`,
-      bioData: {...bioData},
-      contactInfo: {...contactInfo},
+      // bioData: {...bioData},
+      // contactInfo: {...contactInfo},
       church, allowsMarketing,
       type: 'USER'
     }
@@ -59,6 +59,8 @@ export default function FirstTimersForm() {
       console.log(err);
     }
   };
+
+
 
   return (
     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, height: '200px', overflowY:'auto'}} >

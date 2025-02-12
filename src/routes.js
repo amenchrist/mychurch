@@ -116,7 +116,7 @@ export default function Router() {
           path: '', 
           element: <Dashboard />,
           children: [
-            { path: '', element: currentPage.type === 'USER'? <UserStats /> : <PostCollection /> },
+            { path: '', element: currentPage?.type === 'USER'? <UserStats /> : <PostCollection /> },
             { path: 'posts', element: <div style={{height: '95vh', overflowY: 'auto'}}><PostCollection /></div> },
             { path: 'transactions', element: <div>Transactions</div> },
           ]
