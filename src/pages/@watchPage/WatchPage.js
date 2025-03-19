@@ -48,8 +48,9 @@ function WatchPage() {
                 {event?.hasStarted ? attendanceCaptured ? currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />:<VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
             </div>     
           </Grid>
-          <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  justifyContent: 'space-between' ,alignItems: 'center',}} >
-            {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }
+          <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  justifyContent: 'flex-end' ,alignItems: 'center',}} >
+            {/* {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> } */}
+            {user.attendanceSubmitted? <FullWidthTabs /> : <></> }
             <BottomNav showOnLg={true}/> 
           </Grid>
         </Grid>
