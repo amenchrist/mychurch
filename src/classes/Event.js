@@ -89,9 +89,9 @@ export default class Event extends Post{
     }
 
     async end() {
-      console.log("Ending Event")
+      console.log("Ending Event");
       try {
-        console.log('Calculating total attendance')
+        console.log('Calculating total attendance');
         const totalAttendance = await this.getTotalAttendance();
         const update = { hasEnded: true, endTimestamp: new Date().getTime(), totalAttendance: totalAttendance};
         try {
