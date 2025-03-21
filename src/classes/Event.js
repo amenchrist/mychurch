@@ -88,6 +88,29 @@ export default class Event extends Post{
 
     }
 
+    async end() {
+      console.log("Ending Event")
+      try {
+        console.log('Calculating total attendance')
+        const totalAttendance = await this.getTotalAttendance();
+        const update = { hasEnded: true, endTimestamp: new Date().getTime(), totalAttendance: totalAttendance};
+        try {
+          const updatedEvent = await this.update(update)
+          if(updatedEvent){
+            return updatedEvent;
+          }
+        } catch (err) {
+          console.log('Error updating event')
+          console.log(err);
+        }
+  
+      }catch (err){
+        console.log('Error calculating total attendance')
+        console.log(err);
+      }
+      
+    }
+
     addParticipants(){}
     addReviews(){}
     createChat(){}
