@@ -51,7 +51,7 @@ function WatchPage() {
           <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  justifyContent: 'space-between' ,alignItems: 'center',}} >
             {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }
             {/* {user.attendanceSubmitted? <FullWidthTabs /> : <></> } */}
-            <BottomNav showOnLg={true}/> 
+            {/* <BottomNav showOnLg={true}/>  */}
           </Grid>
         </Grid>
           
