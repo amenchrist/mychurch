@@ -137,7 +137,7 @@ export default function EventPage({setNewEvent}) {
                 <Grid item xs={12}>
                     <TextField fullWidth multiline label="Archive Link" id="archive-link" value={archiveURL} onChange={(e) => setArchiveURL(e.target.value)}/>
                 </Grid>          
-                <Grid item xs={12} sm={6} >
+                {/* <Grid item xs={12} sm={6} >
                   <FormControlLabel control={<Checkbox onChange={() => setRecurring(!recurring)} />} label="Recurring" />
                   { !recurring? <></> :
                   <TextField required={recurring} fullWidth select id="frequency" value={frequency} onChange={(e) => setFrequency(e.target.value)}>
@@ -146,7 +146,7 @@ export default function EventPage({setNewEvent}) {
                     ))}
                   </TextField>
                   }
-                </Grid>
+                </Grid> */}
                 {/* <Grid item xs={12} >
                   <TextField required fullWidth label="Watch Link" id="watch-link" value={watchLink} onChange={(e) => setWatchLink(e.target.value)}/>
                 </Grid> */}

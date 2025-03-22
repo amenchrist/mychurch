@@ -17,9 +17,9 @@ function Dashboard() {
       <DashboardContextProvider >
         <PageHeader />
         <Outlet />
-      <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0' }}>
+      {/* <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0' }}>
         
-      </Card>
+      </Card> */}
       </DashboardContextProvider>
       {/* {currentPage.type === "USER"? <UserDashboard /> : <ChurchDashboard />} */}
       </div>

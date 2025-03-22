@@ -4,6 +4,7 @@ import { Avatar, Card, CardActions, CardContent, CardHeader, IconButton, Typogra
 import { blue } from '@mui/material/colors';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import dayjs from 'dayjs';
 
 
 function PostCollection() {
@@ -15,20 +16,21 @@ function PostCollection() {
       (async () => {
         try {
           const posts = await currentPage.getPosts()
+          const events = await currentPage.getEvents()
           if(posts){
-            setPosts(posts)
+            setPosts([posts, ...events.filter((e)=> e.hasStarted).sort((e1,e2) => dayjs(e2.date) - dayjs(e1.date))])
           }
         }catch (err) {
           console.log("Error getting Events")
           console.log(err)
         } 
       })()
-    }) 
+    }, [])
 
   return (
     <div style={{ overflowY: 'auto',  width: '100%', border: '2px solid', display: 'flex', flexDirection:'column', justifyContent: 'center'}}>
-          { posts.map((post) => 
-            <Card sx={{ minHeight: 50,  borderRadius: '0', mb: 1}}>
+          { posts.map((post, i) => 
+            <Card sx={{ minHeight: 50,  borderRadius: '0', mb: 1}} key={i}>
             <CardHeader
               avatar={
                 <Avatar sx={{ bgcolor: blue[500] }} aria-label="recipe">
@@ -41,7 +43,7 @@ function PostCollection() {
                 </IconButton>
               }
               title={currentPage?.name}
-              subheader={ post?.text || "September 14, 2016"}
+              subheader={ post?.name || "September 14, 2016"}
             />
             {/* // <CardMedia
             //   component="img"
@@ -52,7 +54,7 @@ function PostCollection() {
             // /> } */}
             <CardContent>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {post?.bio || " Lorem Ipsum"}
+                {post?.bio || post?.totalAttendance? `Attendance: ${post?.totalAttendance}` : " Lorem Ipsum"}
               </Typography>
             </CardContent>
             <CardActions disableSpacing>

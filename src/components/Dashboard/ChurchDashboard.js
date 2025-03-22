@@ -97,41 +97,41 @@ export default function ChurchDashboard() {
   }, [ currentPage, setFollower, user, follower?.userID])
 
 
-  function oldReturn() {
-    const style = {
-      width: '300px',
-      height: '30vh',
-      border: '2px solid'
-    }
-    return(
-      <>
-      {/* {adminMode? <AdminDashboard /> : <MemberDashboard />} */}
-      <Container component="main" maxWidth="800px" sx={{maxWidth: '800px', width: '80vw',}}>
-        <Box sx={{ marginTop: 8, height:'80%',  }} >
-          <Typography component="h1" variant="h4">Analytics</Typography>
-          <Box component="form" sx={{ mt: 2,  height:'100%', overflowY: 'auto', paddingTop:1}}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} >
-              <Typography component="p" sx={{ mb: 2,}} >Select an event date</Typography>
-              <TextField required type="date" label="Date" value={date} onChange={submitDate} />
-            </Grid>
-          </Grid>
-          {/* <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >Save</Button> */}
-          {eventsFound? <></> : <Typography component="p" sx={{ mt: 2,}} >No events to report.</Typography>}
-          </Box>
-        </Box>
+  // function oldReturn() {
+  //   const style = {
+  //     width: '300px',
+  //     height: '30vh',
+  //     border: '2px solid'
+  //   }
+  //   return(
+  //     <>
+  //     {/* {adminMode? <AdminDashboard /> : <MemberDashboard />} */}
+  //     <Container component="main" maxWidth="800px" sx={{maxWidth: '800px', width: '80vw',}}>
+  //       <Box sx={{ marginTop: 8, height:'80%',  }} >
+  //         <Typography component="h1" variant="h4">Analytics</Typography>
+  //         <Box component="form" sx={{ mt: 2,  height:'100%', overflowY: 'auto', paddingTop:1}}>
+  //         <Grid container spacing={2}>
+  //           <Grid item xs={12} >
+  //             <Typography component="p" sx={{ mb: 2,}} >Select an event date</Typography>
+  //             <TextField required type="date" label="Date" value={date} onChange={submitDate} />
+  //           </Grid>
+  //         </Grid>
+  //         {/* <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >Save</Button> */}
+  //         {eventsFound? <></> : <Typography component="p" sx={{ mt: 2,}} >No events to report.</Typography>}
+  //         </Box>
+  //       </Box>
 
-        <Box sx={{ height:'80%',  }} >
-          { showEventReport ? <EventReport /> : eventsFound? <EventsList /> 
-          : <div style={{width: '600px', height: '300px', border: '2px solid', marginTop: 15}}>
-            <p>Graph of attendance figures for the year till date</p>
-          </div> 
-          }
-        </Box>
-      </Container>
-      </>
-    )
-  }
+  //       <Box sx={{ height:'80%',  }} >
+  //         { showEventReport ? <EventReport /> : eventsFound? <EventsList /> 
+  //         : <div style={{width: '600px', height: '300px', border: '2px solid', marginTop: 15}}>
+  //           <p>Graph of attendance figures for the year till date</p>
+  //         </div> 
+  //         }
+  //       </Box>
+  //     </Container>
+  //     </>
+  //   )
+  // }
 
   const followPage = async (e) => {
     e?.preventDefault();

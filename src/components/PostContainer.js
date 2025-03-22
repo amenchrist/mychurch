@@ -48,7 +48,8 @@ function PostContainer({post} ) {
           </IconButton>
         }
         title={post?.name || "Shrimp and Chorizo Paella"}
-        subheader={ post?.formattedDate() || "September 14, 2016"}
+        subheader={ post?.date || "September 14, 2016"}
+        // subheader={ post?.formattedDate() || "September 14, 2016"}
       />
       {post?.archiveURL? <VimeoPlayer link={post?.archiveURL} /> : 
       <CardMedia
