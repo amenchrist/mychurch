@@ -1,13 +1,21 @@
-import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { db } from "../config/firebase";
 import dayjs from "dayjs";
 import Event from "./Event";
+import { constructorHelper } from "./helpers";
+import ContactInfo from "./ContactInfo";
+import Post from "./Post";
 
 export default class Page {
   constructor(data){
-    const fields = ["type","liveStreamURL", "avatarURL", "bannerURL", "name", "handle", "bio", "contactInfo", "followers", "events", "posts", "bankDetails", "transactions", "chats"];
     const defaultPage = {
       type: "USER",
+      name: null,
+      handle: null,
+      bio: null,
+      avatarURL: null,
+      bannerURL: null,
+      contactInfo: {...new ContactInfo()},
       followers: [],
       events: [],
       posts: [],
@@ -21,37 +29,33 @@ export default class Page {
       liveStreamURL: null,
     }
 
-    //create all object properties
-    for (const value of fields){
-        this[value] = null
-    }
+    constructorHelper.call(this, data, defaultPage)
 
-    //Assign object properties to default values
-    for (const property in defaultPage) {
-        this[property] = defaultPage[property];
-    }
-
-    //Assign property values passed through parameters
-    for (const property in data) {
-        if (fields.includes(property)){
-            this[property] = data[property];
-        }
-    }
   }
 
-  getPosts(){}
   createPost(Post){}
   deletePost(postID){}
   createChat(pageID){}
   createEvent(pageID){}
-  addFollower(pageID){}
   makePayment(senderID, recipientID){}
   registerForEvents(eventID){}
 
+  async update(pageUpdate) {
+    try {
+      await updateDoc(doc(db, `pages`, this.handle), pageUpdate);
+      const updatedPage = new Page({...this, ...pageUpdate })
+      return updatedPage;
+    } catch (err) {
+      console.log('Error updating event')
+      console.log(err);
+      return false
+    }
+  }
+
   async addEvent(event) {
     try {
-        await setDoc(doc(db, `pages/${this.handle}/events`, event.id), {...event});
-        return true
+      await setDoc(doc(db, `pages/${this.handle}/events`, event.id), {...event});
+      return true
     } catch (err) {
       console.log('Error creating event')
       console.log(err);
@@ -108,6 +112,67 @@ export default class Page {
       console.log(err);
       return false
     }
+  }
+
+  /// FOLLOWER METHODS //
+
+  async addFollower(follower) {
+    try {
+      await setDoc(doc(db, `pages/${this.handle}/followers`, follower.userID), {...follower});
+      return true
+    } catch (err) {
+      console.log('Error adding follower')
+      console.log(err);
+      return false
+    }
+  }
+
+  async userFollows(user) {
+    try {
+      const docRef = doc(db, `pages/${this.handle}/followers`, user.id)
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()){
+        return docSnap.data()
+      } else {
+        return false
+      }
+    } catch (err) {
+      console.log("Error validating follower");
+      console.log(err)
+    }
+    
+  }
+
+  /// POST METHODS ///
+
+  async addPost(post) {
+    try {
+      await setDoc(doc(db, `pages/${this.handle}/posts`, post.id), {...post});
+      return true
+    } catch (err) {
+      console.log('Error creating post')
+      console.log(err);
+      return false
+    }
+  }
+
+  async getPosts() {
+    try {
+      const querySnapshot = await getDocs(collection(db, `pages/${this.handle}/posts`)); 
+      const newPosts = []
+
+      querySnapshot.forEach((doc) => {
+        newPosts.push(new Post(doc.data()))
+      });
+      // newEvents.sort((e1,e2) => dayjs(e1.date) - dayjs(e2.date));
+      // setEvents([...newEvents])
+      // this.events = [...newEvents]
+      return [...newPosts]
+    }catch (err) {
+      console.log("Error getting Posts from db")
+      console.log(err)
+      return false
+    } 
   }
 
 }

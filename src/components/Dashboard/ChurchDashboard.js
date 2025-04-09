@@ -1,26 +1,59 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Container, Grid, TextField, Typography } from '@mui/material';
+import { Box, ButtonGroup, Card, Container, Grid, TextField, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { useMyStore } from '../../store';
 import { useDashboardContext } from '../../contexts/DashboardContextProvider';
 import EventReport from './EventReport';
 import EventsList from './EventsList';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import PostContainer from '../PostContainer';
+import BottomNav from '../BottomNav';
+import Follower from '../../classes/Follower';
+import Events from '../../pages/Events';
+import PageHeader from './PageHeader';
 
 
 export default function ChurchDashboard() {
 
-  const { currentPage } = useMyStore();
-  const { showEventReport, setEvents, setShowEventReport, } = useDashboardContext();
+  const { currentPage, user, setFollower, follower } = useMyStore();
+  const { showEventReport, setEvents, setShowEventReport, events, setEvent } = useDashboardContext();
 
 
   const [ date, setDate ] = useState(dayjs().format('YYYY-MM-DD'));
   const [ eventsFound, setEventsFound ] = useState(false);
 
+  const [ dateRequested, setDateRequested ] = useState(false);
+
+  const [ isFollowing, setIsFollowing ] = useState(follower?.userID ? true : false );
+  const [ showEvents, setShowEvents ] = useState(false);
+
   const submitDate = (e) => {
     setDate(e.target.value);
-    setShowEventReport(false)
+    setShowEventReport(false);
+    setDateRequested(true);
   }
   
+
+  useEffect(() => {
+    const getEvents = async () => {
+      // console.log('searching for all events')
+      try {
+        const events = await currentPage.getEvents()
+        if(events){
+          const relevantEvents = events.filter((e)=> e.hasStarted).sort((e1,e2) => dayjs(e2.date) - dayjs(e1.date));
+          setEventsFound(relevantEvents.length > 0)
+          setEvents(relevantEvents)
+        }
+      }catch (err) {
+        console.log("Error getting Events in Dashboard")
+        console.log(err)
+      } 
+    }
+    getEvents()
+  }, [currentPage, setEvents,])
 
   useEffect(() => {
     const getEventsByDate = async () => {
@@ -39,57 +72,114 @@ export default function ChurchDashboard() {
 
     }
 
+    if(dateRequested){
       getEventsByDate();
+      setDateRequested(false)
+    } 
+  }, [date, currentPage, setEvents, dateRequested])
 
 
-  }, [date, currentPage, setEvents])
-
-  function previousReturn() {
-    const style = {
-      width: '300px',
-      height: '30vh',
-      border: '2px solid'
+  useEffect(() => {
+    const checkIfFollower = async () => {
+      try {
+        const userFollows = await currentPage.userFollows(user)
+        if(userFollows){
+          if(follower?.userID !== userFollows?.userID){
+            setFollower(userFollows)
+          }
+        }
+      }catch (err) {
+        console.log("Error getting Follower status")
+        console.log(err)
+      } 
     }
-    return(
-      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        <div style={{display: 'flex', gap: '5px', flexWrap: 'wrap', width: 950, overflowY: 'auto'}}>
-          <div style={style}>Average Sunday Attendance In Past month</div>
-          <div style={style}>Average Wednesday Attendance In Past month</div>
-          <div style={{...style, width:600}}>Weekly Attendance Trend Graph For the current time period (Sunday and Wednesday)</div>
-          <div style={style}>Average Monthly Giving</div>
-          <div style={{...style, width:600}}>Giving Trend Graph For the current time period (By Category)</div> 
-        </div> 
-        <div style={style}>Membership Strength</div>
-        <div style={style}>No of FirstTimers this month compared with last month</div>
-      </div>
-    )
+    checkIfFollower()
+  }, [ currentPage, setFollower, user, follower?.userID])
+
+
+  // function oldReturn() {
+  //   const style = {
+  //     width: '300px',
+  //     height: '30vh',
+  //     border: '2px solid'
+  //   }
+  //   return(
+  //     <>
+  //     {/* {adminMode? <AdminDashboard /> : <MemberDashboard />} */}
+  //     <Container component="main" maxWidth="800px" sx={{maxWidth: '800px', width: '80vw',}}>
+  //       <Box sx={{ marginTop: 8, height:'80%',  }} >
+  //         <Typography component="h1" variant="h4">Analytics</Typography>
+  //         <Box component="form" sx={{ mt: 2,  height:'100%', overflowY: 'auto', paddingTop:1}}>
+  //         <Grid container spacing={2}>
+  //           <Grid item xs={12} >
+  //             <Typography component="p" sx={{ mb: 2,}} >Select an event date</Typography>
+  //             <TextField required type="date" label="Date" value={date} onChange={submitDate} />
+  //           </Grid>
+  //         </Grid>
+  //         {/* <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >Save</Button> */}
+  //         {eventsFound? <></> : <Typography component="p" sx={{ mt: 2,}} >No events to report.</Typography>}
+  //         </Box>
+  //       </Box>
+
+  //       <Box sx={{ height:'80%',  }} >
+  //         { showEventReport ? <EventReport /> : eventsFound? <EventsList /> 
+  //         : <div style={{width: '600px', height: '300px', border: '2px solid', marginTop: 15}}>
+  //           <p>Graph of attendance figures for the year till date</p>
+  //         </div> 
+  //         }
+  //       </Box>
+  //     </Container>
+  //     </>
+  //   )
+  // }
+
+  const followPage = async (e) => {
+    e?.preventDefault();
+    const newFollower = new Follower({userID: user.id,})
+    try {
+      const followerAdded = await currentPage?.addFollower(newFollower)
+      if(followerAdded){
+        setFollower(newFollower)
+      }
+    } catch (err) {
+      console.log('Error updating event')
+      console.log(err);
+    }
+  }
+
+  const getEvent = (e) => {
+    setShowEventReport(true);
+    setEvent(e)
   }
 
   return (
     <>
-      {/* {adminMode? <AdminDashboard /> : <MemberDashboard />} */}
-      <Container component="main" maxWidth="800px" sx={{maxWidth: '800px', width: '80vw',}}>
-        <Box sx={{ marginTop: 8, height:'80%',  }} >
-          <Typography component="h1" variant="h4">Analytics</Typography>
-          <Box component="form" sx={{ mt: 2,  height:'100%', overflowY: 'auto', paddingTop:1}}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} >
-              <Typography component="p" sx={{ mb: 2,}} >Select an event date</Typography>
-              <TextField required type="date" label="Date" value={date} onChange={submitDate} />
-            </Grid>
+      <div style={{height: '95vh', overflowY: 'auto'}}>
+        <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0' }}>
+          <PageHeader />
+          { isFollowing ? <></> : <CardActions><Button size="small" onClick={followPage}>Follow</Button></CardActions>}
+          { showEvents ? <Events />  : 
+          <div style={{ overflowY: 'auto',  width: '100%', display: 'flex', flexDirection:'column', justifyContent: 'center'}}>
+            {showEventReport ? <EventReport /> : events.map((e, i) => (
+              <>
+                <PostContainer key={i} post={e}/>
+                {follower?.userID && follower?.role === 'SUBSCRIBER' ?
+                  <></> :
+                  <>
+                    <Button type="submit" fullWidth variant="contained" onClick={() => getEvent(e)} sx={{ borderRadius:0, mb: 1 }} >See Report</Button>
+                  </>
+                }
+              </>
+            ))}
+            <></>
+          </div> }
+          <Grid container justifyContent="flex-start">
+              <Grid item sx={{ p:2}}>
+              { showEventReport ? <Typography variant='p' onClick={()=> setShowEventReport(false)} >Back</Typography> : <></> }
+              </Grid>
           </Grid>
-          {/* <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >Save</Button> */}
-          {eventsFound? <></> : <Typography component="p" sx={{ mt: 2,}} >No events to report.</Typography>}
-          </Box>
-        </Box>
-
-        
-      { showEventReport ? <EventReport /> : eventsFound? <EventsList /> 
-      : <div style={{width: '600px', height: '300px', border: '2px solid', marginTop: 15}}>
-        <p>Graph of attendance figures for the year till date</p>
-      </div> 
-      }
-      </Container>
+        </Card>        
+      </div>
     </>
   )
 

@@ -12,6 +12,7 @@ import AttendanceCard from '../../components/WatchPage/AttendanceCard';
 import { useWatchPageContext } from '../../contexts/WatchPageContextProvider';
 import Navbar from '../../components/WatchPage/NavBar';
 import VimeoPlayer from '../../components/WatchPage/VimeoPlayer';
+import BottomNav from '../../components/BottomNav';
 
 
 function WatchPage() {
@@ -21,14 +22,13 @@ function WatchPage() {
   const { event, nextEvent, currentPage } = useMyStore();
   const { attendanceCaptured } = useWatchPageContext();
 
-  console.log(currentPage)
 
   const ServiceMessage = () => {
     return (
       <div style={{color: 'white', width: "100%", height: '30vh',textAlign: 'center', padding: '20px', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
         {nextEvent ? <><p>NEXT EVENT</p>
         <h3>{nextEvent?.name.toUpperCase()}</h3>
-        <p>{dayjs(`${nextEvent?.date} ${nextEvent?.time}`).format('dddd, MMMM DD @ hh:mm a')}</p></> : <p>NO UPCOMING EVENTS</p>}
+        <p>{dayjs(nextEvent.getTimestamp()).format('dddd, MMMM DD @ hh:mm a')}</p></> : <p>NO UPCOMING EVENTS</p>}
       </div>
     )
   }
@@ -36,21 +36,25 @@ function WatchPage() {
   return (
     <>
       <Box sx={{ flexGrow: 1, height: '100vh' }}>
-      <Navbar />
+        <Navbar openSideBar={setMobileNavOpen} /> 
         <WatchPageSidebar 
         onMobileClose={() => setMobileNavOpen(false)}
         openMobile={isMobileNavOpen}
         />
-        <Grid container sx={{ height: "100%" }} >
-          <Grid item xs={12} md={8}  >  
+        <Grid container sx={{ height: "90%" }} >
+          <Grid item xs={12} md={8} >  
             <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                { event?.hasStarted ? attendanceCaptured ? currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />:<VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
+              {/* { event?.hasEnded && event?.archiveURL ? <VimeoPlayer /> : */}
+                {event?.hasStarted ? attendanceCaptured ? currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />:<VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
             </div>     
           </Grid>
-          <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  alignItems: 'center'}} >
+          <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  justifyContent: 'space-between' ,alignItems: 'center',}} >
             {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }
+            {/* {user.attendanceSubmitted? <FullWidthTabs /> : <></> } */}
+            {/* <BottomNav showOnLg={true}/>  */}
           </Grid>
         </Grid>
+          
       </Box>
     </>
   )

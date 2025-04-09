@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef, useMemo } from 'react';
 import { useMyStore } from '../store';
+import dayjs from 'dayjs';
 // import { getOrgDetails } from '../functions';
 
 const StateContext = createContext();
@@ -62,13 +63,103 @@ export const WatchPageContextProvider = ({ children }) => {
 //     }
     
 // })
+
+    const [ events, setEvents ] = useState([])
+    const { currentPage, event, setEvent, nextEvent, setNextEvent } = useMyStore();
+
+    useEffect(() => {
+      const getEvents = async () => {
+        // console.log('searching for all events')
+        try {
+          const events = await currentPage.getEvents()
+          if(events){
+            const relevantEvents = events.filter((e)=> (e.hasStarted && !e.hasEnded) || e.getTimestamp() >= new Date().getTime()).sort((e1,e2) => dayjs(e1.getTimestamp) - dayjs(e2.getTimestamp));
+          
+            const ongoingEvent = relevantEvents.find(e => e.hasStarted && e.hasEnded === false);
+            if (ongoingEvent === undefined && event !== null){
+              console.log("there's no ongoing event")
+              setEvent(null)
+            }
+
+            if(nextEvent && nextEvent?.id !== relevantEvents[0]?.id ){
+              if(relevantEvents[0] === undefined){
+                setNextEvent(null)
+              }else {
+                setNextEvent(relevantEvents[0])
+              }
+            }
+            if(nextEvent === null ){
+              setNextEvent(relevantEvents[0])
+            }
+            
+            setEvents([...relevantEvents])
+
+            setEvents(relevantEvents)
+          }
+        }catch (err) {
+          console.log("Error getting Events by date")
+          console.log(err)
+        } 
+      }
+      getEvents();
+  
+    }, [currentPage, setEvent, setNextEvent, nextEvent, event])
+
+    const ongoingEvent = events.find(e => e.hasStarted && e.hasEnded === false);
+    useEffect(() => {
+      if(ongoingEvent !== undefined && ongoingEvent?.id !== event?.id){
+        setEvent(ongoingEvent);
+      } 
+    }, [ongoingEvent, event, setEvent]);
+
+    //Automatically Start Event 
+    useEffect(() => {
+      const today = dayjs(dayjs().format('YYYY-MM-DD')).toDate().toString()
+      const startEvent = async () => {
+        const update = { hasStarted: true, startTimestamp: new Date().getTime() }
+        try {
+          const updatedEvent = await nextEvent.update(update)
+          if(updatedEvent){
+            setEvent(updatedEvent);
+            console.log('Event Started Automatically')
+          }
+        } catch (err) {
+          console.log('Error updating event')
+          console.log(err);
+        }
+      }
+      if(nextEvent && nextEvent.hasStarted === false && nextEvent.date === today){
+        startEvent()
+        
+      } 
+    }, [nextEvent, setEvent]);
+
+    //Automatically End Event
+    useEffect(() => {
+      const endEvent = async () => {
+        try {
+          const updatedEvent = await event.end()
+          if(updatedEvent){
+            setEvent(updatedEvent);
+          }
+        } catch (err) {
+          console.log('Error updating event')
+          console.log(err);
+        }
+      }
+      const oneDay = 86400000;
+      const now = new Date().getTime()
+      if(event && event.hasStarted && now - event.startTimestamp >= oneDay && !event.hasEnded ){
+        endEvent()
+      } 
+    }, [event, setEvent]);
  
   
   const contextStateVars = {
 
     attendeeEmail, setAttendeeEmail, emailCaptured, setEmailCaptured, attendanceCaptured, setAttendanceCaptured, isRegistered, setIsRegistered,
     isAdmin, setIsAdmin, attendanceSubmitted, setAttendanceSubmitted,
-    user, setUser, blankUser, userIsParticipant, setUserIsParticipant
+    user, setUser, blankUser, userIsParticipant, setUserIsParticipant, events, setEvents
 
   }
 

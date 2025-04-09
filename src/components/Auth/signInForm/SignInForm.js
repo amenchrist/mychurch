@@ -5,7 +5,7 @@ import { useMyStore } from "../../../store";
 import { doc, getDoc } from "firebase/firestore";
 import { Box, Button, Grid, Link, TextField, Typography } from "@mui/material";
 import { emailRegex } from "../../../regex";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import User from "../../../classes/User";
 import { getUser } from "../../../dbQueryFunctions";
 
@@ -15,6 +15,7 @@ export const SignInForm = ({setUsePassword}) => {
   const setUser = useMyStore((store) => store.setUser)
   const { setIsSignedIn } = useMyStore();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [ email, setEmail ] = useState(window.localStorage.getItem("emailForSignIn") || "");
   const [ password, setPassword ] = useState("");
@@ -43,7 +44,7 @@ export const SignInForm = ({setUsePassword}) => {
       if(user){
         setUser(user)
         setIsSignedIn(true);
-        navigate(`/${user.primaryPage}`);
+        navigate(location.pathname);
       }
       
     } catch (err) {

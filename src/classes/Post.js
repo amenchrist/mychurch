@@ -3,12 +3,15 @@ import { constructorHelper } from "./helpers"
 export default class Post {
     constructor(data){
         const defaultObj = {
-            authorID: null,
-            pageID: null,
+            id: null,
+            parentPageHandle: null,
+            creatorID: null,
             content: [],
             caption: null,
             likes: [],
-            comments: []
+            comments: [],
+            type: 'TEXT',
+            text:  null
         };
         constructorHelper.call(this, data, defaultObj)   
     }

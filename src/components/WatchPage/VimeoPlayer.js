@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useMyStore } from '../../store';
 
-export default function VimeoPlayer() {
+export default function VimeoPlayer({link}) {
 
   const { currentPage } = useMyStore();
 
@@ -12,7 +12,7 @@ export default function VimeoPlayer() {
         //Var was used because the component mounts twice before unmounting, for some weird reason, and throws errors about variables being already existing
         //var happily reassigns existing variables unlike let and const
         var options = {
-          url: '${currentPage.liveStreamURL}',
+          url: '${link? link : currentPage.liveStreamURL}',
           width: ${videoWidth},
           loop: true
         };

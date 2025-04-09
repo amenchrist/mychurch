@@ -6,7 +6,7 @@ import {
 
 export const allItems = [
     {
-      href: '',
+      href: '/',
       icon: BarChart,
       title: 'Dashboard',
       mode: 'ALL'
@@ -33,7 +33,7 @@ export const allItems = [
       href: 'church',
       icon: Home,
       title: 'Home',
-      mode: ''
+      mode: 'ALL'
     },
     // {
     //   href: 'conversations',
@@ -47,18 +47,18 @@ export const allItems = [
     //   title: 'Notifications',
     //   mode: 'ALL'
     // },
-    {
-      href: 'testimonies',
-      icon: Bell,
-      title: 'Testimonies',
-      mode: 'CHURCH'
-    },
-    {
-      href: 'notes',
-      icon: Clipboard,
-      title: 'Notes',
-      mode: 'PERSON'
-    },
+    // {
+    //   href: 'testimonies',
+    //   icon: Bell,
+    //   title: 'Testimonies',
+    //   mode: 'CHURCH'
+    // },
+    // {
+    //   href: 'notes',
+    //   icon: Clipboard,
+    //   title: 'Notes',
+    //   mode: 'PERSON'
+    // },
     // {
     //   href: 'news-feed',
     //   icon: Rss,
@@ -71,24 +71,24 @@ export const allItems = [
       title: 'Profile',
       mode: 'ALL'
     },
-    {
-      href: 'reports',
-      icon: Archive,
-      title: 'Reports',
-      mode: 'CHURCH'
-    },
-    {
-      href: 'members',
-      icon: Users,
-      title: 'Members',
-      mode: 'CHURCH'
-    },
-    {
-      href: 'admins',
-      icon: Users,
-      title: 'Manage Admins',
-      mode: 'CHURCH'
-    },
+    // {
+    //   href: 'reports',
+    //   icon: Archive,
+    //   title: 'Reports',
+    //   mode: 'CHURCH'
+    // },
+    // {
+    //   href: 'members',
+    //   icon: Users,
+    //   title: 'Members',
+    //   mode: 'CHURCH'
+    // },
+    // {
+    //   href: 'admins',
+    //   icon: Users,
+    //   title: 'Manage Admins',
+    //   mode: 'CHURCH'
+    // },
     {
       href: '/pages',
       icon: Users,

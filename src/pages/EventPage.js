@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Box, Button, Checkbox, Container, FormControlLabel, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../config/firebase';
-import { Event } from '../classes';
 import { useMyStore } from '../store';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import ErrorPage from './ErrorPage';
@@ -35,6 +32,7 @@ export default function EventPage({setNewEvent}) {
   const [ time, setTime ] = useState(event?.time);
   const [ name, setName ] = useState(event?.name);
   const [ description, setDescription ] = useState(event?.bio || '');
+  const [ archiveURL, setArchiveURL ] = useState(event?.archiveURL || '');
   const [ watchLink, setWatchLink ] = useState(event?.liveStreamURL || '');
   const [ frequency, setFrequency ] = useState(event?.frequency || '');
   const [ recurring, setRecurring ] = useState(event?.recurring);
@@ -47,9 +45,9 @@ export default function EventPage({setNewEvent}) {
       recurring, name,
       bio: description.trim(),
       liveStreamURL: watchLink.trim(),
+      archiveURL: archiveURL.trim(),
     }
     try {
-      // await updateDoc(doc(db, `pages/${currentPage.handle}/events`, event.id), eventUpdate);
       const updatedEvent = await event.update(eventUpdate)
       if(updatedEvent){
         setEvent(updatedEvent);
@@ -92,16 +90,25 @@ export default function EventPage({setNewEvent}) {
   }
 
   const endEvent = async () => {
-    const update = { hasEnded: true, endTimestamp: new Date().getTime() }
     try {
-      const updatedEvent = await event.update(update)
-      if(updatedEvent){
-        setEvent(updatedEvent);
+      console.log('Calculating total attendance')
+      const totalAttendance = await event.getTotalAttendance();
+      const update = { hasEnded: true, endTimestamp: new Date().getTime(), totalAttendance: totalAttendance};
+      try {
+        const updatedEvent = await event.update(update)
+        if(updatedEvent){
+          setEvent(updatedEvent);
+        }
+      } catch (err) {
+        console.log('Error updating event')
+        console.log(err);
       }
-    } catch (err) {
-      console.log('Error updating event')
+
+    }catch (err){
+      console.log('Error calculating total attendance')
       console.log(err);
     }
+    
   }
 
   const frequencyOptions = [ {value: 'DAILY', label: 'Daily'}, {value: 'WEEKLY', label: 'Weekly'}, {value: 'MONTHLY', label: 'Monthly'} ];
@@ -112,35 +119,40 @@ export default function EventPage({setNewEvent}) {
       <Container component="main" maxWidth="xs" sx={{}}>
         <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center',height:'80%',  }} >
           <Typography component="h1" variant="h5">{event?.name.toUpperCase()}</Typography>
-          <Box component="form" onSubmit={updateEvent} sx={{ mt: 3,  height:'100%', overflowY: 'auto', paddingTop:1}} onChange={() => setUpdated(true)}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-                <TextField required fullWidth label="Event Title" id="name" value={name} onChange={(e) => setName(e.target.value)} />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-                <TextField required fullWidth type="date" id="date" label="Date" value={date} onChange={(e) => setDate(e.target.value)} />
-            </Grid>
-            <Grid item xs={12} sm={6} >
-                <TextField required fullWidth type="time" id="time" label="Time" value={time} onChange={(e) => setTime(e.target.value)} />
-            </Grid>
-            <Grid item xs={12}>
-                <TextField fullWidth multiline label="Description" id="description" value={description} onChange={(e) => setDescription(e.target.value)}/>
-            </Grid>            
-            <Grid item xs={12} sm={6} >
-              <FormControlLabel control={<Checkbox onChange={() => setRecurring(!recurring)} />} label="Recurring" />
-              { !recurring? <></> :
-              <TextField required={recurring} fullWidth select id="frequency" value={frequency} onChange={(e) => setFrequency(e.target.value)}>
-                {frequencyOptions.map((e,i) => (
-                  <MenuItem key={i} value={e.value}>{e.value}</MenuItem>
-                ))}
-              </TextField>
-              }
-            </Grid>
-            {/* <Grid item xs={12} >
-              <TextField required fullWidth label="Watch Link" id="watch-link" value={watchLink} onChange={(e) => setWatchLink(e.target.value)}/>
-            </Grid> */}
-          </Grid>
-          <Button type="submit" fullWidth variant="contained" disabled={!updated} sx={{ mt: 3, }} >Save</Button>
+          <Box component="form" onSubmit={updateEvent} onChange={() => setUpdated(true)}>
+            <Box sx={{ mt: 3,  height:'100%', overflowY: 'auto', paddingTop:1}} >
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <TextField required fullWidth label="Event Title" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField required fullWidth type="date" id="date" label="Date" value={date} onChange={(e) => setDate(e.target.value)} />
+                </Grid>
+                <Grid item xs={12} sm={6} >
+                    <TextField required fullWidth type="time" id="time" label="Time" value={time} onChange={(e) => setTime(e.target.value)} />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField fullWidth multiline label="Description" id="description" value={description} onChange={(e) => setDescription(e.target.value)}/>
+                </Grid>            
+                <Grid item xs={12}>
+                    <TextField fullWidth multiline label="Archive Link" id="archive-link" value={archiveURL} onChange={(e) => setArchiveURL(e.target.value)}/>
+                </Grid>          
+                {/* <Grid item xs={12} sm={6} >
+                  <FormControlLabel control={<Checkbox onChange={() => setRecurring(!recurring)} />} label="Recurring" />
+                  { !recurring? <></> :
+                  <TextField required={recurring} fullWidth select id="frequency" value={frequency} onChange={(e) => setFrequency(e.target.value)}>
+                    {frequencyOptions.map((e,i) => (
+                      <MenuItem key={i} value={e.value}>{e.value}</MenuItem>
+                    ))}
+                  </TextField>
+                  }
+                </Grid> */}
+                {/* <Grid item xs={12} >
+                  <TextField required fullWidth label="Watch Link" id="watch-link" value={watchLink} onChange={(e) => setWatchLink(e.target.value)}/>
+                </Grid> */}
+              </Grid>
+              <Button type="submit" fullWidth variant="contained" disabled={!updated} sx={{ mt: 3, mb: 2 }} >Save</Button>
+            </Box>
           </Box>
           {event?.hasStarted && !event?.hasEnded? 
           <Button fullWidth variant="contained" sx={{ mt: 2, mb: 2 }} onClick={endEvent} color={'error'}>

@@ -26,6 +26,14 @@ import EventPage from './pages/EventPage';
 import { WatchPageContextProvider } from './contexts/WatchPageContextProvider';
 import { DashboardContextProvider } from './contexts/DashboardContextProvider';
 import { RegistrationPageContextProvider } from './contexts/RegistrationContextProvider';
+import Home from './pages/Home';
+import BottomNav from './components/BottomNav';
+import PageHeader from './components/Dashboard/PageHeader';
+import EventForm from './components/EventForm';
+import NewPost from './components/NewPost';
+import PostCollection from './components/PostCollection';
+import UserStats from './components/UserStats';
+import PageContainer from './components/PageContainer';
 
 
 export default function Router() {
@@ -79,30 +87,49 @@ export default function Router() {
   // }, [isAdmin, currentPage, user])''
 
   //Force redirect to primary page when visiting root
-  useEffect(() => {
-    if((isSignedIn && pageRef === "") || (isSignedIn && pageRef === "register")){
-      navigate(`/${user.primaryPage}`);
-    }
-  },[user, pageRef, isSignedIn, navigate])
+  // useEffect(() => {
+  //   if((isSignedIn && pageRef === "") || (isSignedIn && pageRef === "register")){
+  //     navigate(`/${user.primaryPage}`);
+  //   }
+  // },[user, pageRef, isSignedIn, navigate])
 
-  const PageContainer = () => {
-    return(
-      <div>
-      <Sidebar />
-      <Outlet />
-      </div>
-    )
-  }  
+  // const PageContainer = () => {
+  //   return(
+  //     <div style={{ display: 'flex', flexDirection:'column', justifyContent: 'space-between',  border: '2px solid blue' }}>
+  //       <Sidebar />
+  //       <Outlet />
+  //       <BottomNav />
+  //     </div>
+  //   )
+  // }  
+
   const routes = [
-    { path: '/', element: <SignInPage /> } , //Form will only show if user is not signed in due to forced redirect setting
-    { path: 'pages', element: isSignedIn? <Pages /> : <SignInPage /> } ,
-    { path: 'register', element: <RegistrationPageContextProvider ><SignUpPage /></RegistrationPageContextProvider> } , //Form will only show if user is not signed in due to forced redirect setting
+    { path: '/', element: isSignedIn? <><Sidebar /><Home /></> : <SignInPage /> } , //Form will only show if user is not signed in due to forced redirect setting
+    { path: 'pages', element: isSignedIn? <><Sidebar /><Pages /></> : <SignInPage /> } ,
+    // { path: 'register', element: <RegistrationPageContextProvider ><SignUpPage /></RegistrationPageContextProvider> } , //Form will only show if user is not signed in due to forced redirect setting
     { path: ':handle/watch', element: currentPage?.type === "CHURCH" ? <WatchPageContextProvider ><WatchPage /></WatchPageContextProvider> : <ErrorPage /> } ,   
     { 
       path: ':handle', 
       element: currentPage ? isSignedIn? <PageContainer /> : <SignInPage /> : <ErrorPage /> , //if handle doesn't exist, return error page, otherwise check if logged in
       children: [
-        { path: '', element: <DashboardContextProvider ><Dashboard /></DashboardContextProvider> },
+        { 
+          path: '', 
+          element: <Dashboard />,
+          children: [
+            { path: '', element: currentPage?.type === 'USER'? <UserStats /> : <PostCollection /> },
+            { path: 'posts', element: <div style={{height: '95vh', overflowY: 'auto'}}><PostCollection /></div> },
+            { path: 'transactions', element: <div>Transactions</div> },
+          ]
+        },
+        { 
+          path: 'events', 
+          children: [
+            { path: '', element: <div style={{height: '95vh', overflowY: 'auto'}}><PageHeader /><Events /></div>,},
+            { path: ':id', element: <EventPage /> },
+            { path: ':id/settings', element: <EventPage /> },
+            { path: 'new', element: <EventForm /> }
+          ]
+        },
         { path: 'giving-records', element: isSignedIn? <GivingRecords/>: <SignInForm /> },
         { path: 'conversations', element: <ComingSoon /> }, //user.email?<Conversations />: <SignInForm /> },
         { path: 'notifications', element: <ComingSoon /> }, //user.email?<Notifications/>: <SignInForm /> },
@@ -119,13 +146,7 @@ export default function Router() {
         { path: 'create-page', element: user?.type === 'SUPERUSER'? <NewPage/>: <ErrorPage /> },
         { path: 'page-profile', element:  isAdmin ? <Pages />: <ErrorPage /> },
         { path: 'admin', element: <AdminPage /> },
-        { 
-          path: 'events', 
-          children: [
-            { path: '', element: <Events />,},
-            { path: ':id', element: <EventPage /> }
-          ]
-        },
+        { path: 'new', element: <NewPost /> },
       ],
     },
     { path: '*', element: <ErrorPage /> },

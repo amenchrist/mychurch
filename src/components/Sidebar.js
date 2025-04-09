@@ -17,7 +17,9 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [ openMenu, setOpenMenu ] = useState(false)
+  const [ openMenu, setOpenMenu ] = useState(false);
+
+  const church = user?.church?.toLowerCase().replace(/\s/g, '');
 
   useEffect(() => {
     if(adminMode) setItems(allItems.filter((item) => item.mode !== 'USER'))
@@ -41,17 +43,13 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
     toggleAdminMode(!adminMode)
   }
 
-  // const { title, firstName, lastName } = user?.bioData;
-  // console.log(user)
-
-
   function Header() {
     return (
       <Box sx={{alignItems: 'center', display: 'flex', flexDirection: 'column', p: 2 }} >
         <Avatar component={RouterLink} src={''} sx={{cursor: 'pointer', width: 64, height: 64 }} to="#" />
         <Typography color="textPrimary" variant="h5" align='center' >
           {/* {user?.email? `${user.bioData?.title} ${user.bioData?.firstName} ${user.bioData?.lastName}` :'Guest'} */}
-          {currentPage?.name}
+          {currentPage? currentPage?.name : 'My Church'}
         </Typography> 
         {/* <Typography color="textPrimary" variant="h5" align='center' >
           {user?.email? 'Sign Amen Out' : 'Sign Amen In'}
@@ -69,11 +67,11 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
       <Box sx={{alignItems: 'center', display: 'flex', flexDirection: 'column', p: 2 }} >
         <Avatar component={RouterLink} src={''} sx={{cursor: 'pointer', width: 64, height: 64 }} to="#" />
         <Typography color="textPrimary" variant="h5" align='center' >
-          {currentPage? currentPage.name : 'Christ Embassy'}
+          {currentPage? currentPage?.name : 'My Church'}
         </Typography> 
-        <Typography color="textSecondary" variant="body2" >
+        {/* <Typography color="textSecondary" variant="body2" >
           {'Change Page'}
-        </Typography>
+        </Typography> */}
       </Box>
     )
   }
@@ -92,7 +90,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
       <Box sx={{ p: 2 }}>
         <List>
           {items.map((item) => {
-            const { type } = currentPage;
+            const type  = currentPage?.type;
 
             if (item.title === 'Home' && currentPage?.websiteURL ){
               item.href = currentPage.websiteURL;
@@ -101,7 +99,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
           if(item.mode === type || item.mode === 'ALL'){
             return (
               <NavItem
-                href={`${item.href}`}
+                href={item.href === 'church' ? `/${church}`: item.href === 'profile' ?`/${user.primaryPage}`:`${item.href}`}
                 key={item.title}
                 title={item.title}
                 icon={item.icon}
@@ -148,7 +146,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
             }
           }}
         >
-          <div style={{padding: 15, display: 'flex', flexDirection: 'column', alignItems: 'flex-end'}} onClick={() => setOpenMenu(!openMenu)}>
+          <div style={{padding: 15, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', }} onClick={() => setOpenMenu(!openMenu)}>
              <X />
           </div>
           {content}
