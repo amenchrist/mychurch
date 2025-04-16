@@ -12,7 +12,9 @@ import { handleValidation, churches } from './formAssets';
 
 export default function AttendanceForm() {
 
-  const { currentPage, event } = useMyStore();
+  const { currentPage, event, user } = useMyStore();
+  // console.log(currentPage);
+  const d = new Date()
 
   const { attendeeEmail, setAttendanceCaptured, userIsParticipant, setEmailCaptured, setAttendeeEmail, setUserIsParticipant } = useWatchPageContext();
 
@@ -28,6 +30,7 @@ export default function AttendanceForm() {
 
   const handleAttendance = async (e) => {
     e.preventDefault();
+    
 
     if(userIsParticipant){
       //Update Doc
@@ -57,8 +60,8 @@ export default function AttendanceForm() {
 
       try {
         await setDoc(doc(db, `pages/${currentPage.handle}/events/${event.id}/attendanceRecords`, attendeeEmail), attendanceRecord);
-
         setAttendanceCaptured(true);
+        handleSubmit(attendanceRecord)
       } catch (err) {
         console.log('Error adding event attendance records');
         console.log(err);
@@ -66,6 +69,36 @@ export default function AttendanceForm() {
     }				
 
   }
+
+  const handleSubmit = async (record) => {
+
+    try {
+      const formData = new URLSearchParams();
+      formData.append("entry.1889964327", `${record.church}${record.email}${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`);
+      formData.append("entry.1070375190", '{real_ip}');
+      formData.append("entry.2045109208",`${Math.ceil(record.timestamp/1000)}`);
+      formData.append("entry.128336941", `${record.attendance}`);
+      formData.append("entry.244609626", `${record.email}`);
+      formData.append("entry.1229061700",`${user.firstName}`);
+      formData.append("entry.1152381045", `${user.lastName}`);
+      formData.append("entry.2077765430", `${user.title}`);
+      formData.append("entry.1546523996", `${currentPage.name}`);
+
+      const response = await fetch('https://docs.google.com/forms/d/1rGCZkxaCVqoUHcbHDKBXx4EddC1rcIDlzJWUt8XKmj4/formResponse?', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formData 
+      });
+
+      // const result = await response.json();
+      // console.log('Server Response:', result);
+
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  };
 
   return (
   <Box component="form" onSubmit={handleAttendance} sx={{ mt: 3 }}>
