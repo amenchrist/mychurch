@@ -9,7 +9,7 @@ import { useMyStore } from '../../store';
 
 export default function EmailForm() {
 
-  const { user } = useMyStore();
+  const { user, setUser } = useMyStore();
   
   const { attendeeEmail, setAttendeeEmail, attendanceCaptured, setIsRegistered, setEmailCaptured } = useWatchPageContext();
   
@@ -51,6 +51,9 @@ export default function EmailForm() {
         const docRef = doc(db, 'userProfiles', email)
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()){
+          const data = docSnap.data();
+          // console.log(data)
+          setUser({...{}, title: data.bioData.title, firstName: data.bioData.firstName, lastName: data.bioData.lastName,});
           // console.log("Email exists");
           // setIsRegistered(true)
           setEmailCaptured(true)
