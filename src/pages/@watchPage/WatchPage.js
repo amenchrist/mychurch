@@ -13,6 +13,7 @@ import { useWatchPageContext } from '../../contexts/WatchPageContextProvider';
 import Navbar from '../../components/WatchPage/NavBar';
 import VimeoPlayer from '../../components/WatchPage/VimeoPlayer';
 import BottomNav from '../../components/BottomNav';
+import FacebookPlayer from '../../components/WatchPage/FacebookPlayer';
 
 
 function WatchPage() {
@@ -45,7 +46,9 @@ function WatchPage() {
           <Grid item xs={12} md={8} >  
             <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
               {/* { event?.hasEnded && event?.archiveURL ? <VimeoPlayer /> : */}
-                {event?.hasStarted ? attendanceCaptured ? currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />:<VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
+                {event?.hasStarted ? attendanceCaptured ? 
+                currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />: currentPage.liveStreamURL.includes('facebook')? <FacebookPlayer />: 
+                <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
             </div>     
           </Grid>
           <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  justifyContent: 'space-between' ,alignItems: 'center',}} >
