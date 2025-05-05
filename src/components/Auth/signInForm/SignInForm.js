@@ -12,8 +12,7 @@ import { getUser } from "../../../dbQueryFunctions";
 
 export const SignInForm = ({setUsePassword}) => {
 
-  const setUser = useMyStore((store) => store.setUser)
-  const { setIsSignedIn } = useMyStore();
+  const { setUser, setIsSignedIn } = useMyStore();
   const navigate = useNavigate();
   const location = useLocation();
 

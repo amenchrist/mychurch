@@ -7,7 +7,7 @@ export default class User {
         const defaultUser = {
             id: null,
             emailVerified: false,
-            biodata: new Biodata(),
+            bioData: new Biodata(),
             contactInfo: new ContactInfo(),
             primaryPage: null,
             pages: [],

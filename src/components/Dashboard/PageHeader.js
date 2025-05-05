@@ -1,7 +1,9 @@
-import { Button, ButtonGroup, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material'
+import { Button, ButtonGroup, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useMyStore } from '../../store';
+import { Settings } from 'react-feather';
+
 
 function PageHeader() {
 
@@ -34,17 +36,24 @@ function PageHeader() {
     <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0', }}>
       <CardMedia sx={{ height: 140 }} image={currentPage.type === "USER"? "default bg.jpg" : "Jesus.jpg"} title="Cover photo" />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {currentPage?.name}
-        </Typography>
+        <Grid container justifyContent="space-between">
+          <Grid item>
+            <Typography gutterBottom variant="h5" component="div">
+              {currentPage?.name}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Settings onClick={() => navigate(`/${currentPage.handle}/profile`)} sx={{width: '2px'}}/>
+          </Grid>
+        </Grid>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {currentPage?.bio || 'No bio yet'}
         </Typography>
       </CardContent>
       {currentPage.type === "USER"? <></> : 
         <CardActions>
-        <Button size="small">Visit Website</Button>
-        {currentPage.type === "USER"? '' : <Button size="small" onClick={() => navigate(`/${currentPage.handle}/watch`)}>Watch Live Stream</Button>}
+        <Button size="small" href={`${currentPage.websiteURL}`}>Visit Website</Button>
+        <Button size="small" onClick={() => navigate(`/${currentPage.handle}/watch`)}>Watch Live Stream</Button>
         </CardActions>
       }
       {currentPage.type === "USER"? <UserDashNav /> : <ChurchDashNav />}

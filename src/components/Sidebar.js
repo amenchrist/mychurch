@@ -48,15 +48,16 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
       <Box sx={{alignItems: 'center', display: 'flex', flexDirection: 'column', p: 2 }} >
         <Avatar component={RouterLink} src={''} sx={{cursor: 'pointer', width: 64, height: 64 }} to="#" />
         <Typography color="textPrimary" variant="h5" align='center' >
-          {/* {user?.email? `${user.bioData?.title} ${user.bioData?.firstName} ${user.bioData?.lastName}` :'Guest'} */}
-          {currentPage? currentPage?.name : 'My Church'}
+          {user?.contactInfo.email? `${user.bioData?.title} ${user.bioData?.firstName} ${user.bioData?.lastName}` :'Guest'}
+          {/* {currentPage? currentPage?.name : 'My Church'} */}
         </Typography> 
         {/* <Typography color="textPrimary" variant="h5" align='center' >
           {user?.email? 'Sign Amen Out' : 'Sign Amen In'}
         </Typography> */}
         <Typography color="textSecondary" variant="body2" >
           {/* {currentPage? currentPage.name : 'Christ Embassy'} */}
-          {`${user.bioData?.title} ${user.bioData?.firstName} ${user.bioData?.lastName}`}
+          {user?.church}
+          {/* {`${user.bioData?.title} ${user.bioData?.firstName} ${user.bioData?.lastName}`} */}
         </Typography>
       </Box>
     )
@@ -85,27 +86,22 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
         height: '100%'
       }}
     >
-      {adminMode? <Header /> : <AdminHeader />}
+      {adminMode? <AdminHeader />: <Header />}
       <Divider />
       <Box sx={{ p: 2 }}>
         <List>
           {items.map((item) => {
-            const type  = currentPage?.type;
-
-            if (item.title === 'Home' && currentPage?.websiteURL ){
-              item.href = currentPage.websiteURL;
-            }
-
-          if(item.mode === type || item.mode === 'ALL'){
+           
             return (
               <NavItem
+                // href={item.href === 'church' ? `/${church}`: item.href === 'profile' ?`/${user.primaryPage}`:`${item.href}`}
                 href={item.href === 'church' ? `/${church}`: item.href === 'profile' ?`/${user.primaryPage}`:`${item.href}`}
                 key={item.title}
                 title={item.title}
                 icon={item.icon}
               />
             )
-          }
+
           })}
           {user.emailChecked? <NavItem href={'#'} key={'reset'} title={'Reset'} icon={RefreshCw} onClick={() => setUser({})}/>  : <></>}
         </List>
@@ -115,7 +111,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
         : <NavItem onClick={toggleMode} key={'Close Admin Mode'} title={'Close Admin Mode'} icon={Square}/>
         : <></>
         } */}
-        <NavItem href={`/pages`} title={'Pages'} icon={MinusSquare} />
+        {/* <NavItem href={`/pages`} title={'Pages'} icon={MinusSquare} /> */}
       
 
         {user?.contactInfo?.email?

@@ -14,14 +14,18 @@ import Navbar from '../../components/WatchPage/NavBar';
 import VimeoPlayer from '../../components/WatchPage/VimeoPlayer';
 import BottomNav from '../../components/BottomNav';
 import FacebookPlayer from '../../components/WatchPage/FacebookPlayer';
+import Event from '../../classes/Event';
 
 
 function WatchPage() {
 
   const { user, isMobileNavOpen, setMobileNavOpen } = useStateContext();
   
-  const { event, nextEvent, currentPage } = useMyStore();
+  const { event, currentPage } = useMyStore();
+  const nextEvent = useMyStore(store => new Event(store.nextEvent))
   const { attendanceCaptured } = useWatchPageContext();
+
+  console.log(nextEvent)
 
 
   const ServiceMessage = () => {
@@ -29,7 +33,7 @@ function WatchPage() {
       <div style={{color: 'white', width: "100%", height: '30vh',textAlign: 'center', padding: '20px', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
         {nextEvent ? <><p>NEXT EVENT</p>
         <h3>{nextEvent?.name.toUpperCase()}</h3>
-        <p>{dayjs(nextEvent.getTimestamp()).format('dddd, MMMM DD @ hh:mm a')}</p></> : <p>NO UPCOMING EVENTS</p>}
+        <p>{dayjs(nextEvent?.getTimestamp()).format('dddd, MMMM DD @ hh:mm a')}</p></> : <p>NO UPCOMING EVENTS</p>}
       </div>
     )
   }
@@ -47,7 +51,7 @@ function WatchPage() {
             <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
               {/* { event?.hasEnded && event?.archiveURL ? <VimeoPlayer /> : */}
                 {event?.hasStarted ? attendanceCaptured ? 
-                currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />: currentPage.liveStreamURL.includes('facebook')? <FacebookPlayer />: 
+                currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />: currentPage.liveStreamURL.includes('facebook')? <FacebookPlayer link={currentPage.liveStreamURL} />: 
                 <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
             </div>     
           </Grid>

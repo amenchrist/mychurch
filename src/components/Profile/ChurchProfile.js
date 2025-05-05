@@ -16,15 +16,17 @@ function ChurchProfile() {
   const [ updated, setUpdated ] = useState(false);
 
   const updatePage = async (e) => {
-    e?.preventDefault();
+    
+    e.preventDefault();
     const pageUpdate = {
       contactInfo: {email}, 
-      name, streamURL, websiteURL
+      name, liveStreamURL: streamURL, websiteURL
     }
     try {
       const updatedPage = await currentPage.update(pageUpdate)
       if(updatedPage){
         setCurrentPage(updatedPage);
+        setUpdated(false)
       }
     } catch (err) {
       console.log('Error updating event')

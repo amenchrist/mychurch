@@ -23,10 +23,10 @@ export default function AttendanceCard() {
 	useEffect(() => {
 
 		const checkParticipant = async () => {
-			const querySnap = await getDoc(doc(db, `pages/${currentPage.handle}/events/${event.id}/attendanceRecords`, user?.email))
+			const querySnap = await getDoc(doc(db, `pages/${currentPage.handle}/events/${event.id}/attendanceRecords`, user?.contactInfo.email))
 			setUserIsParticipant(querySnap.exists())
 		}
-		if(user?.email) {
+		if(user?.contactInfo.email) {
 			checkParticipant()
 		}		
 	}, [user, currentPage, event, setUserIsParticipant])

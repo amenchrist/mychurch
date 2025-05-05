@@ -27,7 +27,6 @@ import { WatchPageContextProvider } from './contexts/WatchPageContextProvider';
 import { DashboardContextProvider } from './contexts/DashboardContextProvider';
 import { RegistrationPageContextProvider } from './contexts/RegistrationContextProvider';
 import Home from './pages/Home';
-import BottomNav from './components/BottomNav';
 import PageHeader from './components/Dashboard/PageHeader';
 import EventForm from './components/EventForm';
 import NewPost from './components/NewPost';

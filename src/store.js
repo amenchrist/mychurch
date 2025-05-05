@@ -29,4 +29,4 @@ function store(set) {
 }
 
 // export const useMyStore = create(persist(store, {name: 'store'}));
-export const useMyStore = create(store, {name: 'store'});
+export const useMyStore = create(persist(store, {name: 'store'}));

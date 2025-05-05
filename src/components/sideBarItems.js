@@ -1,14 +1,49 @@
 import {
     BarChart, User, Users, CreditCard, Monitor, Calendar, Rss,
-    Clipboard, Bell, Mail, Home, Archive, Menu 
+    Clipboard, Bell, Mail, Home, Archive, Menu, MinusSquare 
 } from 'react-feather';
+
+import Diversity3Icon from '@mui/icons-material/Diversity3';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
+
 
 
 export const allItems = [
     {
       href: '/',
-      icon: BarChart,
-      title: 'Dashboard',
+      icon: Home,
+      title: 'Home',
+      mode: 'ALL'
+    },
+    {
+      href: '/pages',
+      icon: MinusSquare,
+      title: 'Pages',
+      mode: 'ALL'
+    },
+    // {
+    //   href: 'events',
+    //   icon: Calendar,
+    //   title: 'Upcoming Events',
+    //   mode: 'CHURCH'
+    // },
+    // {
+    //   href: 'watch',
+    //   icon: Monitor,
+    //   title: 'Watch',
+    //   mode: 'ALL'
+    // },
+    {
+      href: 'church',
+      icon: Diversity3Icon,
+      title: 'My Church',
+      mode: 'ALL'
+    },
+    {
+      href: 'profile',
+      icon: AccountCircleIcon,
+      title: 'Profile',
       mode: 'ALL'
     },
     // {
@@ -17,24 +52,6 @@ export const allItems = [
     //   title: 'Giving Records',
     //   mode: 'ALL'
     // },
-    {
-      href: 'events',
-      icon: Calendar,
-      title: 'Upcoming Events',
-      mode: 'CHURCH'
-    },
-    {
-      href: 'watch',
-      icon: Monitor,
-      title: 'Watch',
-      mode: 'ALL'
-    },
-    {
-      href: 'church',
-      icon: Home,
-      title: 'Home',
-      mode: 'ALL'
-    },
     // {
     //   href: 'conversations',
     //   icon: Mail,
@@ -65,12 +82,6 @@ export const allItems = [
     //   title: 'News Feed',
     //   mode: 'ALL'
     // },
-    {
-      href: 'profile',
-      icon: User,
-      title: 'Profile',
-      mode: 'ALL'
-    },
     // {
     //   href: 'reports',
     //   icon: Archive,
@@ -89,10 +100,4 @@ export const allItems = [
     //   title: 'Manage Admins',
     //   mode: 'CHURCH'
     // },
-    {
-      href: '/pages',
-      icon: Users,
-      title: 'Pages',
-      mode: ''
-    }
   ];

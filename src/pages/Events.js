@@ -21,7 +21,7 @@ export default function Events() {
   useEffect(() => {
     (async () => {
       try {
-        const events = await currentPage.getEvents()
+        const events = await currentPage?.getEvents()
         if(events){
           setEvents(events)
         }

@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, useRef, useMemo } from 'react';
 import { useMyStore } from '../store';
 import dayjs from 'dayjs';
+import Page from '../classes/Page';
+import Event from '../classes/Event';
 // import { getOrgDetails } from '../functions';
 
 const StateContext = createContext();
@@ -14,7 +16,9 @@ export const WatchPageContextProvider = ({ children }) => {
     console.log(`Watch Page Context provider Renders = ${rendered.current}`)
   }, []);
 
+  
   const { user, setUser, } = useMyStore();
+  console.log(user)
 
   //Set attendee defaults
   const [ isRegistered, setIsRegistered ] = useState(true);
@@ -23,7 +27,7 @@ export const WatchPageContextProvider = ({ children }) => {
 	const [ userIsParticipant, setUserIsParticipant ] = useState(false)
   const [ attendanceSubmitted, setAttendanceSubmitted ] = useState(false);
 
-  const [ attendeeEmail, setAttendeeEmail ] = useState(user?.email || '');
+  const [ attendeeEmail, setAttendeeEmail ] = useState(user?.contactInfo?.email || '');
   const [ attendanceCaptured, setAttendanceCaptured ] = useState(false);
   const [ attendanceRecord, setAttendanceRecord ] = useState({
     church: 'Christ Embassy Barking',
@@ -65,11 +69,15 @@ export const WatchPageContextProvider = ({ children }) => {
 // })
 
     const [ events, setEvents ] = useState([])
-    const { currentPage, event, setEvent, nextEvent, setNextEvent } = useMyStore();
+    const {  event, setEvent, setNextEvent } = useMyStore();
+    const currentPage = useMyStore(store => new Page(store.currentPage))
+    const nextEvent = useMyStore(store => new Event(store.nextEvent))
+    
+    
 
     useEffect(() => {
       const getEvents = async () => {
-        // console.log('searching for all events')
+        console.log('searching for all events')
         try {
           const events = await currentPage.getEvents()
           if(events){
@@ -103,7 +111,8 @@ export const WatchPageContextProvider = ({ children }) => {
       }
       getEvents();
   
-    }, [currentPage, setEvent, setNextEvent, nextEvent, event])
+    }, [])
+    //[currentPage, setEvent, setNextEvent, nextEvent, event]
 
     const ongoingEvent = events.find(e => e.hasStarted && e.hasEnded === false);
     useEffect(() => {
