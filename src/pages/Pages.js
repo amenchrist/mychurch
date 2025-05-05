@@ -18,7 +18,7 @@ function Pages() {
   }
 
   function PageList() {
-    const arr = user.pages
+    const arr = user?.pages || [];
 
     return (
       <div>
@@ -31,12 +31,11 @@ function Pages() {
           }
           {arr?.map((handle,i) => {
             return (
-              <div style={style} key={i} onClick={() => navigate(`/${handle}`)} >
+              <div style={style} key={i} onClick={() => navigate(`/${handle}`)}>
                 <p>{handle}</p>
               </div>
             )})
           }
-          
         </div>
       </div>
     )

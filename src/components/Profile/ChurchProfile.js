@@ -11,6 +11,7 @@ function ChurchProfile() {
   const [ name, setName] = useState(currentPage.name);
   const [ streamURL, setStreamURL] = useState(currentPage.liveStreamURL);
   const [ websiteURL, setWebsiteURL] = useState(currentPage.websiteURL || '');
+  const [ bannerURL, setBannerURL] = useState(currentPage.bannerURL || '');
 
 
   const [ updated, setUpdated ] = useState(false);
@@ -20,7 +21,7 @@ function ChurchProfile() {
     e.preventDefault();
     const pageUpdate = {
       contactInfo: {email}, 
-      name, liveStreamURL: streamURL, websiteURL
+      name, liveStreamURL: streamURL, websiteURL, bannerURL
     }
     try {
       const updatedPage = await currentPage.update(pageUpdate)
@@ -44,20 +45,23 @@ function ChurchProfile() {
             <Typography>Account Info</Typography>
           </Grid>
           <Grid item xs={12}>
+            <TextField required fullWidth label="Handle" value={handle} disabled />
+          </Grid>
+          <Grid item xs={12}>
             <TextField required fullWidth label="Name" value={name} onChange={(e) => setName(e.target.value)} />
           </Grid>   
           <Grid item xs={12}>
             <TextField required fullWidth label="Email Address" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </Grid>
           <Grid item xs={12}>
-          <TextField required fullWidth label="Handle" value={handle} onChange={(e) => setHandle(e.target.value)} />
+            <TextField required fullWidth label="Stream URL" value={streamURL} onChange={(e) => setStreamURL(e.target.value)} />
           </Grid>
           <Grid item xs={12}>
-          <TextField required fullWidth label="Stream URL" value={streamURL} onChange={(e) => setStreamURL(e.target.value)} />
+            <TextField required fullWidth label="Website URL" value={websiteURL} onChange={(e) => setWebsiteURL(e.target.value)} />
           </Grid>
           <Grid item xs={12}>
-          <TextField required fullWidth label="Website URL" value={websiteURL} onChange={(e) => setWebsiteURL(e.target.value)} />
-          </Grid>         
+            <TextField required multiline fullWidth label="Banner URL" value={bannerURL} onChange={(e) => setBannerURL(e.target.value)} />
+          </Grid> 
         </Grid>
         <Button type="submit" onClick={updatePage} disabled={!updated} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >Update</Button>
       </Box>

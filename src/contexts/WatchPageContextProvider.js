@@ -15,10 +15,8 @@ export const WatchPageContextProvider = ({ children }) => {
     rendered.current++
     console.log(`Watch Page Context provider Renders = ${rendered.current}`)
   }, []);
-
   
   const { user, setUser, } = useMyStore();
-  console.log(user)
 
   //Set attendee defaults
   const [ isRegistered, setIsRegistered ] = useState(true);
@@ -77,7 +75,7 @@ export const WatchPageContextProvider = ({ children }) => {
 
     useEffect(() => {
       const getEvents = async () => {
-        console.log('searching for all events')
+        // console.log('searching for all events')
         try {
           const events = await currentPage.getEvents()
           if(events){
