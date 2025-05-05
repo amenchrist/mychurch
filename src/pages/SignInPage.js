@@ -41,7 +41,7 @@ export default function SignInPage() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          {/* {usePassword? <SignInForm setUsePassword={setUsePassword} /> : <EmailSignInForm setUsePassword={setUsePassword}/>} */}
+          {usePassword? <SignInForm setUsePassword={setUsePassword} /> : <EmailSignInForm setUsePassword={setUsePassword}/>}
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>

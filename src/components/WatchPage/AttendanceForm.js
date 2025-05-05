@@ -103,6 +103,11 @@ export default function AttendanceForm() {
   return (
   <Box component="form" onSubmit={handleAttendance} sx={{ mt: 3 }}>
     <Grid container spacing={2}>
+    <Grid item justifyContent={'center'} xs={12}>
+      <Typography variant="body1" color="text.secondary" textAlign={'center'}>
+        Welcome {user.bioData.title}. {user.bioData.firstName}
+      </Typography>
+    </Grid>
       {/* <Grid item xs={12} >
         <TextField required select fullWidth id="Church" label="Church" name="Church" value={church} autoComplete="title" autoFocus onChange={(e) => setChurch(e.target.value)} >
           {churches.map((church) => (<MenuItem key={church.value} value={church.value}>{church.label}</MenuItem>))}

@@ -13,7 +13,7 @@ import ContactInfo from '../../classes/ContactInfo';
 
 export default function FirstTimersForm() {
   
-  const { attendeeEmail, setIsRegistered, setEmailCaptured } = useWatchPageContext();
+  const { attendeeEmail, setIsRegistered, setEmailCaptured, setUser } = useWatchPageContext();
 
   const [ firstName, setFirstName ] = useState('');
   const [ lastName, setLastName ] = useState('');
@@ -58,6 +58,7 @@ export default function FirstTimersForm() {
       console.log('New User Profile Added')
       setEmailCaptured(true);
       setIsRegistered(true);
+      setUser(newUser)
     } catch (err) {
       console.log('Error adding user profile')
       console.log(err);

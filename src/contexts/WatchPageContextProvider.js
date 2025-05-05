@@ -31,7 +31,6 @@ export const WatchPageContextProvider = ({ children }) => {
     church: 'Christ Embassy Barking',
   })
 
-
   const blankUser = {
     email: '',
     emailChecked: false,
@@ -43,7 +42,6 @@ export const WatchPageContextProvider = ({ children }) => {
     attendanceRecords: [],
     avatar: '/static/images/avatars/avatar_6.png',
   }
-  
 
 //   const [user, setUser] = useState(() => {
 //     const defaultUser = {
