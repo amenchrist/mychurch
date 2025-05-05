@@ -51,6 +51,7 @@ export default function EventPage({setNewEvent}) {
       const updatedEvent = await event.update(eventUpdate)
       if(updatedEvent){
         setEvent(updatedEvent);
+        setUpdated(false)
       }
     } catch (err) {
       console.log('Error updating event')

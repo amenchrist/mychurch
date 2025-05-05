@@ -15,10 +15,11 @@ export default function AttendanceCard() {
 
   const { emailCaptured, isRegistered, attendanceCaptured, setAttendanceCaptured, userIsParticipant, setUserIsParticipant } = useWatchPageContext();
 
-  const { event, user, setUser, currentPage } = useMyStore();
+  const { event, user, currentPage } = useMyStore();
   const [ enableLogIn, setEnableLogin ] = useState(true);
 
   // const userIsParticipant = event?.attendanceRecords.some(r => r.email === user.email);
+  console.log(user)
 
 	useEffect(() => {
 

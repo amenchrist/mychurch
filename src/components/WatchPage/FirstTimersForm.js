@@ -4,10 +4,12 @@ import { nameRegex, phoneRegex } from '../../regex';
 import { v4 as uuidv4 } from 'uuid';
 import { useWatchPageContext } from '../../contexts/WatchPageContextProvider';
 import { churches, handleValidation, titles } from './formAssets';
-import { Address, Biodata, ContactInfo } from '../../classes';
+// import { Address, Biodata, ContactInfo } from '../../classes';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { MuiTelInput } from 'mui-tel-input';
+import Biodata from '../../classes/Biodata';
+import ContactInfo from '../../classes/ContactInfo';
 
 export default function FirstTimersForm() {
   
@@ -38,16 +40,18 @@ export default function FirstTimersForm() {
   const handleSubmit = async (event) => {
 
     event.preventDefault();
-    // const bioData = new Biodata({ title, firstName, lastName })
-    // const contactInfo = new ContactInfo({ email: attendeeEmail, phoneNumber: phone, address: {...new Address()} })
+    const bioData = new Biodata({ title, firstName, lastName })
+    const contactInfo = new ContactInfo({ email: attendeeEmail, phoneNumber: phone, })
 
     const newUser = {
       id: `user_${uuidv4()}`,
-      // bioData: {...bioData},
-      // contactInfo: {...contactInfo},
+      bioData: {...bioData},
+      contactInfo: {...contactInfo},
       church, allowsMarketing,
       type: 'USER'
     }
+
+    console.log(newUser)
 
     try {
       await setDoc(doc(db, 'userProfiles', attendeeEmail), newUser);

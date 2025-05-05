@@ -79,9 +79,9 @@ export default function AttendanceForm() {
       formData.append("entry.2045109208",`${Math.ceil(record.timestamp/1000)}`);
       formData.append("entry.128336941", `${record.attendance}`);
       formData.append("entry.244609626", `${record.email}`);
-      formData.append("entry.1229061700",`${user.firstName}`);
-      formData.append("entry.1152381045", `${user.lastName}`);
-      formData.append("entry.2077765430", `${user.title}`);
+      formData.append("entry.1229061700",`${user.bioData.firstName}`);
+      formData.append("entry.1152381045", `${user.bioData.lastName}`);
+      formData.append("entry.2077765430", `${user.bioData.title}`);
       formData.append("entry.1546523996", `${currentPage.name}`);
 
       const response = await fetch('https://docs.google.com/forms/d/1rGCZkxaCVqoUHcbHDKBXx4EddC1rcIDlzJWUt8XKmj4/formResponse?', {

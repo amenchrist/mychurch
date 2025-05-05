@@ -34,7 +34,7 @@ function PageHeader() {
 
   return (
     <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0', }}>
-      <CardMedia sx={{ height: 140 }} image={currentPage.type === "USER"? "default bg.jpg" : `${currentPage.bannerURL}`} title="Cover photo" />
+      <CardMedia sx={{ height: 140 }} image={currentPage?.type === "USER"? "default bg.jpg" : `${currentPage?.bannerURL}`} title="Cover photo" />
       <CardContent>
         <Grid container justifyContent="space-between">
           <Grid item>
