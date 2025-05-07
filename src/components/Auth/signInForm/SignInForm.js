@@ -38,8 +38,9 @@ export const SignInForm = ({setUsePassword}) => {
     e.preventDefault();
     //Sign in flow
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const valentine = await signInWithEmailAndPassword(auth, email, password);
       const user = await getUser(email)
+      console.log(valentine)
       if(user){
         setUser(user)
         setIsSignedIn(true);

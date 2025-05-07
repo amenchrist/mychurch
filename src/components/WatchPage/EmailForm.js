@@ -6,10 +6,12 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { useWatchPageContext } from '../../contexts/WatchPageContextProvider';
 import { useMyStore } from '../../store';
+import User from '../../classes/User';
 
 export default function EmailForm() {
 
-  const { user, setUser } = useMyStore();
+  const { setUser, setIsSignedIn, isSignedIn } = useMyStore();
+  const user = useMyStore(store => new User(store.user))
   
   const { attendeeEmail, setAttendeeEmail, attendanceCaptured, setIsRegistered, setEmailCaptured } = useWatchPageContext();
   
@@ -75,6 +77,19 @@ export default function EmailForm() {
     })()
 
   }  
+
+   //LOG USER OUT
+    const logOut = async () => {
+      setEmail('');
+      try {
+        await user.logOut();
+        setIsSignedIn(false)
+        setUser(null)
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    
   
 
   return (
@@ -82,11 +97,14 @@ export default function EmailForm() {
       <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}  >
         <Grid container spacing={2} >
           <Grid item xs={12} >
-            <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" value={email} error={!valid} autoFocus 
+            <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" value={email} error={!valid} autoFocus disabled={isSignedIn}
             onChange={(e) => handleValidation(e.target.value)}
             />
           </Grid>
         </Grid>
+        {isSignedIn? <Typography component="h5" variant="p" sx={{ mt: 2,  textAlign: 'right', color: 'gray'}} onClick={logOut} >
+            Change Email 
+        </Typography> : <></>}
         {!emailFound? <Typography component="h5" variant="p" sx={{ mt: 2,  textAlign: 'center', color: 'red' }}>
             Email not found! Are you new here?
         </Typography> : <></> }

@@ -112,6 +112,7 @@ export const WatchPageContextProvider = ({ children }) => {
 
     const ongoingEvent = events.find(e => e.hasStarted && e.hasEnded === false);
     useEffect(() => {
+      console.log('Setting event to ongoing event')
       if(ongoingEvent !== undefined && ongoingEvent?.id !== event?.id){
         setEvent(ongoingEvent);
       } 
@@ -119,6 +120,7 @@ export const WatchPageContextProvider = ({ children }) => {
 
     //Automatically Start Event 
     useEffect(() => {
+      console.log('auto starting event')
       const today = dayjs(dayjs().format('YYYY-MM-DD')).toDate().toString()
       const startEvent = async () => {
         const update = { hasStarted: true, startTimestamp: new Date().getTime() }

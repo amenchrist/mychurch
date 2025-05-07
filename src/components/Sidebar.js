@@ -14,7 +14,6 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
   // const user = useMyStore(store => store.user);
   const { setUser, adminMode, toggleAdminMode, user, currentPage, setIsSignedIn } = useMyStore();
   const [items, setItems] = useState(allItems.filter((item) => item.mode !== 'ADMIN'))
-  const location = useLocation();
   const navigate = useNavigate();
 
   const [ openMenu, setOpenMenu ] = useState(false);

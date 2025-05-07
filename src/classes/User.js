@@ -1,6 +1,8 @@
 import { constructorHelper } from "./helpers";
 import Biodata from "./Biodata";
 import ContactInfo from "./ContactInfo";
+import { signOut } from "firebase/auth";
+import { auth } from "../config/firebase";
 
 export default class User {
     constructor(data){
@@ -24,4 +26,14 @@ export default class User {
 
     makePost(postID, postContent) {}
     createPage(){}
+
+    async logOut() {
+        try {
+            await signOut(auth);
+            return true
+          } catch (err) {
+            console.error(err);
+            return err
+          }
+    }
 }

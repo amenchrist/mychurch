@@ -12,14 +12,27 @@ import { useMyStore } from '../store';
 import MonitorIcon from '@mui/icons-material/Monitor';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { Box } from '@mui/material';
+import User from '../classes/User';
 
 function BottomNav({showOnLg}) {
 
-  const { user, currentPage } = useMyStore();
+  const { currentPage, setIsSignedIn, setUser, isSignedIn } = useMyStore();
+  const user = useMyStore(store => new User(store.user))
   const navigate = useNavigate();
   
   const church = user?.church?.toLowerCase().replace(/\s/g, '');
   const style =  {height: '10vh', width: '100%', border: '2px solid', }
+
+  //LOG USER OUT
+  const logOut = async () => {
+    try {
+      await user.logOut();
+      setIsSignedIn(false)
+      setUser(null)
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <Box sx={{...style, display: { lg: showOnLg? 'block' : 'none', md: 'none', xs: 'block' }, }}>
@@ -36,7 +49,7 @@ function BottomNav({showOnLg}) {
         <IconButton aria-label="Community" onClick={() => navigate(`/${church}`)}>
           <Diversity3Icon />
         </IconButton>
-        <IconButton aria-label="Profile" onClick={() => navigate(`/${user.primaryPage}`)}>
+        <IconButton aria-label="Profile" onClick={() => isSignedIn? navigate(`/${user.primaryPage}`): logOut()}>
           <AccountCircleIcon />
         </IconButton>
       </Stack>
