@@ -14,15 +14,16 @@ import Navbar from '../../components/WatchPage/NavBar';
 import VimeoPlayer from '../../components/WatchPage/VimeoPlayer';
 import FacebookPlayer from '../../components/WatchPage/FacebookPlayer';
 import Event from '../../classes/Event';
+import EventCard from '../../components/EventCard';
 
 
 function WatchPage() {
 
   const { user, isMobileNavOpen, setMobileNavOpen } = useStateContext();
   
-  const { event, currentPage } = useMyStore();
+  const { event, currentPage,  } = useMyStore();
   const nextEvent = useMyStore(store => new Event(store.nextEvent))
-  const { attendanceCaptured } = useWatchPageContext();
+  const { attendanceCaptured, events } = useWatchPageContext();
 
   const ServiceMessage = () => {
     return (
@@ -32,6 +33,19 @@ function WatchPage() {
         <p>{dayjs(nextEvent?.getTimestamp()).format('dddd, MMMM DD @ hh:mm a')}</p></> : <p>NO UPCOMING EVENTS</p>}
       </div>
     )
+  }
+
+  const PastEvents = () => {
+    return (
+      <div style={{width: '100%', border: '2px solid',  height: '150px'}}>
+        Past Events
+        {events.map(a => <EventCard event={a} /> )}
+      </div>
+    )
+  }
+
+  const UpcomingEvents = () => {
+
   }
 
   return (
@@ -51,10 +65,11 @@ function WatchPage() {
                 <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
             </div>     
           </Grid>
-          <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  justifyContent: 'space-between' ,alignItems: 'center',}} >
+          <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", height: '50%', flexDirection: 'column',  justifyContent: 'space-between' ,alignItems: 'center',}} >
             {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }
             {/* {user.attendanceSubmitted? <FullWidthTabs /> : <></> } */}
             {/* <BottomNav showOnLg={true}/>  */}
+            <PastEvents />
           </Grid>
         </Grid>
           
