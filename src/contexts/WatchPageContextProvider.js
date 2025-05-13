@@ -65,6 +65,7 @@ export const WatchPageContextProvider = ({ children }) => {
 // })
 
     const [ events, setEvents ] = useState([])
+    const [ pastEvents, setPastEvents ] = useState([])
     const {  event, setEvent, setNextEvent } = useMyStore();
     const currentPage = useMyStore(store => new Page(store.currentPage))
     const nextEvent = useMyStore(store => new Event(store.nextEvent))
@@ -77,7 +78,10 @@ export const WatchPageContextProvider = ({ children }) => {
         try {
           const events = await currentPage.getEvents()
           if(events){
-            const relevantEvents = events.filter((e)=> (e.hasStarted && !e.hasEnded) || e.getTimestamp() >= new Date().getTime()).sort((e1,e2) => dayjs(e1.getTimestamp) - dayjs(e2.getTimestamp));
+            const relevantEvents = events.filter((e)=> (e.hasStarted && !e.hasEnded) || e.getTimestamp() >= new Date().getTime()).sort((e1,e2) => dayjs(e1.getTimestamp()) - dayjs(e2.getTimestamp()));
+            const endedEvents = events.filter( e => e.hasEnded === true && e.archiveURL !== ''  && e.archiveURL !== null ).sort((e1,e2) => dayjs(e2.endTimestamp) - dayjs(e1.endTimestamp));
+            console.log(endedEvents)
+            setPastEvents(endedEvents)
           
             const ongoingEvent = relevantEvents.find(e => e.hasStarted && e.hasEnded === false);
             if (ongoingEvent === undefined && event !== null){
@@ -135,7 +139,7 @@ export const WatchPageContextProvider = ({ children }) => {
           console.log(err);
         }
       }
-      if(nextEvent && nextEvent.hasStarted === false && nextEvent.date === today){
+      if(nextEvent && nextEvent.hasStarted === false && nextEvent.date === today && nextEvent.id !== ongoingEvent?.id){
         startEvent()
         
       } 
@@ -165,8 +169,8 @@ export const WatchPageContextProvider = ({ children }) => {
   const contextStateVars = {
 
     attendeeEmail, setAttendeeEmail, emailCaptured, setEmailCaptured, attendanceCaptured, setAttendanceCaptured, isRegistered, setIsRegistered,
-    isAdmin, setIsAdmin, attendanceSubmitted, setAttendanceSubmitted,
-    user, setUser, blankUser, userIsParticipant, setUserIsParticipant, events, setEvents
+    isAdmin, setIsAdmin, attendanceSubmitted, setAttendanceSubmitted, pastEvents,
+    user, setUser, blankUser, userIsParticipant, setUserIsParticipant, events, setEvents, 
 
   }
 

@@ -148,7 +148,7 @@ export default function Router() {
         { path: 'new', element: <NewPost /> },
       ],
     },
-    { path: '*', element: <ErrorPage /> },
+    // { path: '*', element: <ErrorPage /> },
   ]
 
   return useRoutes(routes);

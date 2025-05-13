@@ -49,7 +49,7 @@ export default function AttendanceCard() {
   return (
     // <div style={{padding: 30,}}>
 			<Card sx={{ maxWidth: 380, borderRadius: 0.5, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', p:2}}>
-        <Box sx={{ display: 'flex' }}>
+        {/* <Box sx={{ display: 'flex' }}>
           <CardMedia
             component="img"
             sx={{ width: 151 }}
@@ -70,7 +70,7 @@ export default function AttendanceCard() {
               </Typography>
             </CardContent>
           </Box>
-        </Box>
+        </Box> */}
         { userIsParticipant || emailCaptured ? <AttendanceForm /> : isRegistered? <EmailForm /> : <FirstTimersForm /> }
 
         {/* <CardMedia

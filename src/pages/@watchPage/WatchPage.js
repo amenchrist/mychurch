@@ -23,9 +23,10 @@ function WatchPage() {
 
   const { user, isMobileNavOpen, setMobileNavOpen } = useStateContext();
   
-  const { event, currentPage,  } = useMyStore();
+  const {  currentPage,  } = useMyStore();
   const nextEvent = useMyStore(store => new Event(store.nextEvent))
-  const { attendanceCaptured, events } = useWatchPageContext();
+  const event = useMyStore(store => new Event(store.event))
+  const { attendanceCaptured, events, pastEvents, } = useWatchPageContext();
 
   const ServiceMessage = () => {
     return (
@@ -42,7 +43,7 @@ function WatchPage() {
       <Grid sx={{width: '100%', borderTop: '2px solid',  height: '50%', p:1}}>
         <Typography variant='h6'>Past Events</Typography>
 
-        {events.map((a,i) => <EventCard event={a} key={i} /> )}
+        {pastEvents.map((a,i) => <EventCard event={a} key={i} /> )}
       </Grid>
     )
   }
@@ -63,10 +64,10 @@ function WatchPage() {
           </div>     
         </Grid>
         <Grid sx={{width: '100%', height: '10%', p:1, borderBottom: '2px solid' }}>
-          <Typography variant='h6'>Event Name</Typography>
-          <Typography variant='p'>Event Description</Typography>
+          <Typography variant='h6'>{event?.name || 'No Upcoming Event'}</Typography>
+          <Typography variant='p'>{event?.formattedDate() || ''}</Typography>
         </Grid>
-        <Grid item xs={12} style={{display: 'flex', width: "100%", height: '40%', flexDirection: 'column',  justifyContent: 'space-between', alignItems: 'center', overflowY: 'auto'} } >
+        <Grid item xs={12} sx={{display: 'flex', width: "100%", height: '40%', flexDirection: 'column',  justifyContent: 'space-between', alignItems: 'center', overflowY: 'auto'} } >
           {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }
           <PastEvents />
         </Grid>
@@ -77,21 +78,25 @@ function WatchPage() {
 
   const NonMobileWatchPage = () => {
     return (
-      <Grid container sx={{ height: "90vh" }} >
-          <Grid item xs={12} md={8} >  
-            <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-              {/* { event?.hasEnded && event?.archiveURL ? <VimeoPlayer /> : */}
-                {event?.hasStarted ? attendanceCaptured ? 
-                currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />: currentPage.liveStreamURL.includes('facebook')? <FacebookPlayer link={currentPage.liveStreamURL} />: 
-                <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
-            </div>     
-          </Grid>
-          <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  justifyContent: 'space-between', alignItems: 'center' , border: '2px solid red', overflowY: 'auto'} } >
-            {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }
-            <PastEvents />
-            <BottomNav showOnLg={false}/> 
-          </Grid>
+      <Grid container sx={{ height: "90vh", display: { xs: 'none', md: 'flex', lg: 'flex' }, }} >
+        <Grid item md={8} sx={{ height: "100%",}} >  
+          <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '90%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            {/* { event?.hasEnded && event?.archiveURL ? <VimeoPlayer /> : */}
+              {event?.hasStarted ? attendanceCaptured ? 
+              currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />: currentPage.liveStreamURL.includes('facebook')? <FacebookPlayer link={currentPage.liveStreamURL} />: 
+              <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
+          </div> 
+          <Grid sx={{width: '100%', height: '10%', p:1, borderBottom: '2px solid' }}>
+            <Typography variant='h6'>{event?.name || 'No Upcoming Event'}</Typography>
+            <Typography variant='p'>{event?.formattedDate() || ''}</Typography>
+          </Grid>    
         </Grid>
+        <Grid item md={4} style={{display: 'flex', width: "100%",  height: '100%', flexDirection: 'column',  justifyContent: 'space-between', alignItems: 'center' , overflowY: 'auto'} } >
+          {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }
+          <PastEvents />
+          {/* <BottomNav showOnLg={false}/>  */}
+        </Grid>
+      </Grid>
     )
   }
 
@@ -101,6 +106,7 @@ function WatchPage() {
         <Navbar openSideBar={setMobileNavOpen} /> 
         <WatchPageSidebar onMobileClose={() => setMobileNavOpen(false)} openMobile={isMobileNavOpen} />
         <MobileWatchPage />
+        <NonMobileWatchPage />
       </Box>
     </>
   )

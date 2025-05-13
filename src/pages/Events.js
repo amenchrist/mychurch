@@ -6,10 +6,13 @@ import EventForm from '../components/EventForm';
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PageHeader from '../components/Dashboard/PageHeader';
+import Page from '../classes/Page';
 
 export default function Events() {
 
-  const { currentPage, setEvent } = useMyStore();
+  const { setEvent } = useMyStore();
+  const currentPage = useMyStore((store) => new Page(store.currentPage))
+  
   const [ newEvent, setNewEvent ] = useState(false);
   const [ events, setEvents ] = useState([]);
   const navigate = useNavigate();
