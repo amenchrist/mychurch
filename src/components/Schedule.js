@@ -10,10 +10,9 @@ export default function Schedule() {
   const { events } = useWatchPageContext();
 
   return (
-      <Box sx={{ width: '100%',  display: 'flex', flexDirection:'column', justifyContent: 'space-between'}}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={12} >
-            <Box>
+      <Box sx={{ width: '100%',  display: 'flex', flexDirection:'column', justifyContent: 'space-between', height: '50%', overflowY: 'hidden'}}>
+          <Grid item xs={12} md={12} sx={{height: '100%',}}>
+            <Box sx={{ height: '100%'}}>
               <Grid container justifyContent="flex-start" sx={{ p: 1, }}>
                 <Grid item>
                   <Typography variant="h6" component="div">Schedule</Typography>
@@ -35,7 +34,8 @@ export default function Schedule() {
               </List>
             </Box>
           </Grid>
-        </Grid>
+        {/* <Grid container sx={{height: '100%', border: '2px solid blue', }}>
+        </Grid> */}
       </Box>
     )
 }

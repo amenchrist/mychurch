@@ -15,6 +15,8 @@ import VimeoPlayer from '../../components/WatchPage/VimeoPlayer';
 import FacebookPlayer from '../../components/WatchPage/FacebookPlayer';
 import Event from '../../classes/Event';
 import EventCard from '../../components/EventCard';
+import BottomNav from '../../components/BottomNav';
+import { Hidden, Typography } from '@mui/material';
 
 
 function WatchPage() {
@@ -37,10 +39,11 @@ function WatchPage() {
 
   const PastEvents = () => {
     return (
-      <div style={{width: '100%', border: '2px solid',  height: '150px'}}>
-        Past Events
-        {events.map(a => <EventCard event={a} /> )}
-      </div>
+      <Grid sx={{width: '100%', borderTop: '2px solid',  height: '50%', p:1}}>
+        <Typography variant='h6'>Past Events</Typography>
+
+        {events.map((a,i) => <EventCard event={a} key={i} /> )}
+      </Grid>
     )
   }
 
@@ -48,15 +51,33 @@ function WatchPage() {
 
   }
 
-  return (
-    <>
-      <Box sx={{ flexGrow: 1, height: '100vh' }}>
-        <Navbar openSideBar={setMobileNavOpen} /> 
-        <WatchPageSidebar 
-        onMobileClose={() => setMobileNavOpen(false)}
-        openMobile={isMobileNavOpen}
-        />
-        <Grid container sx={{ height: "90%" }} >
+  const MobileWatchPage = () => {
+    return (
+      <Grid container sx={{ height: "90vh", display: { xs: 'flex', md: 'none', lg: 'none' }, alignContent: 'space-between', }} >
+        <Grid item xs={12} sx={{height: '40%', }} >  
+          <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            {/* { event?.hasEnded && event?.archiveURL ? <VimeoPlayer /> : */}
+              {event?.hasStarted ? attendanceCaptured ? 
+              currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />: currentPage.liveStreamURL.includes('facebook')? <FacebookPlayer link={currentPage.liveStreamURL} />: 
+              <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
+          </div>     
+        </Grid>
+        <Grid sx={{width: '100%', height: '10%', p:1, borderBottom: '2px solid' }}>
+          <Typography variant='h6'>Event Name</Typography>
+          <Typography variant='p'>Event Description</Typography>
+        </Grid>
+        <Grid item xs={12} style={{display: 'flex', width: "100%", height: '40%', flexDirection: 'column',  justifyContent: 'space-between', alignItems: 'center', overflowY: 'auto'} } >
+          {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }
+          <PastEvents />
+        </Grid>
+        <BottomNav showOnLg={false}/> 
+      </Grid>
+    )
+  }
+
+  const NonMobileWatchPage = () => {
+    return (
+      <Grid container sx={{ height: "90vh" }} >
           <Grid item xs={12} md={8} >  
             <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
               {/* { event?.hasEnded && event?.archiveURL ? <VimeoPlayer /> : */}
@@ -65,14 +86,21 @@ function WatchPage() {
                 <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
             </div>     
           </Grid>
-          <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", height: '50%', flexDirection: 'column',  justifyContent: 'space-between' ,alignItems: 'center',}} >
+          <Grid item xs={12} md={4} style={{display: 'flex', width: "100%", flexDirection: 'column',  justifyContent: 'space-between', alignItems: 'center' , border: '2px solid red', overflowY: 'auto'} } >
             {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }
-            {/* {user.attendanceSubmitted? <FullWidthTabs /> : <></> } */}
-            {/* <BottomNav showOnLg={true}/>  */}
             <PastEvents />
+            <BottomNav showOnLg={false}/> 
           </Grid>
         </Grid>
-          
+    )
+  }
+
+  return (
+    <>
+      <Box sx={{ flexGrow: 1, height: '100vh' }}>
+        <Navbar openSideBar={setMobileNavOpen} /> 
+        <WatchPageSidebar onMobileClose={() => setMobileNavOpen(false)} openMobile={isMobileNavOpen} />
+        <MobileWatchPage />
       </Box>
     </>
   )
