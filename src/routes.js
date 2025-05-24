@@ -105,7 +105,7 @@ export default function Router() {
   const routes = [
     { path: '/', element: isSignedIn? <><Sidebar /><Home /></> : <SignInPage /> } , //Form will only show if user is not signed in due to forced redirect setting
     { path: 'pages', element: isSignedIn? <><Sidebar /><Pages /></> : <SignInPage /> } ,
-    // { path: 'register', element: <RegistrationPageContextProvider ><SignUpPage /></RegistrationPageContextProvider> } , //Form will only show if user is not signed in due to forced redirect setting
+    { path: 'register', element: <RegistrationPageContextProvider ><SignUpPage /></RegistrationPageContextProvider> } , //Form will only show if user is not signed in due to forced redirect setting
     { path: ':handle/watch', element: currentPage?.type === "CHURCH" ? <WatchPageContextProvider ><WatchPage /></WatchPageContextProvider> : <ErrorPage /> } ,   
     { 
       path: ':handle', 

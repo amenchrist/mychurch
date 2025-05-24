@@ -38,10 +38,10 @@ export default function AccountInfo() {
             <TextField required fullWidth id="email" label="Email Address" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </Grid>
           <Grid item xs={12}>
-            <TextField required fullWidth  label="Password" type="password" id="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <TextField required fullWidth label="Password" type="password" id="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </Grid>
           <Grid item xs={12}>
-          <TextField required fullWidth id="handle" label="handle" placeholder="@" value={handle} onChange={(e) => setHandle(e.target.value)} />
+          <TextField required fullWidth id="handle" label="handle" placeholder="" value={handle} onChange={(e) => setHandle(e.target.value)} />
           </Grid>         
         </Grid>
         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >Continue</Button>

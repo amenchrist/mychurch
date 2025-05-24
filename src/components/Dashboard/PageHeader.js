@@ -1,13 +1,13 @@
-import { Button, ButtonGroup, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material'
+import { Button, ButtonGroup, Card, CardActions, CardContent, CardMedia, Grid, IconButton, Typography } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useMyStore } from '../../store';
-import { Settings } from 'react-feather';
+import { Settings, Power as PowerIcon } from 'react-feather';
 
 
 function PageHeader() {
 
-  const { currentPage, user } = useMyStore();
+  const { currentPage, user, setIsSignedIn, setUser } = useMyStore();
   const navigate = useNavigate();
   const church = user?.church?.toLowerCase().replace(/\s/g, '');
 
@@ -30,11 +30,28 @@ function PageHeader() {
     )
   }
 
+  //LOG USER OUT
+    const logOut = async () => {
+      try {
+        await user.logOut();
+        setIsSignedIn(false)
+        setUser(null)
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
 
 
   return (
     <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0', }}>
       <CardMedia sx={{ height: 140 }} image={currentPage?.type === "USER"? "default bg.jpg" : `${currentPage?.bannerURL}`} title="Cover photo" />
+      <IconButton
+        sx={{ position: 'absolute', top: 8, right: 20, color: 'white' }}
+        aria-label="log-out"
+      >
+        <PowerIcon onClick={logOut} />
+      </IconButton>
       <CardContent>
         <Grid container justifyContent="space-between">
           <Grid item>

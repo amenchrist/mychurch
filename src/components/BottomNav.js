@@ -35,7 +35,7 @@ function BottomNav({showOnLg}) {
   };
 
   return (
-    <Box sx={{...style, display: { lg: showOnLg? 'block' : 'none', md: 'none', xs: 'block' }, }}>
+    <Box sx={{...style, display: { lg: showOnLg? 'block' : 'none', md: 'none', xs: 'block' }, alignSelf: 'flex-end'}}>
       <Stack direction="row" spacing={1} sx={{height: '100%', display: 'flex', justifyContent: 'center',alignItems: 'center'}} >
         <IconButton  aria-label="Home" onClick={() => navigate(`/`)}>
           <HomeIcon sx={{}} />

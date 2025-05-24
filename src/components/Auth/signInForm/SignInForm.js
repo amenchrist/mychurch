@@ -6,7 +6,6 @@ import { doc, getDoc } from "firebase/firestore";
 import { Box, Button, Grid, Link, TextField, Typography } from "@mui/material";
 import { emailRegex } from "../../../regex";
 import { useLocation, useNavigate } from "react-router-dom";
-import User from "../../../classes/User";
 import { getUser } from "../../../dbQueryFunctions";
 
 
@@ -129,14 +128,14 @@ export const SignInForm = ({setUsePassword}) => {
               </Grid>
             </Grid>
           </Box>
-    <Button
+    {/* <Button
         fullWidth
         variant="outlined"
         sx={{ mt: 1, mb: 2 }}
         onClick={() => setUsePassword(false)}
       >
         Sign In with Email Link
-      </Button>
+      </Button> */}
     </>
   );
 };

@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { auth, db } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import {  useNavigate } from "react-router-dom";
-import { User } from '../classes';
+import User  from '../classes/User';
 import { createPage, createUserProfile } from '../dbQueryFunctions';
 
 const StateContext = createContext();
@@ -17,6 +17,8 @@ export const RegistrationPageContextProvider = ({ children }) => {
     rendered.current++
     console.log(`Registration Page Context provider Renders = ${rendered.current}`)
   }, []);
+
+  const navigate = useNavigate();
 
   const { setUser, currentPage } = useMyStore();
   const [ error, setError ] = useState(false);
@@ -33,27 +35,49 @@ export const RegistrationPageContextProvider = ({ children }) => {
   const [ bioData, setBioData ] = useState({}) //{ title, firstName, middleName, lastName, gender, dateOfBirth, maritalStatus, nationality }
   const contactInfo = { email, phoneNumber, address }
 
-  const navigate = useNavigate();
+  let userCred = null;
+  let userAuthCreated = false
+  let userProfileCreated = false
+
+  const newUser = {
+    id: `user_${uuidv4()}`,
+    bioData,
+    contactInfo,
+    likedPosts: [],
+    savedPosts: [],
+    events: [],
+    notes: [],
+    reviews: [],
+    type: 'USER',
+    primaryPage: handle
+  }
 
   const signUp = async () => {
+    console.log(credentials)
     try {
-      const userCred = await createUserWithEmailAndPassword(auth, email, password);
-
-      const newUser = {
-        id: `user_${uuidv4()}`,
-        bioData,
-        contactInfo,
-        likedPosts: [],
-        savedPosts: [],
-        events: [],
-        notes: [],
-        reviews: [],
-        type: 'USER',
-        primaryPage: handle
+      userCred = await createUserWithEmailAndPassword(auth, email, password);
+      
+      if(userCred){
+        userAuthCreated = true
       }
-      const userCreated = await createUserProfile(newUser);
+      
+    } catch (err) {
+      setError(true)
+      console.log('Error Creating New user auth')
+      console.error(err);
+    }
 
-      if (userCreated){
+    try {
+      if (userAuthCreated){
+        userProfileCreated = await createUserProfile(newUser);
+      }
+    } catch (err){
+      console.log('Error Creating New user profile')
+      console.error(err);
+    }
+
+    try {
+      if(userProfileCreated){
         const { firstName, lastName } = bioData
         const newPage = {
           id: uuidv4(),
@@ -69,7 +93,7 @@ export const RegistrationPageContextProvider = ({ children }) => {
           creatorID: newUser.id,
           creationTimestamp: new Date().getTime()
         }
-
+  
         const pageCreated = await createPage(newPage);
         if (pageCreated){
           setUser({...userCred.user, ...new User(newUser)});
@@ -77,9 +101,8 @@ export const RegistrationPageContextProvider = ({ children }) => {
         }
       }
     } catch (err) {
-      setError(true)
-      console.log('Error Creating New user')
-      console.error(err);
+        console.log('Error Creating New page')
+        console.error(err);
     }
   };
   
