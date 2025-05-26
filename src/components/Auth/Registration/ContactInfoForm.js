@@ -9,7 +9,6 @@ export default function ContactInfoForm() {
 
 
   const [ error, setError ] = useState(false);
-  const [ phoneNumber, setPhoneNumber ] = useState('');
   const [ houseNameOrNumber, setHouseNameOrNumber ] = useState('');  
   const [ street, setStreet ] = useState('');  
   const [ cityOrTown, setCityOrTown ] = useState('');  
@@ -38,9 +37,7 @@ export default function ContactInfoForm() {
             <Typography onClick={() => setStage(2)} >{'<--'}</Typography>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <TextField fullWidth label="Phone Number" type="text" id="phoneNumber" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-        </Grid>
+        
         <Grid item xs={12}>
           <TextField fullWidth label="House Name of Number" type="text" id="houseNameOrNumber" value={houseNameOrNumber} onChange={(e) => setHouseNameOrNumber(e.target.value)} />
         </Grid>

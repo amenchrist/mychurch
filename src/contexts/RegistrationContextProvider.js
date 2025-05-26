@@ -26,14 +26,14 @@ export const RegistrationPageContextProvider = ({ children }) => {
   const [ stage, setStage ] = useState(1);
 
   //New User Authentication states
-  const [ credentials, setCredentials ] = useState('')
-  const [ phoneNumber, setPhoneNumber ] = useState('');
-
-  const { email, password, handle } = credentials;
+  // const [ credentials, setCredentials ] = useState({})
+  const [ userDetails, setUserDetails ] = useState({})
+  const { email, phoneNumber, password, church } = userDetails;
   
   const [ address, setAddress ] = useState({})
   const [ bioData, setBioData ] = useState({}) //{ title, firstName, middleName, lastName, gender, dateOfBirth, maritalStatus, nationality }
   const contactInfo = { email, phoneNumber, address }
+
 
   let userCred = null;
   let userAuthCreated = false
@@ -43,17 +43,12 @@ export const RegistrationPageContextProvider = ({ children }) => {
     id: `user_${uuidv4()}`,
     bioData,
     contactInfo,
-    likedPosts: [],
-    savedPosts: [],
-    events: [],
-    notes: [],
-    reviews: [],
     type: 'USER',
-    primaryPage: handle
+    church,
+    // primaryPage: handle
   }
 
   const signUp = async () => {
-    console.log(credentials)
     try {
       userCred = await createUserWithEmailAndPassword(auth, email, password);
       
@@ -83,7 +78,8 @@ export const RegistrationPageContextProvider = ({ children }) => {
           id: uuidv4(),
           type: 'PERSON',
           name: `${firstName} ${lastName}`, 
-          handle, bio: '', contactInfo,
+          // handle, 
+          bio: '', contactInfo,
           followers: [],
           events: [],
           posts: [],
@@ -97,7 +93,7 @@ export const RegistrationPageContextProvider = ({ children }) => {
         const pageCreated = await createPage(newPage);
         if (pageCreated){
           setUser({...userCred.user, ...new User(newUser)});
-          navigate(`/${handle}`);
+          // navigate(`/${handle}`);
         }
       }
     } catch (err) {
@@ -107,7 +103,7 @@ export const RegistrationPageContextProvider = ({ children }) => {
   };
   
   const contextStateVars = {
-    bioData, setBioData, stage, setStage, address, setAddress, signUp, password, setCredentials 
+    bioData, setBioData, stage, setStage, address, setAddress, signUp, userDetails, setUserDetails
   }
 
   return (

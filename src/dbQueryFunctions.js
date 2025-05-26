@@ -93,3 +93,24 @@ export const createEvent = async (event, page) => {
     return { success: false }
   }
 }
+
+export const checkEmail = (email) => {
+    // console.log('checking if email is registered')
+    // if(!valid && email !=='' ) return
+    (async () => {
+      try {
+        const docRef = doc(db, 'userProfiles', email)
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()){
+          // console.log("Email exists");
+          return true
+        } else {
+          return false
+
+        }
+      } catch (err) {
+        console.log("Error validating email");
+        // console.log(err)
+      }
+    })()
+  }

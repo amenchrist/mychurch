@@ -35,6 +35,8 @@ export const SignInForm = ({setUsePassword}) => {
   const signIn = async (e) => {
     //Submit will only be enabled if email is registered
     e.preventDefault();
+    setIsSignedIn(true);
+
     //Sign in flow
     try {
       const valentine = await signInWithEmailAndPassword(auth, email, password);
