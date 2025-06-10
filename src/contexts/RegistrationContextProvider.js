@@ -20,7 +20,7 @@ export const RegistrationPageContextProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
-  const { setUser, currentPage } = useMyStore();
+  const { setUser, currentPage, setIsSignedIn } = useMyStore();
   const [ error, setError ] = useState(false);
 
   const [ stage, setStage ] = useState(1);
@@ -46,6 +46,13 @@ export const RegistrationPageContextProvider = ({ children }) => {
     type: 'USER',
     church,
     // primaryPage: handle
+  }
+
+  const offlineSignUp = () => {
+    console.log(newUser)
+    setUser(newUser)
+    setIsSignedIn(true)
+    navigate('/create-page')
   }
 
   const signUp = async () => {
@@ -103,7 +110,7 @@ export const RegistrationPageContextProvider = ({ children }) => {
   };
   
   const contextStateVars = {
-    bioData, setBioData, stage, setStage, address, setAddress, signUp, userDetails, setUserDetails
+    bioData, setBioData, stage, setStage, address, setAddress, signUp, userDetails, setUserDetails, offlineSignUp
   }
 
   return (

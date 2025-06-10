@@ -1,18 +1,25 @@
 import { collection, setDoc, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { Page } from '../classes';
+import Page from '../classes/Page';
 import { db } from '../config/firebase';
 import { useMyStore } from '../store';
 import { v4 as uuidv4 } from 'uuid';
+import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 
 
 function NewPage({setCreatePageMode}) {
 
+    const [ error, setError ] = useState(false);
+
+    const { setCurrentPage, toggleAdminMode, user, } = useMyStore();
+    const navigate = useNavigate();
+
     const [ avatarURL, setAvatarURL ] = useState('');
     const [ bannerURL, setBannerURL ] = useState('');
-    const [ name, setName ] = useState('');
+    const [ name, setName ] = useState(`${user.bioData.firstName} ${user.bioData.lastName}`);
     const [ handle, setHandle ] = useState('');
+    const [ handleExists, setHandleExists ] = useState(false);
     const [ bio, setBio ] = useState('');
     const [ websiteURL, setWebsiteURL ] = useState('');
     const [ liveStreamURL, setLiveStreamURL ] = useState('');
@@ -27,12 +34,7 @@ function NewPage({setCreatePageMode}) {
     const [ country, setCountry ] = useState('');  
     const [ postOrZipCode, setPostOrZipCode ] = useState('');  
 
-    const pagesRef = collection(db, 'pages');
-    const { setCurrentPage, toggleAdminMode, user } = useMyStore();
-    const navigate = useNavigate();
-
     const address = { houseNameOrNumber, street, cityOrTown, state, county, country, postOrZipCode }
-
     const contactInfo = { email, phoneNumber, address };
 
     const firstFollower = {
@@ -45,7 +47,9 @@ function NewPage({setCreatePageMode}) {
     const newPage = {
       id: uuidv4(),
       type: 'CHURCH',
-      avatarURL, bannerURL, name, handle, bio, contactInfo, websiteURL, liveStreamURL,
+      name,
+      avatarURL, bannerURL, 
+      handle, bio, contactInfo, websiteURL, liveStreamURL,
       followers: [firstFollower],
       events: [],
       posts: [],
@@ -56,14 +60,23 @@ function NewPage({setCreatePageMode}) {
       creationTimestamp: new Date().getTime()
     }
 
+    const checkHandle = () => {
+
+    }
+
+    const offlineCreatePage = () => {
+      setCurrentPage(new Page((newPage)));
+      navigate(`/${handle}`);
+    }
+
     const createPage = async () => {
+    const pagesRef = collection(db, 'pages'); 
 
       try {
           console.log(newPage)
           await setDoc(doc(pagesRef, handle), newPage);
           // await updateDoc(doc(db,'userProfiles', user.email), {pages: user.pages.push(newPage.handle)});
-          await updateDoc(doc(db,'userProfiles', user.email), {pages: arrayUnion(newPage.handle)
-        });
+          await updateDoc(doc(db,'userProfiles', user.email), {pages: arrayUnion(newPage.handle)});
           setCurrentPage(new Page((newPage)));
           console.log('New User Added');
           toggleAdminMode(true);
@@ -73,34 +86,38 @@ function NewPage({setCreatePageMode}) {
       }
     }
 
+    (<div style={{width: '400px', display: 'flex', flexDirection: 'column', height: '400px'}}>
+      <div onClick={() => setCreatePageMode(false)}>{'Back to Pages List'}</div>
+      <br/>
+  </div>)
+
   return (
+
+    <Box component="form" onSubmit={offlineCreatePage} sx={{ width:450,  mt:2, p:1, overflowY: 'auto'}} onFocus={() => setError(false)} >
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography>Create a New Page</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth id="name" value={name} onChange={(e) => setName(e.target.value)} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField autoFocus required fullWidth id="handle" label="Page Handle" value={handle} onChange={(e) => setHandle(e.target.value)} error={handleExists} onBlur={() => setHandleExists(checkHandle(handle))} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth multiline id="Bio" label="Biography" value={bio} onChange={(e) => setBio(e.target.value)} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth id="streamURL" label="Stream Link" value={liveStreamURL} onChange={(e) => setLiveStreamURL(e.target.value)} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth id="websiteURL" label="Website" value={websiteURL} onChange={(e) => setWebsiteURL(e.target.value)} />
+            </Grid>
+          </Grid>
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >Create Page</Button>
+        </Box>
     
-    <div style={{width: '400px', display: 'flex', flexDirection: 'column', height: '400px'}}>
-        <div onClick={() => setCreatePageMode(false)}>{'Back to Pages List'}</div>
-        <br/>
-      <div style={{width: '400px', display: 'flex', flexDirection: 'column'}}>
-        <input required placeholder="Name" onChange={(e) => setName(e.target.value)} />
-        <input required placeholder="@Handle" onChange={(e) => setHandle(e.target.value)} />      
-        <textarea required placeholder="Bio" onChange={(e) => setBio(e.target.value)} />
-        <input required placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-        <input required placeholder="Website URL" onChange={(e) => setWebsiteURL(e.target.value)} />
-        <input required placeholder="Stream URL" onChange={(e) => setLiveStreamURL(e.target.value)} />
-        <input required placeholder="Avatar URL" onChange={(e) => setAvatarURL(e.target.value)} />
-        <input required placeholder="Banner URL" onChange={(e) => setBannerURL(e.target.value)} />
-
-        <p>Contact Info</p>
-        <input required placeholder="Phone Number" onChange={(e) => setPhoneNumber(e.target.value)} />
-        <input required placeholder="House Name of Number" onChange={(e) => setHouseNameOrNumber(e.target.value)} />
-        <input required placeholder="Street" onChange={(e) => setStreet(e.target.value)} />
-        <input required placeholder="City/Town" onChange={(e) => setCityOrTown(e.target.value)} />
-        <input required placeholder="State" onChange={(e) => setState(e.target.value)} />
-        <input required placeholder="County" onChange={(e) => setCounty(e.target.value)} />
-        <input required placeholder="Country" onChange={(e) => setCountry(e.target.value)} />
-        <input required placeholder="Postcode / Zip code" onChange={(e) => setPostOrZipCode(e.target.value)} />
-      </div>
-      <button onClick={createPage}> Create Page</button>
-
-    </div>
+    
   )
 }
 

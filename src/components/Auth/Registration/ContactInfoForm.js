@@ -5,7 +5,7 @@ import { useRegistrationPageContext } from '../../../contexts/RegistrationContex
 
 export default function ContactInfoForm() {
 
-  const { setAddress, signUp, setStage } = useRegistrationPageContext();
+  const { setAddress, signUp, setStage, offlineSignUp } = useRegistrationPageContext();
 
 
   const [ error, setError ] = useState(false);
@@ -23,7 +23,8 @@ export default function ContactInfoForm() {
   const handleSubmit = e => {
     e.preventDefault();
     setAddress(address);
-    signUp();
+    offlineSignUp()
+    // signUp();
   }
 
   return (

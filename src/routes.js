@@ -107,6 +107,7 @@ export default function Router() {
     { path: 'pages', element: isSignedIn? <><Sidebar /><Pages /></> : <SignInPage /> } ,
     { path: 'register', element: <RegistrationPageContextProvider ><SignUpPage /></RegistrationPageContextProvider> } , //Form will only show if user is not signed in due to forced redirect setting
     { path: ':handle/watch', element: currentPage?.type === "CHURCH" ? <WatchPageContextProvider ><WatchPage /></WatchPageContextProvider> : <ErrorPage /> } ,   
+    { path: 'create-page', element: isSignedIn && !user.primaryPage? <NewPage/>: <ErrorPage /> },
     { 
       path: ':handle', 
       element: currentPage ? isSignedIn? <PageContainer /> : <SignInPage /> : <ErrorPage /> , //if handle doesn't exist, return error page, otherwise check if logged in
@@ -142,7 +143,6 @@ export default function Router() {
         { path: 'admins', element: <Admins /> },
         { path: 'pages', element: user?.type === 'SUPERUSER'? <Pages />: 'hello amen' },
         { path: 'page-profile', element: <PageProfile /> } ,
-        { path: 'create-page', element: user?.type === 'SUPERUSER'? <NewPage/>: <ErrorPage /> },
         { path: 'page-profile', element:  isAdmin ? <Pages />: <ErrorPage /> },
         { path: 'admin', element: <AdminPage /> },
         { path: 'new', element: <NewPost /> },
