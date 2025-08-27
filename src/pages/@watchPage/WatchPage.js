@@ -108,7 +108,7 @@ function WatchPage() {
       <Box sx={{ flexGrow: 1, height: '100vh' }}>
         <Navbar openSideBar={setMobileNavOpen} /> 
         <WatchPageSidebar onMobileClose={() => setMobileNavOpen(false)} openMobile={isMobileNavOpen} />
-          {width < 600? <MobileWatchPage /> : <NonMobileWatchPage />}
+          {width < 900? <MobileWatchPage /> : <NonMobileWatchPage />}
       </Box>
     </>
   )
