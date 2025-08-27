@@ -12,7 +12,7 @@ import { handleValidation, churches } from './formAssets';
 
 export default function AttendanceForm() {
 
-  const { currentPage, event, user } = useMyStore();
+  const { currentPage, event, user, setUser } = useMyStore();
   // console.log(currentPage);
   const d = new Date()
 
@@ -151,7 +151,7 @@ export default function AttendanceForm() {
     </Button>
     <Grid container justifyContent="flex-end">
         <Grid item>
-          <Typography variant='p' onClick={() => {setEmailCaptured(false); setUserIsParticipant(false)}} >Back</Typography>
+          <Typography variant='p' onClick={() => {setEmailCaptured(false); setUserIsParticipant(false); setUser(null)}} >Back</Typography>
         </Grid>
     </Grid>
   </Box>

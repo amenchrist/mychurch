@@ -54,7 +54,7 @@ function WatchPage() {
 
   const MobileWatchPage = () => {
     return (
-      <Grid container sx={{ height: "90vh", display: { xs: 'flex', md: 'none', lg: 'none' }, alignContent: 'space-between', }} >
+      <Grid container sx={{ height: "90vh", display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none' }, alignContent: 'space-between', }} >
         <Grid item xs={12} sx={{height: '40%', }} >  
           <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             {/* { event?.hasEnded && event?.archiveURL ? <VimeoPlayer /> : */}
@@ -78,7 +78,7 @@ function WatchPage() {
 
   const NonMobileWatchPage = () => {
     return (
-      <Grid container sx={{ height: "90vh", display: { xs: 'none', md: 'flex', lg: 'flex' }, }} >
+      <Grid container sx={{ height: "90vh", display: { xs: 'none', sm: 'none', md: 'flex', lg: 'flex' }, }} >
         <Grid item md={8} sx={{ height: "100%",}} >  
           <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '90%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             {/* { event?.hasEnded && event?.archiveURL ? <VimeoPlayer /> : */}
@@ -100,13 +100,15 @@ function WatchPage() {
     )
   }
 
+  const width = window.innerWidth;
+  console.log(width)
+
   return (
     <>
       <Box sx={{ flexGrow: 1, height: '100vh' }}>
         <Navbar openSideBar={setMobileNavOpen} /> 
         <WatchPageSidebar onMobileClose={() => setMobileNavOpen(false)} openMobile={isMobileNavOpen} />
-        <NonMobileWatchPage />
-        <MobileWatchPage />
+          {width < 600? <MobileWatchPage /> : <NonMobileWatchPage />}
       </Box>
     </>
   )

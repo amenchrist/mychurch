@@ -52,11 +52,11 @@ export default function EmailForm() {
       try {
         const docRef = doc(db, 'userProfiles', email);
         const docSnap = await getDoc(docRef);
-        if (docSnap.exists()){ 
+        if (docSnap.exists() && docSnap.data().bioData){ 
           const data = docSnap.data();
-          const attendeeBio = {
-            title: data.bioData.title, firstName: data.bioData.firstName, lastName: data.bioData.lastName,
-          }
+          // const attendeeBio = {
+          //   title: data.bioData.title, firstName: data.bioData.firstName, lastName: data.bioData.lastName,
+          // }
           const attendeeContact = {
             email
           }
