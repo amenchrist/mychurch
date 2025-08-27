@@ -71,7 +71,7 @@ function WatchPage() {
           {user.attendanceSubmitted? <FullWidthTabs /> : <Schedule /> }
           <PastEvents />
         </Grid>
-        <BottomNav showOnLg={false}/> 
+        {/* <BottomNav showOnLg={false}/>  */}
       </Grid>
     )
   }
@@ -105,8 +105,8 @@ function WatchPage() {
       <Box sx={{ flexGrow: 1, height: '100vh' }}>
         <Navbar openSideBar={setMobileNavOpen} /> 
         <WatchPageSidebar onMobileClose={() => setMobileNavOpen(false)} openMobile={isMobileNavOpen} />
-        <MobileWatchPage />
         <NonMobileWatchPage />
+        <MobileWatchPage />
       </Box>
     </>
   )

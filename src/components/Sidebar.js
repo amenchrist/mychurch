@@ -47,7 +47,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
       <Box sx={{alignItems: 'center', display: 'flex', flexDirection: 'column', p: 2 }} >
         <Avatar component={RouterLink} src={''} sx={{cursor: 'pointer', width: 64, height: 64 }} to="#" />
         <Typography color="textPrimary" variant="h5" align='center' >
-          {user?.contactInfo.email? `${user.bioData?.title} ${user.bioData?.firstName} ${user.bioData?.lastName}` :'Guest'}
+          {user?.contactInfo?.email? `${user?.bioData?.title} ${user?.bioData?.firstName} ${user?.bioData?.lastName}` :'Guest'}
           {/* {currentPage? currentPage?.name : 'My Church'} */}
         </Typography> 
         {/* <Typography color="textPrimary" variant="h5" align='center' >
@@ -94,7 +94,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
             return (
               <NavItem
                 // href={item.href === 'church' ? `/${church}`: item.href === 'profile' ?`/${user.primaryPage}`:`${item.href}`}
-                href={item.href === 'church' ? `/${church}`: item.href === 'profile' ?`/${user.primaryPage}`:`${item.href}`}
+                href={item.href === 'church' ? `/${church}`: item.href === 'profile' ?`/${user?.primaryPage}`:`${item.href}`}
                 key={item.title}
                 title={item.title}
                 icon={item.icon}
@@ -102,7 +102,7 @@ const Sidebar = ({ onMobileClose, openMobile }) => {
             )
 
           })}
-          {user.emailChecked? <NavItem href={'#'} key={'reset'} title={'Reset'} icon={RefreshCw} onClick={() => setUser({})}/>  : <></>}
+          {user?.emailChecked? <NavItem href={'#'} key={'reset'} title={'Reset'} icon={RefreshCw} onClick={() => setUser({})}/>  : <></>}
         </List>
 
         {/* {currentPage?.followers?.filter(f => f.id === user.id)[0]?.role === 'ADMINISTRATOR'?

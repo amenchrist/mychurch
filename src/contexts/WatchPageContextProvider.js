@@ -80,7 +80,7 @@ export const WatchPageContextProvider = ({ children }) => {
           if(events){
             const relevantEvents = events.filter((e)=> (e.hasStarted && !e.hasEnded) || e.getTimestamp() >= new Date().getTime()).sort((e1,e2) => dayjs(e1.getTimestamp()) - dayjs(e2.getTimestamp()));
             const endedEvents = events.filter( e => e.hasEnded === true && e.archiveURL !== ''  && e.archiveURL !== null ).sort((e1,e2) => dayjs(e2.endTimestamp) - dayjs(e1.endTimestamp));
-            console.log(endedEvents)
+            // console.log(endedEvents)
             setPastEvents(endedEvents)
           
             const ongoingEvent = relevantEvents.find(e => e.hasStarted && e.hasEnded === false);
@@ -123,27 +123,27 @@ export const WatchPageContextProvider = ({ children }) => {
     }, [ongoingEvent, event, setEvent]);
 
     //Automatically Start Event 
-    useEffect(() => {
-      console.log('auto starting event')
-      const today = dayjs(dayjs().format('YYYY-MM-DD')).toDate().toString()
-      const startEvent = async () => {
-        const update = { hasStarted: true, startTimestamp: new Date().getTime() }
-        try {
-          const updatedEvent = await nextEvent.update(update)
-          if(updatedEvent){
-            setEvent(updatedEvent);
-            console.log('Event Started Automatically')
-          }
-        } catch (err) {
-          console.log('Error updating event')
-          console.log(err);
-        }
-      }
-      if(nextEvent && nextEvent.hasStarted === false && nextEvent.date === today && nextEvent.id !== ongoingEvent?.id){
-        startEvent()
+    // useEffect(() => {
+    //   console.log('auto starting event')
+    //   const today = dayjs(dayjs().format('YYYY-MM-DD')).toDate().toString()
+    //   const startEvent = async () => {
+    //     const update = { hasStarted: true, startTimestamp: new Date().getTime() }
+    //     try {
+    //       const updatedEvent = await nextEvent.update(update)
+    //       if(updatedEvent){
+    //         setEvent(updatedEvent);
+    //         console.log('Event Started Automatically')
+    //       }
+    //     } catch (err) {
+    //       console.log('Error updating event')
+    //       console.log(err);
+    //     }
+    //   }
+    //   if(nextEvent && nextEvent.hasStarted === false && nextEvent.date === today && nextEvent.id !== ongoingEvent?.id){
+    //     startEvent()
         
-      } 
-    }, [nextEvent, setEvent]);
+    //   } 
+    // }, [nextEvent, setEvent]);
 
     //Automatically End Event
     useEffect(() => {
