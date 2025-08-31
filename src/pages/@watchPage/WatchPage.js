@@ -48,10 +48,6 @@ function WatchPage() {
     )
   }
 
-  const UpcomingEvents = () => {
-
-  }
-
   const MobileWatchPage = () => {
     return (
       <Grid container sx={{ height: "90vh", display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none' }, alignContent: 'space-between', }} >
@@ -101,7 +97,6 @@ function WatchPage() {
   }
 
   const width = window.innerWidth;
-  console.log(width)
 
   return (
     <>

@@ -6,6 +6,8 @@ import User  from "./classes/User";
 export const getPage = async (handle) => {
 
   // console.log('running get page');
+  console.log('Running a db getPage query');
+
   try {
     const docRef = doc(db, 'pages', handle)
     const docSnap = await getDoc(docRef);
@@ -25,6 +27,8 @@ export const getPage = async (handle) => {
 export const getEvent = async (id) => {
 
   console.log('running get event');
+  console.log('Running a db getEvent query');
+
   try {
     const docRef = doc(db, 'event', id);
     const docSnap = await getDoc(docRef);
@@ -42,6 +46,7 @@ export const getEvent = async (id) => {
 
 export const getUser = async (email) => {
   //Used to load profile after successful auth
+  console.log('Running a db getUser query');
   try {
     const docRef = doc(db, 'userProfiles', email);
     const docSnap = await getDoc(docRef);
@@ -95,7 +100,7 @@ export const createEvent = async (event, page) => {
 }
 
 export const checkEmail = (email) => {
-    // console.log('checking if email is registered')
+    console.log('checking if email is registered')
     // if(!valid && email !=='' ) return
     (async () => {
       try {

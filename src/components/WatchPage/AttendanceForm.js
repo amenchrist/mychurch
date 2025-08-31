@@ -41,6 +41,7 @@ export default function AttendanceForm() {
         console.log('Error updating event attendance records');
         console.log(err);
       }
+      
 
     } else {
       //add new attendance record

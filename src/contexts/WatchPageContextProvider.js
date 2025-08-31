@@ -70,11 +70,9 @@ export const WatchPageContextProvider = ({ children }) => {
     const currentPage = useMyStore(store => new Page(store.currentPage))
     const nextEvent = useMyStore(store => new Event(store.nextEvent))
     
-    
-
     useEffect(() => {
       const getEvents = async () => {
-        // console.log('searching for all events')
+        console.log('searching for all events')
         try {
           const events = await currentPage.getEvents()
           if(events){
@@ -116,8 +114,8 @@ export const WatchPageContextProvider = ({ children }) => {
 
     const ongoingEvent = events.find(e => e.hasStarted && e.hasEnded === false);
     useEffect(() => {
-      console.log('Setting event to ongoing event')
       if(ongoingEvent !== undefined && ongoingEvent?.id !== event?.id){
+        console.log('Setting event to ongoing event')
         setEvent(ongoingEvent);
       } 
     }, [ongoingEvent, event, setEvent]);

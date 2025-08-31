@@ -46,11 +46,12 @@ function PageHeader() {
   return (
     <Card sx={{ maxWidth: 500, width: '100vw', borderRadius: '0', }}>
       <CardMedia sx={{ height: 140 }} image={currentPage?.type === "USER"? "default bg.jpg" : `${currentPage?.bannerURL}`} title="Cover photo" />
-      <IconButton
+      <IconButton 
+        onClick={logOut}
         sx={{ position: 'absolute', top: 8, right: 20, color: 'white' }}
         aria-label="log-out"
       >
-        <PowerIcon onClick={logOut} />
+        <PowerIcon  />
       </IconButton>
       <CardContent>
         <Grid container justifyContent="space-between">
