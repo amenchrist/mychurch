@@ -6,10 +6,13 @@ import { useMyStore } from '../store';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import ErrorPage from './ErrorPage';
 import dayjs from 'dayjs';
+import Page from '../classes/Page';
 
 export default function EventPage({setNewEvent}) {  
 
-  const { setEvent, currentPage, event } = useMyStore();
+  const { setEvent, event } = useMyStore();
+  const currentPage  = useMyStore( store => new Page(store.currentPage));
+  
   const navigate = useNavigate();
   const { id } = useParams();
   const [ error, setError ] = useState(false);

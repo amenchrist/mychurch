@@ -10,10 +10,12 @@ import { db } from '../../config/firebase';
 import FirstTimersForm from './FirstTimersForm';
 import { useWatchPageContext } from '../../contexts/WatchPageContextProvider';
 import AttendanceForm from './AttendanceForm';
+import AccessCodeForm from './AccessCodeForm';
 
 export default function AttendanceCard() {
 
-  const { emailCaptured, isRegistered, attendanceCaptured, setAttendanceCaptured, userIsParticipant, setUserIsParticipant } = useWatchPageContext();
+  const { emailCaptured, isRegistered, attendanceCaptured, setAttendanceCaptured, userIsParticipant, setUserIsParticipant, accessCodeIsValid, } = useWatchPageContext();
+  
 
   const { event, user, currentPage } = useMyStore();
   const [ enableLogIn, setEnableLogin ] = useState(true);
@@ -71,7 +73,8 @@ export default function AttendanceCard() {
             </CardContent>
           </Box>
         </Box> */}
-        { userIsParticipant || emailCaptured ? <AttendanceForm /> : isRegistered? <EmailForm /> : <FirstTimersForm /> }
+          {currentPage.handle === 'cebarking' && accessCodeIsValid === false ? <AccessCodeForm /> : 
+        userIsParticipant || emailCaptured ? <AttendanceForm /> : isRegistered? <EmailForm /> : <FirstTimersForm /> }
 
         {/* <CardMedia
             component="img"

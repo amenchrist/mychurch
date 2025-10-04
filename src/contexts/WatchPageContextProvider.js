@@ -31,6 +31,8 @@ export const WatchPageContextProvider = ({ children }) => {
     church: 'Christ Embassy Barking',
   })
 
+  const [ accessCodeIsValid, setAccessCodeIsValid ] = useState(false);
+
   const blankUser = {
     email: '',
     emailChecked: false,
@@ -168,7 +170,7 @@ export const WatchPageContextProvider = ({ children }) => {
 
     attendeeEmail, setAttendeeEmail, emailCaptured, setEmailCaptured, attendanceCaptured, setAttendanceCaptured, isRegistered, setIsRegistered,
     isAdmin, setIsAdmin, attendanceSubmitted, setAttendanceSubmitted, pastEvents,
-    user, setUser, blankUser, userIsParticipant, setUserIsParticipant, events, setEvents, 
+    user, setUser, blankUser, userIsParticipant, setUserIsParticipant, events, setEvents, accessCodeIsValid, setAccessCodeIsValid 
 
   }
 

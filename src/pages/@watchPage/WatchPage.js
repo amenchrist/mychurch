@@ -17,6 +17,7 @@ import Event from '../../classes/Event';
 import EventCard from '../../components/EventCard';
 import BottomNav from '../../components/BottomNav';
 import { Hidden, Typography } from '@mui/material';
+import AccessCodeForm from '../../components/WatchPage/AccessCodeForm';
 
 
 function WatchPage() {
@@ -26,7 +27,7 @@ function WatchPage() {
   const {  currentPage,  } = useMyStore();
   const nextEvent = useMyStore(store => new Event(store.nextEvent))
   const event = useMyStore(store => new Event(store.event))
-  const { attendanceCaptured, events, pastEvents, } = useWatchPageContext();
+  const { attendanceCaptured, events, pastEvents } = useWatchPageContext();
 
   const ServiceMessage = () => {
     return (
@@ -54,9 +55,10 @@ function WatchPage() {
         <Grid item xs={12} sx={{height: '40%', }} >  
           <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             {/* { event?.hasEnded && event?.archiveURL ? <VimeoPlayer /> : */}
-              {event?.hasStarted ? attendanceCaptured ? 
-              currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />: currentPage.liveStreamURL.includes('facebook')? <FacebookPlayer link={currentPage.liveStreamURL} />: 
-              <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
+
+            {event?.hasStarted ? attendanceCaptured ? 
+            currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />: currentPage.liveStreamURL.includes('facebook')? <FacebookPlayer link={currentPage.liveStreamURL} />: 
+            <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
           </div>     
         </Grid>
         <Grid sx={{width: '100%', height: '10%', p:1, borderBottom: '2px solid' }}>
@@ -78,6 +80,7 @@ function WatchPage() {
         <Grid item md={8} sx={{ height: "100%",}} >  
           <div style={{backgroundColor: "black", display:"flex", width: '100%', height: '90%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             {/* { event?.hasEnded && event?.archiveURL ? <VimeoPlayer /> : */}
+
               {event?.hasStarted ? attendanceCaptured ? 
               currentPage.liveStreamURL.includes('vimeo')? <VimeoPlayer />: currentPage.liveStreamURL.includes('facebook')? <FacebookPlayer link={currentPage.liveStreamURL} />: 
               <VideoPlayer event={event} /> : <AttendanceCard /> : <ServiceMessage /> }
@@ -103,7 +106,7 @@ function WatchPage() {
       <Box sx={{ flexGrow: 1, height: '100vh' }}>
         <Navbar openSideBar={setMobileNavOpen} /> 
         <WatchPageSidebar onMobileClose={() => setMobileNavOpen(false)} openMobile={isMobileNavOpen} />
-          {width < 900? <MobileWatchPage /> : <NonMobileWatchPage />}
+        {width < 900? <MobileWatchPage /> : <NonMobileWatchPage />}
       </Box>
     </>
   )

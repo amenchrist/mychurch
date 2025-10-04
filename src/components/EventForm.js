@@ -7,11 +7,13 @@ import { useMyStore } from '../store';
 import { useNavigate,} from 'react-router-dom';
 import dayjs from 'dayjs';
 import Event from '../classes/Event';
+import Page from '../classes/Page';
 
 
 export default function EventForm() {  
 
-  const { user, currentPage } = useMyStore();
+  const { user, } = useMyStore();
+  const currentPage  = useMyStore( store => new Page(store.currentPage));
   const navigate = useNavigate();
 
   const [ date, setDate ] = useState(dayjs().format('YYYY-MM-DD'));
