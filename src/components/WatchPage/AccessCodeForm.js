@@ -3,38 +3,29 @@ import { doc, getDoc } from 'firebase/firestore';
 import React from 'react'
 import { db } from '../../config/firebase';
 import { useWatchPageContext } from '../../contexts/WatchPageContextProvider';
+import { ContactPage } from '@mui/icons-material';
 
 function AccessCodeForm() {
 
   const [ accessCode, setAccessCode ] = React.useState('');
   const [ valid, setValid ] = React.useState(true);
-
   const { setAccessCodeIsValid } = useWatchPageContext();
+  const [ showMessage, setShowMessage ] = React.useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // checkAccessCode()
-
-    if(accessCodeIsValid()){
-      console.log("Access code is valid")
-      setAccessCodeIsValid(true);
-    } else {
-      console.log("Access code is invalid")
-      setValid(false)
-    }
-  }
-
-  const accessCodeIsValid = () => {
-    //verify access code
+    if(!valid) return;
     (async () => {
       try {
         const docRef = doc(db, 'accessCodes', 'cebarking');
         const docSnap = await getDoc(docRef);
-        console.log(docSnap.data());
+
         if (docSnap.exists() && docSnap.data().code === accessCode){ 
-          return true
+          setAccessCodeIsValid(true)
         } else {
-          return false
+          console.log("No such document or access code does not match!");
+          setValid(false)
         }
       } catch (err) {
         console.log("Error validating access code");
@@ -59,8 +50,16 @@ function AccessCodeForm() {
           variant="contained"
           sx={{ mt: 2, mb: 2 }}
         >
-          Join Meeting
+          SUBMIT
         </Button>
+        <Typography component="h5" variant="p" sx={{ mt: 2,  textAlign: 'center', color: 'gray'}} onClick={() => setShowMessage(true)} >
+            Get Access Code
+        </Typography>
+        {showMessage && (
+          <Typography component="p" variant="body2" sx={{ mt: 2, textAlign: 'center', color: 'gray'}}>
+            Please contact your cell leader for assistance.
+          </Typography>
+        )}
       </Box>
     </>
   )
