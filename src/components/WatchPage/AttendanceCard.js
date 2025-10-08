@@ -73,8 +73,9 @@ export default function AttendanceCard() {
             </CardContent>
           </Box>
         </Box> */}
-          {currentPage.handle === 'cebarking' && accessCodeIsValid === false ? <AccessCodeForm /> : 
-        userIsParticipant || emailCaptured ? <AttendanceForm /> : isRegistered? <EmailForm /> : <FirstTimersForm /> }
+          {userIsParticipant || emailCaptured ? <AttendanceForm /> : isRegistered? <EmailForm /> : <FirstTimersForm /> }
+        {/* {currentPage.handle === 'cebarking' && accessCodeIsValid === false ? <AccessCodeForm /> : 
+        userIsParticipant || emailCaptured ? <AttendanceForm /> : isRegistered? <EmailForm /> : <FirstTimersForm /> } */}
 
         {/* <CardMedia
             component="img"
